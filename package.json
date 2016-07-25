@@ -12,7 +12,6 @@
     "email": "",
     "url": "http://www.heroku.com/"
   },
-  "homepage": "http://www.heroku.com/",
   "repository": {
     "type": "git",
     "url": "https://git.heroku.com/remnant-the-game.git"
@@ -26,8 +25,8 @@
     "mysql": "^2.11.1",
     "socketio": "^1.0.0"
   },
-  "devDependencies": {},
-  "bundleDependencies": [],
-  "private": true,
-  "main": "index.js"
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
 }
