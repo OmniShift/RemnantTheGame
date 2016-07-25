@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link type="text/css" rel="stylesheet" href="style.css"/>
+		<title>Remnant - The Game</title>
+	</head>
+	<body>
+	<div id="backgroundMain">
+	<div id="overlay">
+		<div>
+			<button onclick="setUser1()">
+				Set user as tester 1
+			</button>
+			<button onclick="setUser2()">
+				Set user as tester 2
+			</button>
+			<button onclick="setUser3()">
+				Set user as tester 3
+			</button>
+			<button onclick="setUser4()">
+				Set user as tester 4
+			</button>
+			<p>
+			<button onclick="displayCookie()">
+				Check tester number
+			</button>
+			<button onclick="deleteUID()">
+				Delete user ID cookie
+			</button>
+		</div>
+	</div><!--end of overlay-->
+	</div><!--end of backgroundMain-->
+
+		<script type="text/javascript">
+			function setUser1(){
+				document.cookie = "rtgPIN=TUsr01; expires=Thu, 31 Dec 2026 12:00:00 GMT";
+			};
+			function setUser2(){
+				document.cookie = "rtgPIN=TUsr02; expires=Thu, 31 Dec 2026 12:00:00 GMT";
+			};
+			function setUser3(){
+				document.cookie = "rtgPIN=TUsr03; expires=Thu, 31 Dec 2026 12:00:00 GMT";
+			};
+			function setUser4(){
+				document.cookie = "rtgPIN=TUsr04; expires=Thu, 31 Dec 2026 12:00:00 GMT";
+			};
+
+			function deletePIN(){
+				document.cookie = "rtgUID=; expires=Thu, 01 Jan 1970 00:00:01 GMT";
+			};
+
+			function displayCookie(){
+				var userID = document.cookie.substring(7,16);
+				if (userID == "") {
+					userID = "No user ID detected";
+				} else {
+					userIDPrompt = "User ID = " + userID;
+				};
+				alert (userIDPrompt);
+			};
+		</script>
+	</body>
