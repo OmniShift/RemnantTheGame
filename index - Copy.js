@@ -1,15 +1,11 @@
 const   fs				= require('fs'),
-		path			= require('path');
-
-		var express = require('express');
-		var app = express();
-		var http = require('http');
-		var server = http.createServer(app);
-		var io = require('socket.io').listen(server);
-		app.set('port', (process.env.PORT || 5000));
-		server.listen(app.get('port'), function() {
-			console.log('Node app is running on port', app.get('port'));
-		});
+		path			= require('path'),
+		env				= process.env;
+		
+		let express = require('express');
+		let app = express();
+		let http = require('http').createServer(app);
+		let io = require('socket.io').listen(http);
 		let mysql = require('mysql');
 		/*let database = mysql.createConnection({
 			host: env.OPENSHIFT_MYSQL_DB_HOST,
@@ -19,25 +15,14 @@ const   fs				= require('fs'),
 			database: 'remnantthegame'
 		});*/
 
+//app.set('host', (env.IP || 'localhost'));
+app.set('port', (env.PORT || 5000));
+
 app.use(express.static(__dirname + '/static'));
 
 app.get('/', function(request, response) {
   response.render('pages/index');
 });
-
-io.on('connection', function(socket){
-	console.log('user connected');
-
-	/*socket.on('generate UID', function(){
-		genUID();
-		console.log('generate UID request received')
-	});*/
-
-	socket.on('disconnect', function(){
-		console.log('user disconnected');
-	});
-});
-setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
 
 /*database.connect(function(err){
 	if(!err) {
@@ -101,3 +86,20 @@ function checkTakenIDs(content1, content2){
 	});
 	valueReturned = true;
 };
+
+io.on('connection', function(socket){
+	console.log('user connected');
+
+	/*socket.on('generate UID', function(){
+		genUID();
+		console.log('generate UID request received')
+	});*/
+	socket.on('disconnect', function(){
+		console.log('user disconnected');
+	});
+});
+setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
+
+app.listen(app.get('port'), function() {
+  console.log('Node app is running on port', app.get('port'));
+});

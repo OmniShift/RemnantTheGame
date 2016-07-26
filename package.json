@@ -2,31 +2,25 @@
   "name": "Remnant-the-Game",
   "version": "1.0.0",
   "description": "A 4-player browser-based stategy game as a mix of Risk and trading card games like Yu-Gi-Oh. Based off the fictional board game features in the webseries RWBY.",
-  "keywords": [
-    "Heroku",
-    "Node.js",
-    "application"
-  ],
-  "author": {
-    "name": "OmniShift",
-    "email": "",
-    "url": "http://www.heroku.com/"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://git.heroku.com/remnant-the-game.git"
-  },
   "engines": {
-    "node": ">= 0.6.0",
-    "npm": ">= 1.0.0"
-  },
-  "dependencies": {
-    "express": "^3.21.2",
-    "mysql": "^2.11.1",
-    "socketio": "^1.0.0"
+    "node": "5.9.1"
   },
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
+  "dependencies": {
+    "express": "^3.21.2",
+    "mysql": "^2.11.1",
+    "socketio": "1.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.heroku.com/remnant-the-game.git"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ]
 }
