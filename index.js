@@ -41,6 +41,7 @@ io.on('connection', function(socket){
 	socket.on('generate UID', function(){
 		console.log('generate UID request received');
 		//genUID();
+		var IDavailable = 0;
 		while (IDavailable != 1){
 			for(var i=0; i < 5; i++){
 				async.parallel([genUID(), checkTakenIDs()], function(err, result) {
@@ -76,7 +77,6 @@ function pausecomp(millis){
 
 function genUID(){
 	var possibleChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-	var IDavailable = 0;
 	console.log('ID generation started');
 	//while (IDavailable != 1){
 		//for(var i=0; i < 5; i++){
