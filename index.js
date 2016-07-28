@@ -16,10 +16,10 @@ const   fs				= require('fs'),
 		var client = new pg.Client(connectionString);
 		client.connect();
 
-client.query('SELECT * FROM TakenIDs');
+/*client.query('SELECT * FROM TakenIDs');
 client.on('row', function(row) {
 	console.log(JSON.stringify(row));
-});
+});*/
 
 app.use(express.static(__dirname + '/static'));
 
