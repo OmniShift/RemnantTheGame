@@ -50,7 +50,7 @@ io.on('connection', function(socket){
 					};
 					console.log(result);
 					if (IDavailable = 1) {
-						break;
+						//break;
 					};
 				});
 			};
