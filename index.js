@@ -42,16 +42,14 @@ io.on('connection', function(socket) {
 		console.log('generate UID request received');
 		//genUID();
 		IDavailable = 0;
-		while (IDavailable != 1) {
-			for(var i=0; i < 5; i++) {
-				async.parallel([genUID, checkTakenIDs], function(err, result) {
-					if (err) {
-						console.log(err);
-						return;
-					};
-					console.log(result);
-				});
-			};
+		for(var i=0; i < 5; i++) {
+			async.parallel([genUID, checkTakenIDs], function(err, result) {
+				if (err) {
+					console.log(err);
+					return;
+				};
+				console.log(result);
+			});
 		};
 	});
 
