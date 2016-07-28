@@ -10,7 +10,6 @@ const   fs				= require('fs'),
 		server.listen(app.get('port'), function() {
 			console.log('Node app is running on port', app.get('port'));
 		});
-		console.log(process.env.DATABASE_URL);
 		var pg = require('pg');
 		pg.defaults.ssl = true;
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
@@ -28,11 +27,6 @@ const   fs				= require('fs'),
 					console.log(JSON.stringify(row));
 				});
 		});
-		/*var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/todo';
-		var client = new pg.Client(connectionString);
-		client.connect();*/
-
-/*client.query('SELECT * FROM TakenIDs');*/
 
 app.use(express.static(__dirname + '/static'));
 
@@ -53,14 +47,6 @@ io.on('connection', function(socket){
 	});
 });
 setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
-
-/*database.connect(function(err){
-	if(!err) {
-		console.log("Connected to database");
-	} else {
-		console.log(err.stack);
-	}
-});*/
 
 var valueReturned = false;
 var userID = "";
@@ -96,7 +82,7 @@ function genUID(){
 	};
 };
 function checkTakenIDs(content1, content2){
-	database.query("SELECT COUNT(*) FROM takenIDs WHERE takenID='" + content1 + "'", function(err, data){
+	client.query("SELECT COUNT(*) FROM TakenIDs WHERE takenID='" + content1 + "'", function(err, data){
 		console.log('query started');
 		if(err) {
 			throw new Error('Error querying for user ID.');
@@ -104,7 +90,7 @@ function checkTakenIDs(content1, content2){
 		}else{
 			console.log('query passed');
 			if(data == 0){
-				database.query("INSERT INTO takenIDs ('takenID', 'IDtype') VALUES ('" + content1 + "', '" + content2 + "');");
+				client.query("INSERT INTO TakenIDs ('IDname', 'IDtype') VALUES ('" + content1 + "', '" + content2 + "');");
 				IDavailable = 1;
 				//socket.emit('return generated UID', content1);
 				console.log('new ID is ' + content1);
