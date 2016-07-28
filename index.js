@@ -10,7 +10,7 @@ const   fs				= require('fs'),
 		server.listen(app.get('port'), function() {
 			console.log('Node app is running on port', app.get('port'));
 		});
-		var pg = require('pg');
+		/*var pg = require('pg');
 		pg.defaults.ssl = true;
 		var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/todo';
 		var client = new pg.Client(connectionString);
@@ -19,7 +19,7 @@ const   fs				= require('fs'),
 client.query('SELECT * FROM TakenIDs');
 client.on('row', function(row) {
 	console.log(JSON.stringify(row));
-});
+});*/
 
 app.use(express.static(__dirname + '/static'));
 
