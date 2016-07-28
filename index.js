@@ -44,7 +44,7 @@ io.on('connection', function(socket){
 		IDavailable = 0;
 		while (IDavailable != 1){
 			for(var i=0; i < 5; i++){
-				async.parallel([genUID(), checkTakenIDs()], function(err, result) {
+				async.parallel([genUID(callback), checkTakenIDs(callback)], function(err, result) {
 					if (err) {
 						console.log(err);
 						return;
@@ -74,7 +74,7 @@ function pausecomp(millis){
 	while(curDate-date < millis);
 };
 
-function genUID(){
+function genUID(callback){
 	var possibleChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	console.log('ID generation started');
 	//while (IDavailable != 1){
@@ -85,7 +85,7 @@ function genUID(){
 				userID += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
 			};
 			attempts = attempts+1;
-			console.log('Attempt #' + attempts + ': new ID is ' + userID);
+			callback(null, 'Attempt #' + attempts + ': new ID is ' + userID);
 			//checkTakenIDs(userID, 1);
 			//pausecomp(1000);
 			/*if(attempts == 5){
@@ -95,7 +95,7 @@ function genUID(){
 		//};
 	//};
 };
-function checkTakenIDs(content1, content2){
+function checkTakenIDs(content1, content2, callback){
 	pg.connect(process.env.DATABASE_URL, function(err, client) {
 		if (err) throw err;
 		console.log('Connected to postgres.');
@@ -109,10 +109,10 @@ function checkTakenIDs(content1, content2){
 				if(data == 0){
 					client.query("INSERT INTO TakenIDs ('IDname', 'IDtype') VALUES ('" + content1 + "', '" + content2 + "');");
 					//socket.emit('return generated UID', content1);
-					console.log('new ID is ' + content1);
+					callback(null, 'new ID is ' + content1);
 					IDavailable = 1;
 				} else {
-					console.log('ID not available. Retrying.');
+					callback(null, 'ID not available. Retrying.');
 					userID = "";
 				};
 			};
