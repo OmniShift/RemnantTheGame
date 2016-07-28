@@ -44,7 +44,7 @@ io.on('connection', function(socket) {
 		IDavailable = 0;
 		while (IDavailable != 1) {
 			for(var i=0; i < 5; i++) {
-				async.parallel([genUID(callback), checkTakenIDs(callback)], function(err, result) {
+				async.parallel([genUID, checkTakenIDs], function(err, result) {
 					if (err) {
 						console.log(err);
 						return;
