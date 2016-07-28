@@ -10,14 +10,16 @@ const   fs				= require('fs'),
 		server.listen(app.get('port'), function() {
 			console.log('Node app is running on port', app.get('port'));
 		});
-		let mysql = require('mysql');
-		/*let database = mysql.createConnection({
-			host: env.OPENSHIFT_MYSQL_DB_HOST,
-			port: env.OPENSHIFT_MYSQL_DB_PORT,
-			user: 'adminYHBtpyd',
-			password: 'u7wtcDSZz1dE',
-			database: 'remnantthegame'
-		});*/
+		var pg = require('pg');
+		pg.defaults.ssl = true;
+		var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/todo';
+		var client = new pg.Client(connectionString);
+		client.connect();
+
+client.query('SELECT public,TakenIDs FROM information_schema.tables');
+client.on('row', function(row) {
+	console.log(JSON.stringify(row));
+});
 
 app.use(express.static(__dirname + '/static'));
 
@@ -28,10 +30,10 @@ app.get('/', function(request, response) {
 io.on('connection', function(socket){
 	console.log('user connected');
 
-	/*socket.on('generate UID', function(){
+	socket.on('generate UID', function(){
 		genUID();
 		console.log('generate UID request received')
-	});*/
+	});
 
 	socket.on('disconnect', function(){
 		console.log('user disconnected');
