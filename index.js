@@ -42,7 +42,7 @@ io.on('connection', function(socket) {
 		console.log('generate UID request received');
 		//genUID();
 		IDavailable = 0;
-		for(var i=0; i < 5; i++) {
+		//for(var i=0; i < 5; i++) {
 			async.parallel([genUID, checkTakenIDs], function(err, result) {
 				if (err) {
 					console.log(err);
@@ -50,7 +50,7 @@ io.on('connection', function(socket) {
 				};
 				console.log(result);
 			});
-		};
+		//};
 	});
 
 	socket.on('disconnect', function(){
