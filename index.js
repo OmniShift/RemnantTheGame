@@ -38,8 +38,8 @@ io.on('connection', function(socket){
 	console.log('user connected');
 
 	socket.on('generate UID', function(){
+		console.log('generate UID request received');
 		genUID();
-		console.log('generate UID request received')
 	});
 
 	socket.on('disconnect', function(){
@@ -82,23 +82,27 @@ function genUID(){
 	};
 };
 function checkTakenIDs(content1, content2){
-	client.query("SELECT COUNT(*) FROM TakenIDs WHERE takenID='" + content1 + "'", function(err, data){
-		console.log('query started');
-		if(err) {
-			throw new Error('Error querying for user ID.');
-			userID = "";
-		}else{
-			console.log('query passed');
-			if(data == 0){
-				client.query("INSERT INTO TakenIDs ('IDname', 'IDtype') VALUES ('" + content1 + "', '" + content2 + "');");
-				IDavailable = 1;
-				//socket.emit('return generated UID', content1);
-				console.log('new ID is ' + content1);
-			} else {
-				console.log('ID not available. Retrying.');
+	pg.connect(process.env.DATABASE_URL, function(err, client) {
+		if (err) throw err;
+		console.log('Connected to postgres.');
+		client.query("SELECT COUNT(*) FROM TakenIDs WHERE takenID='" + content1 + "'", function(err, data){
+			console.log('query started');
+			if(err) {
+				throw new Error('Error querying for user ID.');
 				userID = "";
+			}else{
+				console.log('query passed');
+				if(data == 0){
+					client.query("INSERT INTO TakenIDs ('IDname', 'IDtype') VALUES ('" + content1 + "', '" + content2 + "');");
+					IDavailable = 1;
+					//socket.emit('return generated UID', content1);
+					console.log('new ID is ' + content1);
+				} else {
+					console.log('ID not available. Retrying.');
+					userID = "";
+				};
 			};
-		};
+		});
 	});
 	valueReturned = true;
 };

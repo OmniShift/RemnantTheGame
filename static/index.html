@@ -17,16 +17,21 @@
 				el.innerHTML = 'Server time: ' + timeString;
 			});
 
-			//document.cookie = "rtgUID=AdminUser; expires=Thu, 31 Dec 2026 12:00:00 GMT";
-
-			function generateUID(){
-				socket.emit('generate UID');
-				console.log('generate UID request sent');
-			};
+			//document.cookie = "rtgUID=AdmUsr; expires=Thu, 31 Dec 2026 12:00:00 GMT";
 
 			socket.on('return generated UID'), function(userID){
 				document.cookie = "rtgUID=" + userID + "; expires=Thu, 31 Dec 2026 12:00:00 GMT";
 				console.log('Your new ID is ' + userID);
+			};
+
+			function checkCookie(){
+				var userID = getCookie('rtgUID');
+				if (userID != ""){
+					console.log('User ' + usedID + ' is connected.');
+				} else {
+					console.log('New user connected. ID will be generated.');
+					generateUID();
+				};
 			};
 
 			function getCookie(cname){
@@ -46,14 +51,9 @@
 				return "";
 			};
 
-			function checkCookie(){
-				var userID = getCookie('rtgUID');
-				if (userID != ""){
-					console.log('User ' + usedID + ' is connected.');
-				} else {
-					console.log('New user connected. ID will be generated.');
-					generateUID();
-				};
+			function generateUID(){
+				socket.emit('generate UID');
+				console.log('generate UID request sent');
 			};
 
 			checkCookie();
