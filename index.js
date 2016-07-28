@@ -41,9 +41,8 @@ io.on('connection', function(socket){
 	socket.on('generate UID', function(){
 		console.log('generate UID request received');
 		//genUID();
-		var IDavailable = 0;
+		IDavailable = 0;
 		while (IDavailable != 1){
-			var attempts = 0;
 			for(var i=0; i < 5; i++){
 				async.parallel([genUID(), checkTakenIDs()], function(err, result) {
 					if (err) {
@@ -64,6 +63,8 @@ setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
 
 var valueReturned = false;
 var userID = "";
+var attempts = 0;
+var IDavailable = 0;
 
 function pausecomp(millis){
 	var date = new Date();
