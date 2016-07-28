@@ -22,7 +22,7 @@ const   fs				= require('fs'),
 					console.log(JSON.stringify(row));
 				});
 			client
-				.query('SELECT * FROM TakenIDs')
+				.query('SELECT * FROM TakenIDs;')
 				.on('row', function(row) {
 					console.log(JSON.stringify(row));
 				});
