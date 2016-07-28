@@ -10,6 +10,7 @@ const   fs				= require('fs'),
 		server.listen(app.get('port'), function() {
 			console.log('Node app is running on port', app.get('port'));
 		});
+		console.log(process.env.DATABASE_URL);
 		var pg = require('pg');
 		pg.defaults.ssl = true;
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
@@ -22,7 +23,7 @@ const   fs				= require('fs'),
 					console.log(JSON.stringify(row));
 				});
 			client
-				.query('SELECT * FROM TakenIDs;')
+				.query('SELECT * FROM "TakenIDs";')
 				.on('row', function(row) {
 					console.log(JSON.stringify(row));
 				});
