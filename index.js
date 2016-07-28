@@ -12,14 +12,21 @@ const   fs				= require('fs'),
 		});
 		var pg = require('pg');
 		pg.defaults.ssl = true;
-		var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/todo';
-		var client = new pg.Client(connectionString);
-		client.connect();
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err;
+			console.log('Connected to postgres. Getting schemas...');
 
-/*client.query('SELECT * FROM TakenIDs');
-client.on('row', function(row) {
-	console.log(JSON.stringify(row));
-});*/
+			client
+				.query('SELECT table_schema,table_name FROM information_schema.tables;')
+				.on('row', function(row) {
+					console.log(JSON.stringify(row));
+				});
+		});
+		/*var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/todo';
+		var client = new pg.Client(connectionString);
+		client.connect();*/
+
+/*client.query('SELECT * FROM TakenIDs');*/
 
 app.use(express.static(__dirname + '/static'));
 
