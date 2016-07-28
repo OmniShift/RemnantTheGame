@@ -35,15 +35,15 @@ app.get('/', function(request, response) {
   response.render('pages/index');
 });
 
-io.on('connection', function(socket){
+io.on('connection', function(socket) {
 	console.log('user connected');
 
-	socket.on('generate UID', function(){
+	socket.on('generate UID', function() {
 		console.log('generate UID request received');
 		//genUID();
 		IDavailable = 0;
-		while (IDavailable != 1){
-			for(var i=0; i < 5; i++){
+		while (IDavailable != 1) {
+			for(var i=0; i < 5; i++) {
 				async.parallel([genUID(callback), checkTakenIDs(callback)], function(err, result) {
 					if (err) {
 						console.log(err);
@@ -66,7 +66,7 @@ var userID = "";
 var attempts = 0;
 var IDavailable = 0;
 
-function pausecomp(millis){
+function pausecomp(millis) {
 	var date = new Date();
 	var curDate = null;
 
@@ -74,14 +74,14 @@ function pausecomp(millis){
 	while(curDate-date < millis);
 };
 
-function genUID(callback){
+var genUID = function(callback) {
 	var possibleChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	console.log('ID generation started');
 	//while (IDavailable != 1){
 		//for(var i=0; i < 5; i++){
 			//preventing the userID from growing 5 characters with each failed attempt
 			userID = "";
-			for(var j=0; j < 6; j++){
+			for(var j=0; j < 6; j++) {
 				userID += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
 			};
 			attempts = attempts+1;
@@ -95,18 +95,18 @@ function genUID(callback){
 		//};
 	//};
 };
-function checkTakenIDs(content1, content2, callback){
+var checkTakenIDs = function(content1, content2, callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client) {
 		if (err) throw err;
 		console.log('Connected to postgres.');
-		client.query("SELECT COUNT(*) FROM TakenIDs WHERE takenID='" + content1 + "'", function(err, data){
+		client.query("SELECT COUNT(*) FROM TakenIDs WHERE takenID='" + content1 + "'", function(err, data) {
 			console.log('query started');
 			if(err) {
 				throw new Error('Error querying for user ID.');
 				userID = "";
-			}else{
+			} else {
 				console.log('query passed');
-				if(data == 0){
+				if(data == 0) {
 					client.query("INSERT INTO TakenIDs ('IDname', 'IDtype') VALUES ('" + content1 + "', '" + content2 + "');");
 					//socket.emit('return generated UID', content1);
 					callback(null, 'new ID is ' + content1);
