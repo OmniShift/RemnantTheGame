@@ -43,6 +43,7 @@ io.on('connection', function(socket){
 		//genUID();
 		var IDavailable = 0;
 		while (IDavailable != 1){
+			var attempts = 0;
 			for(var i=0; i < 5; i++){
 				async.parallel([genUID(), checkTakenIDs()], function(err, result) {
 					if (err) {
@@ -50,9 +51,6 @@ io.on('connection', function(socket){
 						return;
 					};
 					console.log(result);
-					if (IDavailable = 1) {
-						//break;
-					};
 				});
 			};
 		};
@@ -85,7 +83,7 @@ function genUID(){
 			for(var j=0; j < 6; j++){
 				userID += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
 			};
-			var attempts = i+1;
+			attempts = attempts+1;
 			console.log('Attempt #' + attempts + ': new ID is ' + userID);
 			//checkTakenIDs(userID, 1);
 			//pausecomp(1000);
