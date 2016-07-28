@@ -21,6 +21,11 @@ const   fs				= require('fs'),
 				.on('row', function(row) {
 					console.log(JSON.stringify(row));
 				});
+			client
+				.query('SELECT * FROM TakenIDs')
+				.on('row', function(row) {
+					console.log(JSON.stringify(row));
+				});
 		});
 		/*var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/todo';
 		var client = new pg.Client(connectionString);
