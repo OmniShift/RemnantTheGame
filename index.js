@@ -104,7 +104,7 @@ var checkUIDs = function(callback) {
 		if (err) throw err;
 		console.log('Connected to postgres');
 		client
-			.query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + userID + '\';'
+			.query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + userID + '\';')
 			.on('row', function(err, data) {
 				console.log('Query started for ' + userID);
 				console.log(JSON.stringify(data) + ' matches');
@@ -135,7 +135,7 @@ var checkUIDs = function(callback) {
 						userID = '';
 					};
 				};
-			});
+			};
 		});
 	});
 };
