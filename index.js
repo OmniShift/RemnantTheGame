@@ -23,7 +23,7 @@ const   fs				= require('fs'),
 					console.log(JSON.stringify(row));
 				});
 			client
-				.query('SELECT COUNT("IDname") FROM "TakenIDs" WHERE "IDname"="'"AdmUsr"'";')
+				.query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'AdmUsr\';')
 				.on('row', function(row) {
 					console.log(JSON.stringify(row));
 				});
