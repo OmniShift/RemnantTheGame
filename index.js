@@ -89,7 +89,7 @@ var genUID = function(callback) {
 			};
 			attempts = attempts+1;
 			console.log('Attempt #' + attempts + ': checking for ID ' + userID);
-			callback(null, 'New ID is ' + userID);
+			//callback(null, 'New ID is ' + userID);
 			//checkTakenIDs(userID, 1);
 			//pausecomp(1000);
 			/*if(attempts == 5){
@@ -99,25 +99,25 @@ var genUID = function(callback) {
 		//};
 	//};
 };
-var checkTakenIDs = function(content1, content2, callback) {
+var checkTakenIDs = function(callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client) {
 		if (err) throw err;
 		console.log('Connected to postgres.');
-		client.query("SELECT COUNT(*) FROM 'TakenIDs' WHERE IDname='" + userID + "'", function(err, data) {
+		client.query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + userID + '\';', function(err, data) {
 			console.log('query started');
 			if(err) {
 				throw new Error('Error querying for user ID.');
-				userID = "";
+				userID = '';
 			} else {
 				console.log('query passed');
 				if(data == 0) {
-					client.query("INSERT INTO TakenIDs ('IDname', 'IDtype') VALUES ('" + content1 + "', '" + content2 + "');");
+					client.query('INSERT INTO "TakenIDs" (idname, idtype) VALUES (\'' + userID + '\', 1);');
 					//socket.emit('return generated UID', content1);
-					callback(null, 'new ID is ' + content1);
+					callback(null, 'new ID is ' + userID);
 					IDavailable = 1;
 				} else {
 					callback(null, 'ID not available. Retrying.');
-					userID = "";
+					userID = '';
 				};
 			};
 		});
