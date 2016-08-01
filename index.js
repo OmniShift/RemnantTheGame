@@ -111,12 +111,17 @@ var checkTakenIDs = function(callback) {
 			} else {
 				console.log('query passed');
 				if(data == 0) {
-					//console.log('inserting ' + userID = ' into database');
+					console.log('inserting ' + userID + ' into database');
 					client.query('INSERT INTO "TakenIDs" (idname, idtype) VALUES (\'' + userID + '\', 1);', function(err, data) {
 						if(err) {
 							throw new Error('Error inserting user ID ' + userID);
 						};
 					});
+					client
+						.query('SELECT * FROM "TakenIDs";')
+						.on('row', function(row) {
+							console.log(JSON.stringify(row));
+						});
 					//socket.emit('return generated UID', content1);
 					callback(null, 'new ID is ' + userID);
 					//IDavailable = 1;
