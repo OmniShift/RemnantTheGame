@@ -23,12 +23,12 @@ const   fs				= require('fs'),
 					console.log(JSON.stringify(row));
 				});
 			client
-				.query('SELECT COUNT(IDname) FROM "TakenIDs";')
+				.query('SELECT COUNT("IDname") FROM "TakenIDs" WHERE "IDname"="'"AdmUsr"'";')
 				.on('row', function(row) {
 					console.log(JSON.stringify(row));
 				});
 		});
- //WHERE IDname="AdmUsr"
+
 app.set('port', (process.env.PORT || 5000));
 server.listen(app.get('port'), function() {
 	console.log('Node app is running on port', app.get('port'));
