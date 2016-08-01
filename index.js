@@ -111,26 +111,26 @@ var checkUIDs = function(callback) {
 			} else {
 				console.log('Query passed');
 			};
-		});
-		if(callback == 0) {
-			console.log('User ID ' + userID + ' available. Inserting it into database');
-			client.query('INSERT INTO "TakenIDs" (idname, idtype) VALUES (\'' + userID + '\', 1);', function(err, data) {
-				if(err) {
-					throw new Error('Error inserting user ID ' + userID);
-				};
-			});
-			client
-				.query('SELECT * FROM "TakenIDs";')
-				.on('row', function(row) {
-					console.log(JSON.stringify(row));
+			if(callback == 0) {
+				console.log('User ID ' + userID + ' available. Inserting it into database');
+				client.query('INSERT INTO "TakenIDs" (idname, idtype) VALUES (\'' + userID + '\', 1);', function(err, data) {
+					if(err) {
+						throw new Error('Error inserting user ID ' + userID);
+					};
 				});
-			//socket.emit('return generated UID', content1);
-			callback(null, 'New ID is ' + userID);
-			//IDavailable = 1;
-		} else {
-			console.log('User ID ' + userID + ' not available. New attempt required');
-			callback(null, 'ID not available. New attempt required');
-			userID = '';
-		};
+				client
+					.query('SELECT * FROM "TakenIDs";')
+					.on('row', function(row) {
+						console.log(JSON.stringify(row));
+					});
+				//socket.emit('return generated UID', content1);
+				callback(null, 'New ID is ' + userID);
+				//IDavailable = 1;
+			} else {
+				console.log('User ID ' + userID + ' not available. New attempt required');
+				callback(null, 'ID not available. New attempt required');
+				userID = '';
+			};
+		});
 	});
 };
