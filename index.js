@@ -58,7 +58,7 @@ io.on('connection', function(socket) {
 		//};
 	});
 
-	socket.on('disconnect', function(){
+	socket.on('disconnect', function() {
 		console.log('User disconnected');
 	});
 });
@@ -79,8 +79,8 @@ function pausecomp(millis) {
 var genUID = function(callback) {
 	var possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 	console.log('ID generation started');
-	//while (IDavailable != 1){
-		//for(var i=0; i < 5; i++){
+	//while (IDavailable != 1) {
+		//for(var i=0; i < 5; i++) {
 			//preventing the userID from growing 5 characters with each failed attempt
 			userID = '';
 			for(var j=0; j < 6; j++) {
@@ -91,7 +91,7 @@ var genUID = function(callback) {
 			callback(null, 'Attempted ID: ' + userID);
 			//checkUIDs(userID, 1);
 			//pausecomp(1000);
-			/*if(attempts == 5){
+			/*if(attempts == 5) {
 				console.log('Query unsuccessful');
 				IDavailable = 1;
 			};*/
@@ -104,7 +104,7 @@ var checkUIDs = function(callback) {
 		console.log('Connected to postgres');
 		client.query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + userID + '\';', function(err, data) {
 			console.log('Query started for ' + userID);
-			console.log(data + ' matches');
+			console.log(JSON.stringify(data) + ' matches');
 			if(err) {
 				throw new Error('Error querying for user ID.');
 				userID = '';
