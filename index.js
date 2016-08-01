@@ -22,7 +22,7 @@ const   fs				= require('fs'),
 				.on('row', function(row) {
 					console.log(JSON.stringify(row));
 				});
-			console.log(client.query("SELECT COUNT(*) FROM 'TakenIDs' WHERE takenID='AdmUsr'"));
+			client.query("SELECT COUNT(*) FROM 'TakenIDs' WHERE takenID='AdmUsr'");
 		});
 
 app.set('port', (process.env.PORT || 5000));
