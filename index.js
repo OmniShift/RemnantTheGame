@@ -66,6 +66,7 @@ setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
 
 var userID = '';
 var attempts = 0;
+var hits = 0;
 //var IDavailable = 0;
 
 function pausecomp(millis) {
@@ -104,13 +105,14 @@ var checkUIDs = function(callback) {
 		console.log('Connected to postgres');
 		client.query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + userID + '\';', function(err, data) {
 			console.log('Query started for ' + userID);
-			console.log(JSON.stringify(data).substring(62, 63) + ' matches'); 62-63
+			hits = JSON.stringify(data).substring(62, 63);
+			console.log(hits + ' matches');
 			if(err) {
 				throw new Error('Error querying for user ID.');
 				userID = '';
 			} else {
 				console.log('Query passed');
-				if(data == 0) {
+				if(hits == 0) {
 					console.log('User ID ' + userID + ' available. Inserting it into database');
 					client.query('INSERT INTO "TakenIDs" (idname, idtype) VALUES (\'' + userID + '\', 1);', function(err, data) {
 						if(err) {
