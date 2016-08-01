@@ -102,16 +102,16 @@ var checkUIDs = function(callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client) {
 		if (err) throw err;
 		console.log('Connected to postgres');
-		client.query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + userID + '\';', function(err, callback) {
+		client.query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + userID + '\';', function(err, data) {
 			console.log('Query started for ' + userID);
-			console.log(callback + ' matches');
+			console.log(data + ' matches');
 			if(err) {
 				throw new Error('Error querying for user ID.');
 				userID = '';
 			} else {
 				console.log('Query passed');
 			};
-			if(callback == 0) {
+			if(data == 0) {
 				console.log('User ID ' + userID + ' available. Inserting it into database');
 				client.query('INSERT INTO "TakenIDs" (idname, idtype) VALUES (\'' + userID + '\', 1);', function(err, data) {
 					if(err) {
