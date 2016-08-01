@@ -22,7 +22,7 @@ const   fs				= require('fs'),
 				.on('row', function(row) {
 					console.log(JSON.stringify(row));
 				});
-			//client.query("SELECT COUNT(*) FROM 'TakenIDs' WHERE takenID='AdmUsr'");
+			console.log(client.query("SELECT COUNT(*) FROM 'TakenIDs' WHERE IDname='AdmUsr';"));
 		});
 
 app.set('port', (process.env.PORT || 5000));
@@ -99,7 +99,7 @@ var checkTakenIDs = function(content1, content2, callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client) {
 		if (err) throw err;
 		console.log('Connected to postgres.');
-		client.query("SELECT COUNT(*) FROM 'TakenIDs' WHERE takenID='" + userID + "'", function(err, data) {
+		client.query("SELECT COUNT(*) FROM 'TakenIDs' WHERE IDname='" + userID + "'", function(err, data) {
 			console.log('query started');
 			if(err) {
 				throw new Error('Error querying for user ID.');
