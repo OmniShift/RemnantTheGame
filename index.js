@@ -98,8 +98,43 @@ var genUID = function(callback) {
 		//};
 	//};
 };
-//client.query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + userID + '\';', function(err, data) {
 var checkUIDs = function(callback) {
+	pg.connect(process.env.DATABASE_URL, function(err, client) {
+		if (err) throw err;
+		console.log('Connected to postgres');
+		client.query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + userID + '\';', function(err, data) {
+			console.log('Query started for ' + userID);
+			console.log(JSON.stringify(data) + ' matches');
+			if(err) {
+				throw new Error('Error querying for user ID.');
+				userID = '';
+			} else {
+				console.log('Query passed');
+				if(data == 0) {
+					console.log('User ID ' + userID + ' available. Inserting it into database');
+					client.query('INSERT INTO "TakenIDs" (idname, idtype) VALUES (\'' + userID + '\', 1);', function(err, data) {
+						if(err) {
+							throw new Error('Error inserting user ID ' + userID);
+						};
+					});
+					client
+						.query('SELECT * FROM "TakenIDs";')
+						.on('row', function(row) {
+							console.log(JSON.stringify(row));
+						});
+					//socket.emit('return generated UID', content1);
+					callback(null, 'New ID is ' + userID);
+					//IDavailable = 1;
+				} else {
+					console.log('User ID ' + userID + ' not available. New attempt required');
+					callback(null, 'ID not available. New attempt required');
+					userID = '';
+				};
+			};
+		});
+	});
+};
+/*var checkUIDs = function(callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client) {
 		if (err) throw err;
 		console.log('Connected to postgres');
@@ -137,4 +172,4 @@ var checkUIDs = function(callback) {
 				};
 		});
 	});
-};
+};*/
