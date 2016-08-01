@@ -111,7 +111,7 @@ var checkTakenIDs = function(callback) {
 			} else {
 				console.log('query passed');
 				if(data == 0) {
-					console.log('inserting ' + userID = ' into database');
+					//console.log('inserting ' + userID = ' into database');
 					client.query('INSERT INTO "TakenIDs" (idname, idtype) VALUES (\'' + userID + '\', 1);', function(err, data) {
 						if(err) {
 							throw new Error('Error inserting user ID ' + userID);
