@@ -135,7 +135,6 @@ var checkUIDs = function(callback) {
 						userID = '';
 					};
 				};
-			};
 		});
 	});
 };
