@@ -105,6 +105,7 @@ var checkUserIDs = function(callback) {
 		console.log('Connected to postgres');
 		client.query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + userID + '\';', function(err, data) {
 			console.log('query started for ' + userID);
+			console.log(data + ' matches');
 			if(err) {
 				throw new Error('Error querying for user ID.');
 				userID = '';
