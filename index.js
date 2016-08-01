@@ -22,6 +22,7 @@ const   fs				= require('fs'),
 				.on('row', function(row) {
 					console.log(JSON.stringify(row));
 				});
+			console.log(client.query("SELECT COUNT(*) FROM 'TakenIDs' WHERE takenID='" + AdmUsr + "'"));
 		});
 
 app.set('port', (process.env.PORT || 5000));
@@ -83,7 +84,8 @@ var genUID = function(callback) {
 				userID += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
 			};
 			attempts = attempts+1;
-			callback(null, 'Attempt #' + attempts + ': new ID is ' + userID);
+			console.log('Attempt #' + attempts + ': checking for ID ' + userID);
+			callback(null, 'New ID is ' + userID);
 			//checkTakenIDs(userID, 1);
 			//pausecomp(1000);
 			/*if(attempts == 5){
@@ -97,7 +99,7 @@ var checkTakenIDs = function(content1, content2, callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client) {
 		if (err) throw err;
 		console.log('Connected to postgres.');
-		client.query("SELECT COUNT(*) FROM TakenIDs WHERE takenID='" + content1 + "'", function(err, data) {
+		client.query("SELECT COUNT(*) FROM 'TakenIDs' WHERE takenID='" + userID + "'", function(err, data) {
 			console.log('query started');
 			if(err) {
 				throw new Error('Error querying for user ID.');
