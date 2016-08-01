@@ -11,7 +11,7 @@
 	<script>
 		$(document).ready(function(){
 			var socket = io();
-			var el = document.getElementById('newsBoard');
+			var el = document.getElementById('serverTime');
 
 			socket.on('time', function(timeString) {
 				el.innerHTML = 'Server time: ' + timeString;
@@ -79,6 +79,7 @@
 					</tr>
 				</table>
 			</div>
+			<div id='serverTime' style='width:600px; height:2px; display:inline-block; background-color:black; text-align:center'></div>
 
 			<div style='text-align:center'><h1>Remnant - The Game</h1>
 			<h2>Show those pesky Remnantians who was meant to rule them</h2>
