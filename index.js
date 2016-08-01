@@ -104,12 +104,12 @@ var checkTakenIDs = function(callback) {
 		if (err) throw err;
 		console.log('Connected to postgres.');
 		client.query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + userID + '\';', function(err, data) {
-			console.log('query started');
+			console.log('query started for ' + userID);
 			if(err) {
 				throw new Error('Error querying for user ID.');
 				userID = '';
 			} else {
-				console.log('query passed');
+				console.log('query passed for ' + userID);
 				if(data == 0) {
 					client.query('INSERT INTO "TakenIDs" (idname, idtype) VALUES (\'' + userID + '\', 1);');
 					//socket.emit('return generated UID', content1);
