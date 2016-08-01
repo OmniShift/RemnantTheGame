@@ -48,7 +48,7 @@ io.on('connection', function(socket) {
 		//genUID();
 		IDavailable = 0;
 		//for(var i=0; i < 5; i++) {
-			async.parallel([genUID, checkTakenIDs], function(err, result) {
+			async.parallel([genUID, checkUserIDs], function(err, result) {
 				if (err) {
 					console.log(err);
 					return;
@@ -90,7 +90,7 @@ var genUID = function(callback) {
 			attempts = attempts+1;
 			console.log('Attempt #' + attempts + ': checking for ID ' + userID);
 			//callback(null, 'New ID is ' + userID);
-			//checkTakenIDs(userID, 1);
+			//checkUserIDs(userID, 1);
 			//pausecomp(1000);
 			/*if(attempts == 5){
 				console.log('Query unsuccessful');
@@ -99,10 +99,10 @@ var genUID = function(callback) {
 		//};
 	//};
 };
-var checkTakenIDs = function(callback) {
+var checkUserIDs = function(callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client) {
 		if (err) throw err;
-		console.log('Connected to postgres.');
+		console.log('Connected to postgres');
 		client.query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + userID + '\';', function(err, data) {
 			console.log('query started for ' + userID);
 			if(err) {
@@ -110,8 +110,8 @@ var checkTakenIDs = function(callback) {
 				userID = '';
 			} else {
 				console.log('query passed');
-				if(data == 0) {
-					console.log('inserting ' + userID + ' into database');
+				if(data === 0) {
+					console.log('User ID ' + userID + ' available. Inserting it into database');
 					client.query('INSERT INTO "TakenIDs" (idname, idtype) VALUES (\'' + userID + '\', 1);', function(err, data) {
 						if(err) {
 							throw new Error('Error inserting user ID ' + userID);
@@ -126,6 +126,7 @@ var checkTakenIDs = function(callback) {
 					callback(null, 'new ID is ' + userID);
 					//IDavailable = 1;
 				} else {
+					console.log('User ID ' + userID + ' not available. New attempt required');
 					callback(null, 'ID not available. Retrying.');
 					userID = '';
 				};
