@@ -41,7 +41,7 @@ io.on('connection', function(socket) {
 			.on('row', function(row) {
 				socket.emit('news', JSON.stringify(row));
 			});
-	};
+	});
 
 	socket.on('generate UID', function() {
 		console.log('Generate UID request received');
