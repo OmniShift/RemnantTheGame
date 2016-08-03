@@ -12,18 +12,8 @@ const   fs				= require('fs'),
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
 			console.log('Checking database connection.');
-			/*client
-				.query('SELECT table_schema,table_name FROM information_schema.tables;')
-				.on('row', function(row) {
-					console.log(JSON.stringify(row));
-				});*/
 			client
 				.query('SELECT * FROM "TakenIDs";')
-				.on('row', function(row) {
-					console.log(JSON.stringify(row));
-				});
-			client
-				.query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'AdmUsr\';')
 				.on('row', function(row) {
 					console.log(JSON.stringify(row));
 				});
@@ -45,7 +35,6 @@ io.on('connection', function(socket) {
 
 	socket.on('generate UID', function() {
 		console.log('Generate UID request received');
-		//genUID();
 		//IDavailable = 0;
 		//for(var i=0; i < 5; i++) {
 			async.parallel([genUID, checkUIDs], function(err, result) {
@@ -87,7 +76,6 @@ var genUID = function(callback) {
 			for(var j=0; j < 6; j++) {
 				userID += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
 			};
-			//attempts = attempts+1;
 			console.log('Checking for ID ' + userID);
 			callback(null, 'Attempted ID: ' + userID);
 			//checkUIDs(userID, 1);
@@ -103,9 +91,12 @@ var checkUIDs = function(callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client) {
 		if (err) throw err;
 		console.log('Connected to postgres');
-		client.query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + userID + '\';', function(err, data) {
+		client
+			.query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + userID + '\';')
+			.on('row', function(row) {
 			console.log('Query started for ' + userID);
-			hits = JSON.stringify(data).substring(62, 63);
+			hits = JSON.stringify(row)
+			//.substring(62, 63);
 			console.log(hits + ' matches');
 			if(err) {
 				throw new Error('Error querying for user ID.');
@@ -136,42 +127,3 @@ var checkUIDs = function(callback) {
 		});
 	});
 };
-/*var checkUIDs = function(callback) {
-	pg.connect(process.env.DATABASE_URL, function(err, client) {
-		if (err) throw err;
-		console.log('Connected to postgres');
-		client
-			.query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + userID + '\';')
-			.on('row', function(err, data) {
-				console.log('Query started for ' + userID);
-				console.log(JSON.stringify(data) + ' matches');
-				console.log(data["count"] + ' matches');
-				if(err) {
-					throw new Error('Error querying for user ID.');
-					userID = '';
-				} else {
-					console.log('Query passed');
-					if(data == 0) {
-						console.log('User ID ' + userID + ' available. Inserting it into database');
-						client.query('INSERT INTO "TakenIDs" (idname, idtype) VALUES (\'' + userID + '\', 1);', function(err, data) {
-							if(err) {
-								throw new Error('Error inserting user ID ' + userID);
-							};
-						});
-						client
-							.query('SELECT * FROM "TakenIDs";')
-							.on('row', function(row) {
-								console.log(JSON.stringify(row));
-							});
-						//socket.emit('return generated UID', content1);
-						callback(null, 'New ID is ' + userID);
-						//IDavailable = 1;
-					} else {
-						console.log('User ID ' + userID + ' not available. New attempt required');
-						callback(null, 'ID not available. New attempt required');
-						userID = '';
-					};
-				};
-		});
-	});
-};*/
