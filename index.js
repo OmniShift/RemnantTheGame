@@ -30,6 +30,13 @@ app.get('/', function(request, response) {
   response.render('pages/index');
 });
 
+function pausecomp(millis) {
+	var date = new Date();
+	var curDate = null;
+	do { curDate = new Date(); }
+	while(curDate-date < millis);
+};
+
 io.on('connection', function(socket) {
 	var userID = '';
 	var attempts = 0;
@@ -40,6 +47,7 @@ io.on('connection', function(socket) {
 			.query('SELECT newsdate,newscontent FROM "NewsFeed";')
 			.on('row', function(row) {
 				socket.emit('news', JSON.stringify(row));
+				pausecomp(200);
 			});
 	});
 
