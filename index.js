@@ -95,8 +95,7 @@ var checkUIDs = function(callback) {
 			.query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + userID + '\';')
 			.on('row', function(row) {
 			console.log('Query started for ' + userID);
-			hitSting = JSON.stringify(row)
-			hits = hitString.substring(10, (hitString.length - 2));
+			hits = JSON.stringify(row).substring(10, (JSON.stringify(row).length - 2));
 			console.log(hits + ' matches');
 			if(err) {
 				throw new Error('Error querying for user ID.');
