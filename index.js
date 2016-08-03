@@ -30,6 +30,10 @@ app.get('/', function(request, response) {
   response.render('pages/index');
 });
 
+var userID = '';
+var attempts = 0;
+var hits = 0;
+
 io.on('connection', function(socket) {
 	console.log('User connected');
 
@@ -49,10 +53,6 @@ io.on('connection', function(socket) {
 	});
 });
 setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
-
-var userID = '';
-var attempts = 0;
-var hits = 0;
 
 function pausecomp(millis) {
 	var date = new Date();
