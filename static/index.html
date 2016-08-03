@@ -19,10 +19,10 @@
 
 			//document.cookie = "rtgUID=AdmUsr; expires=Thu, 31 Dec 2026 12:00:00 GMT";
 
-			socket.on('return generated UID'), function(userID){
+			socket.on('return generated UID', function(userID){
 				document.cookie = 'rtgUID=' + userID + '; expires=Thu, 31 Dec 2026 12:00:00 GMT';
 				console.log('Your new ID is ' + userID);
-			};
+			});
 
 			function checkCookie(){
 				var userID = getCookie('rtgUID');

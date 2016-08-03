@@ -35,20 +35,17 @@ io.on('connection', function(socket) {
 
 	socket.on('generate UID', function() {
 		console.log('Generate UID request received');
-		//IDavailable = 0;
-		//for(var i=0; i < 5; i++) {
-			async.parallel([genUID, checkUIDs], function(err, result) {
-				if (err) {
-					console.log(err);
-					return;
-				};
-				console.log(result);
-			});
-		//};
+		async.parallel([genUID, checkUIDs], function(err, result) {
+			if (err) {
+				console.log(err);
+				return;
+			};
+			console.log(result);
+		});
 	});
 
 	socket.on('disconnect', function() {
-		console.log('User disconnected');
+		console.log('User ' + UserID + ' disconnected');
 	});
 });
 setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
@@ -56,12 +53,10 @@ setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
 var userID = '';
 var attempts = 0;
 var hits = 0;
-//var IDavailable = 0;
 
 function pausecomp(millis) {
 	var date = new Date();
 	var curDate = null;
-
 	do { curDate = new Date(); }
 	while(curDate-date < millis);
 };
@@ -69,23 +64,13 @@ function pausecomp(millis) {
 var genUID = function(callback) {
 	var possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 	console.log('ID generation started');
-	//while (IDavailable != 1) {
-		//for(var i=0; i < 5; i++) {
-			//preventing the userID from growing 5 characters with each failed attempt
-			userID = '';
-			for(var j=0; j < 6; j++) {
-				userID += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
-			};
-			console.log('Checking for ID ' + userID);
-			callback(null, 'Attempted ID: ' + userID);
-			//checkUIDs(userID, 1);
-			//pausecomp(1000);
-			/*if(attempts == 5) {
-				console.log('Query unsuccessful');
-				IDavailable = 1;
-			};*/
-		//};
-	//};
+	//preventing the userID from growing 5 characters with each failed attempt
+	userID = '';
+	for(var j=0; j < 6; j++) {
+		userID += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
+	};
+	console.log('Checking for ID ' + userID);
+	callback(null, 'Attempted ID: ' + userID);
 };
 var checkUIDs = function(callback) {
 	pg.connect(process.env.DATABASE_URL, function(err, client) {
@@ -109,14 +94,13 @@ var checkUIDs = function(callback) {
 							throw new Error('Error inserting user ID ' + userID);
 						};
 					});
-					client
+					/*client
 						.query('SELECT * FROM "TakenIDs";')
 						.on('row', function(row) {
 							console.log(JSON.stringify(row));
-						});
-					//socket.emit('return generated UID', content1);
-					callback(null, 'New ID is ' + userID);
-					//IDavailable = 1;
+						});*/
+					socket.emit('return generated UID', userID);
+					callback(null, 'ID successfully assigned');
 				} else {
 					console.log('User ID ' + userID + ' not available. New attempt required');
 					callback(null, 'ID not available. New attempt required');
