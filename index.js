@@ -49,7 +49,8 @@ io.on('connection', function(socket) {
 	});
 
 	socket.on('disconnect', function() {
-		console.log('User ' + UserID + ' disconnected');
+		//console.log('User ' + UserID + ' disconnected');
+		console.log('User disconnected');
 	});
 
 	setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
