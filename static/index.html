@@ -27,7 +27,7 @@
 
 			function checkCookie(){
 				var localUserID = getCookie('rtgUID');
-				console.log('Your userID is ' + getCookie('rtgUID'));
+				console.log('Your userID is ' + localUserID);
 				if (localUserID != ''){
 					console.log('User ' + usedID + ' is connected.');
 				} else {
@@ -37,6 +37,7 @@
 			};
 
 			function getCookie(cname){
+				/*console.log(document.cookie);
 				var name = cname = '=';
 				var ca = document.cookie.split(';');
 				for (var i = 0; i < ca.length; i++){
@@ -50,7 +51,7 @@
 					};
 				};
 				console.log('no UID found');
-				return '';
+				return '';*/
 			};
 
 			function generateUID(){
