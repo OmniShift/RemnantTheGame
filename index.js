@@ -44,9 +44,9 @@ io.on('connection', function(socket) {
 	console.log('User connected');
 	pg.connect(process.env.DATABASE_URL, function(err, client) {
 		client
-			.query('SELECT newsdate,newscontent FROM "NewsFeed";')
+			.query('SELECT * FROM "NewsFeed";')
 			.on('row', function(row) {
-				socket.emit('news', JSON.stringify(row));
+				socket.emit('news', JSON.stringify(row).substring(JSON.stringify(row).search(','), JSON.stringify(row).length));
 				pausecomp(200);
 			});
 	});
