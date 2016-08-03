@@ -51,62 +51,63 @@ io.on('connection', function(socket) {
 	socket.on('disconnect', function() {
 		console.log('User ' + UserID + ' disconnected');
 	});
-});
-setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
+	
+	setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
 
-function pausecomp(millis) {
-	var date = new Date();
-	var curDate = null;
-	do { curDate = new Date(); }
-	while(curDate-date < millis);
-};
-
-var genUID = function(callback) {
-	var possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-	console.log('ID generation started');
-	//preventing the userID from growing 5 characters with each failed attempt
-	userID = '';
-	for(var j=0; j < 6; j++) {
-		userID += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
+	function pausecomp(millis) {
+		var date = new Date();
+		var curDate = null;
+		do { curDate = new Date(); }
+		while(curDate-date < millis);
 	};
-	console.log('Checking for ID ' + userID);
-	callback(null, 'Attempted ID: ' + userID);
-};
-var checkUIDs = function(callback) {
-	pg.connect(process.env.DATABASE_URL, function(err, client) {
-		if (err) throw err;
-		console.log('Connected to postgres');
-		client
-			.query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + userID + '\';')
-			.on('row', function(row) {
-			console.log('Query started for ' + userID);
-			hits = JSON.stringify(row).substring(10, (JSON.stringify(row).length - 2));
-			console.log(hits + ' matches');
-			if(err) {
-				throw new Error('Error querying for user ID.');
-				userID = '';
-			} else {
-				console.log('Query passed');
-				if(hits == 0) {
-					console.log('User ID ' + userID + ' available. Inserting it into database');
-					client.query('INSERT INTO "TakenIDs" (idname, idtype) VALUES (\'' + userID + '\', 1);', function(err, data) {
-						if(err) {
-							throw new Error('Error inserting user ID ' + userID);
-						};
-					});
-					/*client
-						.query('SELECT * FROM "TakenIDs";')
-						.on('row', function(row) {
-							console.log(JSON.stringify(row));
-						});*/
-					socket.emit('return generated UID', userID);
-					callback(null, 'ID successfully assigned');
-				} else {
-					console.log('User ID ' + userID + ' not available. New attempt required');
-					callback(null, 'ID not available. New attempt required');
+
+	var genUID = function(callback) {
+		var possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+		console.log('ID generation started');
+		//preventing the userID from growing 5 characters with each failed attempt
+		userID = '';
+		for(var j=0; j < 6; j++) {
+			userID += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
+		};
+		console.log('Checking for ID ' + userID);
+		callback(null, 'Attempted ID: ' + userID);
+	};
+	var checkUIDs = function(callback) {
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err;
+			console.log('Connected to postgres');
+			client
+				.query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + userID + '\';')
+				.on('row', function(row) {
+				console.log('Query started for ' + userID);
+				hits = JSON.stringify(row).substring(10, (JSON.stringify(row).length - 2));
+				console.log(hits + ' matches');
+				if(err) {
+					throw new Error('Error querying for user ID.');
 					userID = '';
+				} else {
+					console.log('Query passed');
+					if(hits == 0) {
+						console.log('User ID ' + userID + ' available. Inserting it into database');
+						client.query('INSERT INTO "TakenIDs" (idname, idtype) VALUES (\'' + userID + '\', 1);', function(err, data) {
+							if(err) {
+								throw new Error('Error inserting user ID ' + userID);
+							};
+						});
+						/*client
+							.query('SELECT * FROM "TakenIDs";')
+							.on('row', function(row) {
+								console.log(JSON.stringify(row));
+							});*/
+						socket.emit('return generated UID', userID);
+						callback(null, 'ID successfully assigned');
+					} else {
+						console.log('User ID ' + userID + ' not available. New attempt required');
+						callback(null, 'ID not available. New attempt required');
+						userID = '';
+					};
 				};
-			};
+			});
 		});
-	});
-};
+	};
+});
