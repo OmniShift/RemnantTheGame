@@ -30,11 +30,11 @@ app.get('/', function(request, response) {
   response.render('pages/index');
 });
 
-var userID = '';
-var attempts = 0;
-var hits = 0;
-
 io.on('connection', function(socket) {
+
+	var userID = '';
+	var attempts = 0;
+	var hits = 0;
 	console.log('User connected');
 
 	socket.on('generate UID', function() {
@@ -51,7 +51,7 @@ io.on('connection', function(socket) {
 	socket.on('disconnect', function() {
 		console.log('User ' + UserID + ' disconnected');
 	});
-	
+
 	setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
 
 	function pausecomp(millis) {
