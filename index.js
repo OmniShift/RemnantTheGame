@@ -35,11 +35,13 @@ io.on('connection', function(socket) {
 	var attempts = 0;
 	var hits = 0;
 	console.log('User connected');
-	client
-		.query('SELECT newsdate,newscontent FROM "NewsFeed";')
-		.on('row', function(row) {
-			socket.emit('news', JSON.stringify(row));
-		});
+	pg.connect(process.env.DATABASE_URL, function(err, client) {
+		client
+			.query('SELECT newsdate,newscontent FROM "NewsFeed";')
+			.on('row', function(row) {
+				socket.emit('news', JSON.stringify(row));
+			});
+	};
 
 	socket.on('generate UID', function() {
 		console.log('Generate UID request received');
