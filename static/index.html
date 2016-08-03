@@ -22,11 +22,13 @@
 			socket.on('return generated UID', function(userID){
 				document.cookie = 'rtgUID=' + userID + '; expires=Thu, 31 Dec 2026 12:00:00 GMT';
 				console.log('Your new ID is ' + userID);
+				console.log('Your new ID is ' + getCookie('rtgUID'));
 			});
 
 			function checkCookie(){
-				var userID = getCookie('rtgUID');
-				if (userID != ''){
+				var localUserID = getCookie('rtgUID');
+				console.log('Your userID is ' + getCookie('rtgUID'));
+				if (localUserID != ''){
 					console.log('User ' + usedID + ' is connected.');
 				} else {
 					console.log('New user connected. ID will be generated.');
