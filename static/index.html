@@ -26,7 +26,7 @@
 			});
 
 			function checkCookie(){
-				var localUserID = getCookie('rtgUID');
+				var localUserID = getCookie('rtgUID', 6);
 				console.log('Your userID is ' + localUserID);
 				if (localUserID != ''){
 					console.log('User ' + localUsedID + ' is connected.');
@@ -36,9 +36,9 @@
 				};
 			};
 
-			function getCookie(cname){
-				console.log(document.cookie.substring(document.cookie.search(cname), (document.cookie.search(cname) + cname.length)));
-				return document.cookie.substring(document.cookie.search(cname), (document.cookie.search(cname) + cname.length));
+			function getCookie(cname, cvallength){
+				console.log(document.cookie.substring(document.cookie.search(cname) + cname.length + 1, (ocument.cookie.search(cname) + cname.length + 1 + cvallength)));
+				return document.cookie.substring(document.cookie.search(cname) + cname.length + 1, (ocument.cookie.search(cname) + cname.length + 1 + cvallength));
 				/*console.log(document.cookie);
 				var name = cname = '=';
 				var ca = document.cookie.split(';');
