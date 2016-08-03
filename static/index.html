@@ -19,12 +19,13 @@
 				el.innerHTML = 'Server time: ' + timeString;
 			});
 			socket.on('news', function(newsObject) {
+				console.log(newsObject);
 				newsDate = newsObject.substring((newsObject.search('newsdate') + 11), (newsObject.search(',') - 1));
 				newsContent = newsObject.substring((newsObject.search('newscontent') + 14), (newsObject.length - 2));
 				$('<tr></tr>').append('<td class=\'newsTime\'>' + newsDate + '</td><td class=\'newsContent\'>' + newsContent + '</td>').prependTo('#newsTable');
 			});
 
-			document.cookie = "rtgUID=AdmUsr; expires=Thu, 31 Dec 2026 12:00:00 GMT";
+			//document.cookie = "rtgUID=AdmUsr; expires=Thu, 31 Dec 2026 12:00:00 GMT";
 
 			socket.on('return generated UID', function(userID) {
 				document.cookie = 'rtgUID=' + userID + '; expires=Thu, 31 Dec 2026 12:00:00 GMT';
