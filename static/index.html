@@ -9,54 +9,40 @@
 	<script src='/socket.io/socket.io.js'></script>
 	<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js'></script>
 	<script>
-		$(document).ready(function(){
+		$(document).ready(function() {
 			var socket = io();
 			var el = document.getElementById('serverTime');
+			var newsDate = '';
+			var newsContent = '';
 
 			socket.on('time', function(timeString) {
 				el.innerHTML = 'Server time: ' + timeString;
 			});
-
-			//document.cookie = "rtgUID=AdmUsr; expires=Thu, 31 Dec 2026 12:00:00 GMT";
-
-			socket.on('return generated UID', function(userID){
-				document.cookie = 'rtgUID=' + userID + '; expires=Thu, 31 Dec 2026 12:00:00 GMT';
-				console.log('Your new ID is ' + userID);
-				console.log('Your new ID is ' + getCookie('rtgUID'));
+			socket.on('news', function(newsObject) {
+				newsDate = newsObject.substring((newsObject.search('newsdate') + 11), (newsObject.search(',') - 1));
+				newsContent = newsObject.substring((newsObject.search('newscontent') + 14), (newsObject.length - 2));
+				$('<tr></tr>').append('<td class=\'newsTime\'>' + newsDate + '</td><td class=\'newsContent\'>' + newsContent + '</td>').prependTo('#newsTable');
 			});
 
-			function checkCookie(){
+			document.cookie = "rtgUID=AdmUsr; expires=Thu, 31 Dec 2026 12:00:00 GMT";
+
+			socket.on('return generated UID', function(userID) {
+				document.cookie = 'rtgUID=' + userID + '; expires=Thu, 31 Dec 2026 12:00:00 GMT';
+				console.log('Your new ID is ' + getCookie('rtgUID', 6));
+			});
+			function checkCookie() {
 				var localUserID = getCookie('rtgUID', 6);
-				console.log('Your userID is ' + localUserID);
-				if (localUserID != ''){
+				if (localUserID != '') {
 					console.log('User ' + localUserID + ' is connected.');
 				} else {
 					console.log('New user connected. ID will be generated.');
 					generateUID();
 				};
 			};
-
-			function getCookie(cname, cvallength){
-				console.log(document.cookie.substring(document.cookie.search(cname) + cname.length + 1, (document.cookie.search(cname) + cname.length + 1 + cvallength)));
+			function getCookie(cname, cvallength) {
 				return document.cookie.substring(document.cookie.search(cname) + cname.length + 1, (document.cookie.search(cname) + cname.length + 1 + cvallength));
-				/*console.log(document.cookie);
-				var name = cname = '=';
-				var ca = document.cookie.split(';');
-				for (var i = 0; i < ca.length; i++){
-					var c = ca[i];
-					while (c.charAt(0) == ' '){
-						c = c.substring(1);
-					};
-					if (c.indexOf(name) == 0 ){
-						console.log(c.substring(name.length,c.length));
-						return c.substring(name.length,c.length);
-					};
-				};
-				console.log('no UID found');
-				return '';*/
 			};
-
-			function generateUID(){
+			function generateUID() {
 				socket.emit('generate UID');
 				console.log('generate UID request sent');
 			};
@@ -153,7 +139,7 @@
 			function testFunc() {
 				window.location.href = '/test.php';
 			};
-			function toTestersPage(){
+			function toTestersPage() {
 				window.location.href = '/setTesters.html';
 			};
 

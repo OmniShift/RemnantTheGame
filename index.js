@@ -31,11 +31,15 @@ app.get('/', function(request, response) {
 });
 
 io.on('connection', function(socket) {
-
 	var userID = '';
 	var attempts = 0;
 	var hits = 0;
 	console.log('User connected');
+	client
+		.query('SELECT newsdate,newscontent FROM "NewsFeed";')
+		.on('row', function(row) {
+			socket.emit('news', JSON.stringify(row));
+		});
 
 	socket.on('generate UID', function() {
 		console.log('Generate UID request received');
@@ -80,35 +84,35 @@ io.on('connection', function(socket) {
 			client
 				.query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + userID + '\';')
 				.on('row', function(row) {
-				console.log('Query started for ' + userID);
-				hits = JSON.stringify(row).substring(10, (JSON.stringify(row).length - 2));
-				console.log(hits + ' matches');
-				if(err) {
-					throw new Error('Error querying for user ID.');
-					userID = '';
-				} else {
-					console.log('Query passed');
-					if(hits == 0) {
-						console.log('User ID ' + userID + ' available. Inserting it into database');
-						client.query('INSERT INTO "TakenIDs" (idname, idtype) VALUES (\'' + userID + '\', 1);', function(err, data) {
-							if(err) {
-								throw new Error('Error inserting user ID ' + userID);
-							};
-						});
-						/*client
-							.query('SELECT * FROM "TakenIDs";')
-							.on('row', function(row) {
-								console.log(JSON.stringify(row));
-							});*/
-						socket.emit('return generated UID', userID);
-						callback(null, 'ID successfully assigned');
-					} else {
-						console.log('User ID ' + userID + ' not available. New attempt required');
-						callback(null, 'ID not available. New attempt required');
+					console.log('Query started for ' + userID);
+					hits = JSON.stringify(row).substring(10, (JSON.stringify(row).length - 2));
+					console.log(hits + ' matches');
+					if(err) {
+						throw new Error('Error querying for user ID.');
 						userID = '';
+					} else {
+						console.log('Query passed');
+						if(hits == 0) {
+							console.log('User ID ' + userID + ' available. Inserting it into database');
+							client.query('INSERT INTO "TakenIDs" (idname, idtype) VALUES (\'' + userID + '\', 1);', function(err, data) {
+								if(err) {
+									throw new Error('Error inserting user ID ' + userID);
+								};
+							});
+							/*client
+								.query('SELECT * FROM "TakenIDs";')
+								.on('row', function(row) {
+									console.log(JSON.stringify(row));
+								});*/
+							socket.emit('return generated UID', userID);
+							callback(null, 'ID successfully assigned');
+						} else {
+							console.log('User ID ' + userID + ' not available. New attempt required');
+							callback(null, 'ID not available. New attempt required');
+							userID = '';
+						};
 					};
-				};
-			});
+				});
 		});
 	};
 });
