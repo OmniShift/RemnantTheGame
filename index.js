@@ -42,12 +42,19 @@ io.on('connection', function(socket) {
 	var attempts = 0;
 	var hits = 0;
 	console.log('User connected');
+	/*pg.connect(process.env.DATABASE_URL, function(err, client) {
+		client
+			.query('SELECT newsdate,newscontent FROM "NewsFeed";')
+			.on('row', function(row) {
+				socket.emit('news', JSON.stringify(row));
+				pausecomp(200);
+			});
+	});*/
 	pg.connect(process.env.DATABASE_URL, function(err, client) {
 		client
-			.query('SELECT * FROM "NewsFeed";')
+			.query('SELECT * FROM "NewsFeed" ORDER BY newsid;')
 			.on('row', function(row) {
-				socket.emit('news', JSON.stringify(row).substring(JSON.stringify(row).search(','), JSON.stringify(row).length));
-				pausecomp(200);
+				socket.emit('news', JSON.stringify(row).substring((JSON.stringify(row).search(',') + 1), JSON.stringify(row).length));
 			});
 	});
 
