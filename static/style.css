@@ -101,11 +101,18 @@ button {
 	margin-left: -9%;
 }
 
-#lobby {
-	width: 24%;
-	height: 16%;
-	margin-top: -6%;
-	margin-left: -12%;
+#hostLobby {
+	width: 30%;
+	height: 30%;
+	margin-top: -15%;
+	margin-left: -15%;
+}
+
+#clientLobby {
+	width: 30%;
+	height: 30%;
+	margin-top: -15%;
+	margin-left: -15%;
 }
 
 .popUp {
