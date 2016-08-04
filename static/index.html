@@ -159,6 +159,9 @@
 				document.getElementById('hostLobby').value = gameRoomID;
 				showHostLobby();
 			});
+			function getCookie(cname, cvallength) {
+				return document.cookie.substring(document.cookie.search(cname) + cname.length + 1, (document.cookie.search(cname) + cname.length + 1 + cvallength));
+			};
 
 			function testFunc() {
 				window.location.href = '/test.php';
