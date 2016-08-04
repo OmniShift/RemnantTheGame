@@ -140,6 +140,10 @@
 				</div>
 				<div class='popUpBottom'>
 					<p style='font-size:1.2em'>Room code: <input id='givenRoomCode' type='text' name='roomCode' readonly></p>
+					<div class='lobbyPlayerSlot' id='lobbySlot1'><form><input id='commName1' type='text' name='commanderName1' hidden=''><select name='kingdomPref1'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select><button>V</button><button disabled=''>X</button></form></div><BR>
+					<div class='lobbyPlayerSlot' id='lobbySlot2'>Waiting for 2nd player...<form><input id='commName2' type='text' name='commanderName2' hidden=''><select name='kingdomPref2'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select><button>V</button><button disabled=''>X</button></form></div><BR>
+					<div class='lobbyPlayerSlot' id='lobbySlot3'>Waiting for 3rd player...<form><input id='commName3' type='text' name='commanderName3' hidden=''><select name='kingdomPref3'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select><button>V</button><button disabled=''>X</button></form></div><BR>
+					<div class='lobbyPlayerSlot' id='lobbySlot4'>Waiting for 4th player...<form><input id='commName4' type='text' name='commanderName4' hidden=''><select name='kingdomPref4'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select><button>V</button><button disabled=''>X</button></form></div><BR>
 					<button id='startGameButton' onclick='roomCodeCheck()' disabled=''>Start game</button>
 					<button onclick='hideJoinNewGame()'>Cancel</button>
 				</div>
@@ -155,8 +159,8 @@
 			};
 			socket.on('return generated GRID', function(gameRoomID) {
 				document.cookie = 'rtgLastGame=' + gameRoomID + '; expires=Thu, 31 Dec 2026 12:00:00 GMT';
-				console.log('Your new ID is ' + getCookie('rtgLastGame', 5));
-				document.getElementById('hostLobby').value = gameRoomID;
+				console.log('Your room code is ' + getCookie('rtgLastGame', 5));
+				document.getElementById('givenRoomCode').value = gameRoomID;
 				showHostLobby();
 			});
 			function getCookie(cname, cvallength) {

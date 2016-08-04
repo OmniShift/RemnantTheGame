@@ -13,7 +13,7 @@ const   fs				= require('fs'),
 			if (err) throw err;
 			console.log('Checking database connection.');
 			client
-			 .query('SELECT * FROM "TakenIDs";')
+			 .query('SELECT * FROM "TakenIDs" ORDER BY idtype, idname;')
 			 .on('row', function(row) {
 				console.log(JSON.stringify(row));
 			});
