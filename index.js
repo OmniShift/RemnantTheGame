@@ -45,7 +45,7 @@ io.on('connection', function(socket) {
 		userID = UID;
 		console.log('User ' + UID + ' connected');
 	});
-	
+
 	socket.on('news request', function() {
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 		client
@@ -68,7 +68,7 @@ io.on('connection', function(socket) {
 	});
 
 	socket.on('disconnect', function() {
-		console.log('User ' + UserID + ' disconnected');
+		console.log('User ' + userID + ' disconnected');
 		console.log('User disconnected');
 	});
 
