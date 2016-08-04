@@ -41,14 +41,20 @@ io.on('connection', function(socket) {
 	var userID = '';
 	var attempts = 0;
 	var hits = 0;
-	console.log('User connected');
-	pg.connect(process.env.DATABASE_URL, function(err, client) {
+	socket.on('existing user connection', function(UID) {
+		userID = UID;
+		console.log('User ' + UID + ' connected');
+	});
+	
+	socket.on('news request', function() {
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
 		client
 			.query('SELECT * FROM "NewsFeed" ORDER BY newsid;')
 			.on('row', function(row) {
 				socket.emit('news', JSON.stringify(row).substring((JSON.stringify(row).search(',') + 1), JSON.stringify(row).length));
 			});
-	});
+		});
+	})
 
 	socket.on('generate UID', function() {
 		console.log('Generate UID request received');
@@ -62,7 +68,7 @@ io.on('connection', function(socket) {
 	});
 
 	socket.on('disconnect', function() {
-		//console.log('User ' + UserID + ' disconnected');
+		console.log('User ' + UserID + ' disconnected');
 		console.log('User disconnected');
 	});
 

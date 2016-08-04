@@ -18,23 +18,24 @@
 			socket.on('time', function(timeString) {
 				el.innerHTML = 'Server time: ' + timeString;
 			});
+			socket.emit('news request');
 			socket.on('news', function(newsObject) {
-				console.log(newsObject);
 				newsDate = newsObject.substring((newsObject.search('newsdate') + 11), (newsObject.search(',') - 1));
 				newsContent = newsObject.substring((newsObject.search('newscontent') + 14), (newsObject.length - 2));
 				$('<tr></tr>').append('<td class=\'newsTime\'>' + newsDate + '</td><td class=\'newsContent\'>' + newsContent + '</td>').prependTo('#newsTable');
 			});
 
+			//UserID is checked or generates
 			//document.cookie = "rtgUID=AdmUsr; expires=Thu, 31 Dec 2026 12:00:00 GMT";
-
 			socket.on('return generated UID', function(userID) {
 				document.cookie = 'rtgUID=' + userID + '; expires=Thu, 31 Dec 2026 12:00:00 GMT';
 				console.log('Your new ID is ' + getCookie('rtgUID', 6));
 			});
 			function checkCookie() {
-				var localUserID = getCookie('rtgUID', 6);
-				if (localUserID != '') {
-					console.log('User ' + localUserID + ' is connected.');
+				var userID = getCookie('rtgUID', 6);
+				if (userID != '') {
+					console.log('User ' + userID + ' is connected.');
+					socket.emit('existing user connection', userID);
 				} else {
 					console.log('New user connected. ID will be generated.');
 					generateUID();
@@ -47,7 +48,6 @@
 				socket.emit('generate UID');
 				console.log('generate UID request sent');
 			};
-
 			checkCookie();
 		});
 	</script>
