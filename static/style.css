@@ -101,6 +101,13 @@ button {
 	margin-left: -9%;
 }
 
+#lobby {
+	width: 24%;
+	height: 16%;
+	margin-top: -6%;
+	margin-left: -12%;
+}
+
 .popUp {
 	position: fixed;
 	top: 50%;

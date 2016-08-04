@@ -27,10 +27,6 @@
 
 			//UserID is checked or generates
 			//document.cookie = "rtgUID=AdmUsr; expires=Thu, 31 Dec 2026 12:00:00 GMT";
-			socket.on('return generated UID', function(userID) {
-				document.cookie = 'rtgUID=' + userID + '; expires=Thu, 31 Dec 2026 12:00:00 GMT';
-				console.log('Your new ID is ' + getCookie('rtgUID', 6));
-			});
 			function checkCookie() {
 				var userID = getCookie('rtgUID', 6);
 				if (userID != '') {
@@ -48,7 +44,22 @@
 				socket.emit('generate UID');
 				console.log('generate UID request sent');
 			};
+			socket.on('return generated UID', function(userID) {
+				document.cookie = 'rtgUID=' + userID + '; expires=Thu, 31 Dec 2026 12:00:00 GMT';
+				console.log('Your new ID is ' + getCookie('rtgUID', 6));
+			});
 			checkCookie();
+
+			function generateGRID() {
+				socket.emit('generate GRID');
+				console.log('generate GRID request sent');
+			};
+			socket.on('return generated GRID', function(gameRoomID) {
+				document.cookie = 'rtgLastGame=' + gameRoomID + '; expires=Thu, 31 Dec 2026 12:00:00 GMT';
+				console.log('Your new ID is ' + getCookie('rtgLastGame', 5));
+				document.getElementById('hostLobby').value = gameRoomID;
+				showHostLobby();
+			});
 		});
 	</script>
 	<body>
@@ -78,8 +89,8 @@
 			<button id='createJoinButton' onclick='newGameWarning()'>Create/Join New Game</button><BR>
 			<button id='continueGameButton' onclick='continueGame()' disabled=''>Continue Game</button><BR>
 			<button id='testerIDButton' onclick='toTestersPage()'>To Testers Page</button><BR>
-			<button onclick='testFunc()'>php test</button><BR>
-			<!--<button onclick="showNewGameSettings()">test button 2</button></div>-->
+			<!--<button onclick='testFunc()'>php test</button><BR>
+			<button onclick="showNewGameSettings()">test button 2</button></div>-->
 
 			<div class='popUp' id='newGameSettings'>
 				<div class='popUpTop' style='text-align:center'><div style='font-weight:bold; font-size:1.7em; padding:7px'>New game</div>
@@ -105,7 +116,7 @@
 				</div>
 				<BR>-->
 				<div class='popUpBottom'>
-					<button onclick='goToLobby()'>Create</button>
+					<button onclick='createLobby()'>Create</button>
 					<button onclick='hideNewGameSettings()'>Cancel</button>
 				</div>
 			</div>
@@ -130,6 +141,17 @@
 					<p style='font-size:1.2em'>Please insert your room code:<BR>
 					<input id='roomCode' type='text' name='roomCode' autocomplete='off'></p>
 					<button onclick='roomCodeCheck()'>Join game</button>
+					<button onclick='hideJoinNewGame()'>Cancel</button>
+				</div>
+			</div>
+
+			<div class='popUp' id='hostLobby'>
+				<div class='popUpTop' style='text-align:center'>
+					<div style='font-weight:bold; font-size:1.7em; padding:7px'>Lobby</div>
+				</div>
+				<div class='popUpBottom'>
+					<p style='font-size:1.2em'>Room code: <input id='givenRoomCode' type='text' name='roomCode' readonly></p>
+					<button id='startGameButton' onclick='roomCodeCheck()' disabled=''>Start game</button>
 					<button onclick='hideJoinNewGame()'>Cancel</button>
 				</div>
 			</div>
@@ -159,6 +181,16 @@
 				document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
 				document.getElementById('createJoinButton').disabled = false;
 			};
+			function hideHostLobby() {
+				document.getElementById('hostLobby').style.visibility = 'hidden';
+				document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
+				document.getElementById('createJoinButton').disabled = false;
+			};
+			function hideClientLobby() {
+				document.getElementById('clientLobby').style.visibility = 'hidden';
+				document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
+				document.getElementById('createJoinButton').disabled = false;
+			};
 			function showAYSPrompt() {
 				document.getElementById('AYSprompt').style.visibility = 'visible';
 				document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.5)';
@@ -171,6 +203,16 @@
 			};
 			function showJoinNewGame() {
 				document.getElementById('joinNewGame').style.visibility = 'visible';
+				document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.5)';
+				document.getElementById('createJoinButton').disabled = true;
+			};
+			function showHostLobby() {
+				document.getElementById('hostLobby').style.visibility = 'visible';
+				document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.5)';
+				document.getElementById('createJoinButton').disabled = true;
+			};
+			function showClientLobby() {
+				document.getElementById('clientLobby').style.visibility = 'visible';
 				document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.5)';
 				document.getElementById('createJoinButton').disabled = true;
 			};
@@ -207,18 +249,22 @@
 			};
 
 			function roomCodeCheck() {
-				if (document.getElementById('roomCode').value === 'TESTroom') {
+				if (document.getElementById('roomCode').value === 'TESTr') {
 					console.log('Room code accepted for testing purposes.');
-					goToLobby();
+					joinLobby();
 					//Insert lobby code here
 				} else {
 					alert('Room code not found. Please check for spelling errors.');
 				};
 			};
 
-			function goToLobby() {
-				hideNewGameSettings();
+			function joinLobby() {
 				hideJoinNewGame();
+				showClientLobby();
+			};
+			function createLobby() {
+				hideNewGameSettings();
+				generateGRID();
 			};
 
 			hideAYSPrompt();

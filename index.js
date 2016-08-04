@@ -13,10 +13,10 @@ const   fs				= require('fs'),
 			if (err) throw err;
 			console.log('Checking database connection.');
 			client
-				.query('SELECT * FROM "TakenIDs";')
-				.on('row', function(row) {
-					console.log(JSON.stringify(row));
-				});
+			 .query('SELECT * FROM "TakenIDs";')
+			 .on('row', function(row) {
+				console.log(JSON.stringify(row));
+			});
 		});
 
 app.set('port', (process.env.PORT || 5000));
@@ -39,6 +39,7 @@ function pausecomp(millis) {
 
 io.on('connection', function(socket) {
 	var userID = '';
+	var gameRoomID = '';
 	var attempts = 0;
 	var hits = 0;
 	socket.on('existing user connection', function(UID) {
@@ -48,13 +49,13 @@ io.on('connection', function(socket) {
 
 	socket.on('news request', function() {
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
-		client
-			.query('SELECT * FROM "NewsFeed" ORDER BY newsid;')
-			.on('row', function(row) {
+			client
+			 .query('SELECT * FROM "NewsFeed" ORDER BY newsid;')
+			 .on('row', function(row) {
 				socket.emit('news', JSON.stringify(row).substring((JSON.stringify(row).search(',') + 1), JSON.stringify(row).length));
 			});
 		});
-	})
+	});
 
 	socket.on('generate UID', function() {
 		console.log('Generate UID request received');
@@ -66,20 +67,29 @@ io.on('connection', function(socket) {
 			console.log(result);
 		});
 	});
+	socket.on('generate GRID', function() {
+		console.log('Generate GRID request received');
+		async.parallel([genGRID, checkGRIDs], function(err, result) {
+			if (err) {
+				console.log(err);
+				return;
+			};
+			console.log(result);
+		});
+	});
 
 	socket.on('disconnect', function() {
 		console.log('User ' + userID + ' disconnected');
-		console.log('User disconnected');
 	});
 
 	setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
 
-	function pausecomp(millis) {
+	/*function pausecomp(millis) {
 		var date = new Date();
 		var curDate = null;
 		do { curDate = new Date(); }
 		while(curDate-date < millis);
-	};
+	};*/
 
 	var genUID = function(callback) {
 		var possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -97,37 +107,82 @@ io.on('connection', function(socket) {
 			if (err) throw err;
 			console.log('Connected to postgres');
 			client
-				.query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + userID + '\';')
-				.on('row', function(row) {
-					console.log('Query started for ' + userID);
-					hits = JSON.stringify(row).substring(10, (JSON.stringify(row).length - 2));
-					console.log(hits + ' matches');
-					if(err) {
-						throw new Error('Error querying for user ID.');
-						userID = '';
+			 .query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + userID + '\';')
+			 .on('row', function(row) {
+				console.log('Query started for ' + userID);
+				hits = JSON.stringify(row).substring(10, (JSON.stringify(row).length - 2));
+				console.log(hits + ' matches');
+				if(err) {
+					throw new Error('Error querying for user ID.');
+					userID = '';
+				} else {
+					console.log('Query passed');
+					if(hits == 0) {
+						console.log('User ID ' + userID + ' available. Inserting it into database');
+						client.query('INSERT INTO "TakenIDs" (idname, idtype) VALUES (\'' + userID + '\', 1);', function(err, data) {
+							if(err) {
+								throw new Error('Error inserting user ID ' + userID);
+							};
+						});
+						/*client
+							.query('SELECT * FROM "TakenIDs";')
+							.on('row', function(row) {
+								console.log(JSON.stringify(row));
+							});*/
+						socket.emit('return generated UID', userID);
+						callback(null, 'ID successfully assigned');
 					} else {
-						console.log('Query passed');
-						if(hits == 0) {
-							console.log('User ID ' + userID + ' available. Inserting it into database');
-							client.query('INSERT INTO "TakenIDs" (idname, idtype) VALUES (\'' + userID + '\', 1);', function(err, data) {
-								if(err) {
-									throw new Error('Error inserting user ID ' + userID);
-								};
-							});
-							/*client
-								.query('SELECT * FROM "TakenIDs";')
-								.on('row', function(row) {
-									console.log(JSON.stringify(row));
-								});*/
-							socket.emit('return generated UID', userID);
-							callback(null, 'ID successfully assigned');
-						} else {
-							console.log('User ID ' + userID + ' not available. New attempt required');
-							callback(null, 'ID not available. New attempt required');
-							userID = '';
-						};
+						console.log('User ID ' + userID + ' not available. New attempt required');
+						callback(null, 'ID not available. New attempt required');
+						userID = '';
 					};
-				});
+				};
+			});
+		});
+	};
+
+	var genGRID = function(callback) {
+		var possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+		console.log('GRID generation started');
+		//preventing the userID from growing 5 characters with each failed attempt
+		gameRoomID = '';
+		for(var j=0; j < 5; j++) {
+			gameRoomID += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
+		};
+		console.log('Checking for game room ' + gameRoomID);
+		callback(null, 'Attempted game room ID: ' + gameRoomID);
+	};
+	var checkGRIDs = function(callback) {
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err;
+			console.log('Connected to postgres');
+			client
+			 .query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + gameRoomID + '\';')
+			 .on('row', function(row) {
+				console.log('Query started for ' + gameRoomID);
+				hits = JSON.stringify(row).substring(10, (JSON.stringify(row).length - 2));
+				console.log(hits + ' matches');
+				if(err) {
+					throw new Error('Error querying for game room ID.');
+					gameRoomID = '';
+				} else {
+					console.log('Query passed');
+					if(hits == 0) {
+						console.log('User ID ' + gameRoomID + ' available. Inserting it into database');
+						client.query('INSERT INTO "TakenIDs" (idname, idtype) VALUES (\'' + gameRoomID + '\', 2);', function(err, data) {
+							if(err) {
+								throw new Error('Error inserting game room ID ' + gameRoomID);
+							};
+						});
+						socket.emit('return generated GRID', gameRoomID);
+						callback(null, 'ID successfully assigned');
+					} else {
+						console.log('Game room ID ' + gameRoomID + ' not available. New attempt required');
+						callback(null, 'ID not available. New attempt required');
+						gameRoomID = '';
+					};
+				};
+			});
 		});
 	};
 });
