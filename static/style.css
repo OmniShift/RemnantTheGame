@@ -14,6 +14,7 @@ input[type=submit] {
 
 button {
 	margin: 2px;
+	margin-bottom: 5px;
 	border-color: rgba(0,0,0,0.7);
 	border-radius: 5px;
 }
@@ -103,21 +104,22 @@ button {
 }
 
 #hostLobby {
-	width: 30%;
+	width: 40%;
 	margin-top: -10%;
-	margin-left: -15%;
+	margin-left: -20%;
 }
 
 #clientLobby {
-	width: 30%;
+	width: 40%;
 	margin-top: -10%;
-	margin-left: -15%;
+	margin-left: -20%;
 }
 
 .lobbyPlayerSlot {
 	text-align: center;
 	vertical-align: top;
 	font: 1em arial;
+	padding-bottom: 1%;
 }
 
 .popUp {
