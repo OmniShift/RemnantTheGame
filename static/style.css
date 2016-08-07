@@ -40,6 +40,7 @@ button {
 
 #newsBoard {
 	text-align: center;
+	padding-top: 0.5%;
 	display: block;
 	position: relative;
 	height: 200px;
