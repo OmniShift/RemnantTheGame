@@ -119,7 +119,7 @@ button {
 	text-align: center;
 	vertical-align: top;
 	font: 1em arial;
-	padding-bottom: 1%;
+	padding-bottom: -1%;
 }
 
 .popUp {

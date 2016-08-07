@@ -245,10 +245,11 @@
 				document.getElementById('hLobbySlot1').innerHTML =  "Commander " + commName + ", attempting command of " + kingdomArray[kingdomPref] + " is ready <button id='notReadyP1' onclick='hPlayerNotReady()'>X</button>";
 			};
 			function hPlayerNotReady() {
-				document.getElementById('hLobbySlot1').innerHTML = "<div id='LobbyInfoP1'>Commander name: <input id='CommName1' type='text' name='commanderName1' maxlength='15' value='" + commName + "'> <select name='kingdomPref1' id='KingdomPref1' value='" + kingdomPref + "'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select> <button id='readyP1' onclick='hPlayerReady()'>V</button></div>";
+				console.log(kingdomPref);
+				document.getElementById('hLobbySlot1').innerHTML = "<div id='LobbyInfoP1'>Commander name: <input id='CommName1' type='text' name='commanderName1' maxlength='15' value='" + commName + "'> <select name='kingdomPref1' id='KingdomPref1' value=" + kingdomPref + "><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select> <button id='readyP1' onclick='hPlayerReady()'>V</button></div>";
 			};
 			function cPlayerReady() {
-				document.getElementById('cLobbySlot' + playerNumber.toString()).innerHTML = "Player " + playerNumber.toString() + " info here <button id='notReadyP2' onclick='cPlayerNotReady()'>X</button>";
+				document.getElementById('cLobbySlot' + playerNumber.toString()).innerHTML = "Commander " + commName + ", attempting command of " + kingdomArray[kingdomPref] + " is ready <button id='notReadyP2' onclick='cPlayerNotReady()'>X</button>";
 			};
 			function cPlayerNotReady() {
 				document.getElementById('cLobbySlot' + playerNumber.toString()).innerHTML = "<div id='LobbyInfoP" + playerNumber.toString() + "'>Commander name: <input id='CommName" + playerNumber.toString() + "' type='text' name='commanderName' maxlength='15' value='" + commName + "'> <select name='kingdomPref' id='KingdomPref" + playerNumber.toString() + "' value='" + kingdomPref + "'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select> <button id='readyP" + playerNumber.toString() + "' onclick='cPlayerReady()'>V</button></div>";
