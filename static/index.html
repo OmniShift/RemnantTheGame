@@ -125,17 +125,16 @@
 				</div>
 				<div class='popUpBottom'>
 					<p style='font-size:1.2em'>Room code: <input id='givenRoomCode' type='text' name='roomCode' readonly style='background-color:#cccccc'></p>
-					<div class='lobbyPlayerSlot' id='hLobbySlot1'>
-						<div id='P1Status' hidden=''>Waiting for player...</div>
-						<form id='hLobbyInfoP1'>Commander name: <input id='hCommName1' type='text' name='commanderName1'> 
+					<div class='lobbyPlayerSlot' id='hLobbySlot1'>Waiting for player...</div>
+						<!--<form id='hLobbyInfoP1'>Commander name: <input id='hCommName1' type='text' name='commanderName1'> 
 						<select name='kingdomPref1' id='hKingdomPref1'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select> 
-						<button id='readyP1' onclick='playerReady()'>V</button><button id='notReadyP1' onclick='playerNotReady()'>X</button></form>
+						<button id='readyP1' onclick='playerReady()'>V</button><button id='notReadyP1' onclick='playerNotReady()'>X</button></form>-->
 					</div><BR>
 					<div class='lobbyPlayerSlot' id='hLobbySlot2'>Waiting for player...</div><BR>
 					<div class='lobbyPlayerSlot' id='hLobbySlot3'>Waiting for player...</div><BR>
 					<div class='lobbyPlayerSlot' id='hLobbySlot4'>Waiting for player...</div><BR>
 					<button id='startGameButton' onclick='roomCodeCheck()' disabled=''>Start game</button>
-					<button onclick='hideJoinNewGame()'>Cancel</button>
+					<button onclick='hideHostLobby()'>Cancel</button>
 				</div>
 			</div>
 			<div class='popUp' id='clientLobby'>
@@ -148,7 +147,7 @@
 					<div class='lobbyPlayerSlot' id='cLobbySlot3'>Waiting for player...</div><BR>
 					<div class='lobbyPlayerSlot' id='cLobbySlot4'>Waiting for player...</div><BR>
 					<button id='startGameButton' onclick='roomCodeCheck()' disabled=''>Start game</button>
-					<button onclick='hideJoinNewGame()'>Cancel</button>
+					<button onclick='hideClientLobby()'>Cancel</button>
 					<!--<button onclick='playerReady()'>test</button>
 					<button onclick='playerNotReady()'>test2</button>-->
 				</div>
@@ -171,6 +170,7 @@
 				console.log('Your room code is ' + getCookie('rtgLastGame', 5));
 				document.getElementById('givenRoomCode').value = gameRoomID;
 				showHostLobby();
+				hPlayerNotReady();
 			});
 			function getCookie(cname, cvallength) {
 				return document.cookie.substring(document.cookie.search(cname) + cname.length + 1, (document.cookie.search(cname) + cname.length + 1 + cvallength));
@@ -213,9 +213,6 @@
 				document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
 				document.getElementById('createJoinButton').disabled = false;
 			};
-			function playerReady() {
-				document.getElementById('cLobbySlot2').innerHTML = "Player info here <button id='notReadyP2' onclick='playerNotReady()'>X</button>";
-			};
 			function showAYSPrompt() {
 				document.getElementById('AYSprompt').style.visibility = 'visible';
 				document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.5)';
@@ -241,7 +238,16 @@
 				document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.5)';
 				document.getElementById('createJoinButton').disabled = true;
 			};
-			function playerNotReady() {
+			function hPlayerReady() {
+				document.getElementById('hLobbySlot1').innerHTML = "Player info here <button id='notReadyP2' onclick='playerNotReady()'>X</button>";
+			};
+			function hPlayerNotReady() {
+				document.getElementById('hLobbySlot1').innerHTML = "<div id='hLobbyInfoP2'>Commander name: <input id='hCommName2' type='text' name='commanderName2'> <select name='kingdomPref2' id='hKingdomPref2'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select> <button id='readyP2' onclick='playerReady()'>V</button></div>";
+			};
+			function cPlayerReady() {
+				document.getElementById('cLobbySlot2').innerHTML = "Player info here <button id='notReadyP2' onclick='playerNotReady()'>X</button>";
+			};
+			function cPlayerNotReady() {
 				document.getElementById('cLobbySlot2').innerHTML = "<div id='cLobbyInfoP2'>Commander name: <input id='cCommName2' type='text' name='commanderName2'> <select name='kingdomPref2' id='cKingdomPref2'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select> <button id='readyP2' onclick='playerReady()'>V</button></div>";
 			};
 
