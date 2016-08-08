@@ -268,11 +268,13 @@
 				kingdomPref = 0;
 			};
 			socket.on('dc by host', function() {
+				socket.emit('leave room', roomID);
 				hideClientLobby();
 				roomID = '';
 				playerNumber = 0;
 				commName = '';
 				kingdomPref = 0;
+				alert('Host has left the lobby.');
 			});
 
 			function newGameWarning() {

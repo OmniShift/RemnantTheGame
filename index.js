@@ -81,14 +81,6 @@ io.on('connection', function(socket) {
 	socket.on('host leaves', function(roomID) {
 		//broadcast shouldn't be necessary
 		io.to(roomID).emit('dc by host');
-		for (var socketId in io.nsps['/'].adapter.rooms[roomID]) {
-			console.log(socketId + ' leaving the room');
-			socketId.leave(roomID);
-			for (var socketId in io.nsps['/'].adapter.rooms[roomID]) {
-				console.log(socketId + ' remaining in the room');
-			};
-		};
-		console.log('All these sockets have been removed from room ' + roomID);
 		//deleteGRID();
 	});
 
@@ -190,9 +182,6 @@ io.on('connection', function(socket) {
 						});
 						socket.emit('return generated GRID', gameRoomID);
 						socket.join(gameRoomID);
-						for (var socketId in io.nsps['/'].adapter.rooms[gameRoomID]) {
-							console.log(socketId);
-						};
 						callback(null, 'ID successfully assigned');
 					} else {
 						console.log('Game room ID ' + gameRoomID + ' not available. New attempt required');
