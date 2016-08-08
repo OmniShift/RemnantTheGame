@@ -79,10 +79,14 @@ io.on('connection', function(socket) {
 	});
 
 	socket.on('host leaves', function(roomID) {
-		io.to(roomID).broadcast.emit('dc by host');
+		//broadcast shouldn't be necessary
+		io.to(roomID).emit('dc by host');
 		for (var socketId in io.nsps['/'].adapter.rooms[roomID]) {
-			console.log(socketId);
+			console.log(socketId + ' leaving the room');
 			socketId.leave(roomID);
+			for (var socketId in io.nsps['/'].adapter.rooms[roomID]) {
+				console.log(socketId + ' remaining in the room');
+			};
 		};
 		console.log('All these sockets have been removed from room ' + roomID);
 		//deleteGRID();
@@ -178,7 +182,7 @@ io.on('connection', function(socket) {
 				} else {
 					console.log('Query passed');
 					if(hits == 0) {
-						console.log('User ID ' + gameRoomID + ' available. Inserting it into database');
+						console.log('Game room ' + gameRoomID + ' available. Inserting it into database');
 						client.query('INSERT INTO "TakenIDs" (idname, idtype) VALUES (\'' + gameRoomID + '\', 2);', function(err, data) {
 							if(err) {
 								throw new Error('Error inserting game room ID ' + gameRoomID);
