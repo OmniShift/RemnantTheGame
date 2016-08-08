@@ -79,7 +79,7 @@ io.on('connection', function(socket) {
 	});
 
 	socket.on('host leaves', function(roomID) {
-		io.broadcast.to(roomID).emit('dc by host');
+		io.to(roomID).broadcast.emit('dc by host');
 		for (var socketId in io.nsps['/'].adapter.rooms[roomID]) {
 			console.log(socketId);
 			socketId.leave(roomID);
@@ -186,6 +186,9 @@ io.on('connection', function(socket) {
 						});
 						socket.emit('return generated GRID', gameRoomID);
 						socket.join(gameRoomID);
+						for (var socketId in io.nsps['/'].adapter.rooms[gameRoomID]) {
+							console.log(socketId);
+						};
 						callback(null, 'ID successfully assigned');
 					} else {
 						console.log('Game room ID ' + gameRoomID + ' not available. New attempt required');
