@@ -245,8 +245,8 @@
 				document.getElementById('hLobbySlot1').innerHTML =  "Commander " + commName + ", attempting command of " + kingdomArray[kingdomPref] + " is ready <button id='notReadyP1' onclick='hPlayerNotReady()'>X</button>";
 			};
 			function hPlayerNotReady() {
-				console.log(kingdomPref);
-				document.getElementById('hLobbySlot1').innerHTML = "<div id='LobbyInfoP1'>Commander name: <input id='CommName1' type='text' name='commanderName1' maxlength='15' value='" + commName + "'> <select name='kingdomPref1' id='KingdomPref1' value=" + kingdomPref + "><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select> <button id='readyP1' onclick='hPlayerReady()'>V</button></div>";
+				document.getElementById('hLobbySlot1').innerHTML = "<div id='LobbyInfoP1'>Commander name: <input id='CommName1' type='text' name='commanderName1' maxlength='15' value='" + commName + "'> <select name='kingdomPref1' id='KingdomPref1'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select> <button id='readyP1' onclick='hPlayerReady()'>V</button></div>";
+				document.getElementById("KingdomPref1").selectedIndex = kingdomPref;
 			};
 			function cPlayerReady() {
 				document.getElementById('cLobbySlot' + playerNumber.toString()).innerHTML = "Commander " + commName + ", attempting command of " + kingdomArray[kingdomPref] + " is ready <button id='notReadyP2' onclick='cPlayerNotReady()'>X</button>";
