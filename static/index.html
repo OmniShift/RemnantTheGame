@@ -134,7 +134,7 @@
 					<div class='lobbyPlayerSlot' id='hLobbySlot3'>Waiting for player to join...</div><BR>
 					<div class='lobbyPlayerSlot' id='hLobbySlot4'>Waiting for player to join...</div><BR>
 					<button id='startGameButton' onclick='roomCodeCheck()' disabled=''>Start game</button>
-					<button onclick='hideHostLobby()'>Cancel</button>
+					<button onclick='hostLeave()'>Cancel</button>
 				</div>
 			</div>
 			<div class='popUp' id='clientLobby'>
@@ -157,9 +157,10 @@
 
 		<script type='text/javascript'>
 			var socket = io();
+			var roomID = '';
 			var playerNumber = 0;
 			var commName = '';
-			var kingdomPref = '';
+			var kingdomPref = 0;
 			var kingdomArray = ['any willing kingdom', 'Mantle', 'Minstral', 'Vacuo', 'Vale'];
 
 			function generateGRID() {
@@ -170,8 +171,10 @@
 				document.cookie = 'rtgLastGame=' + gameRoomID + '; expires=Thu, 31 Dec 2026 12:00:00 GMT';
 				console.log('Your room code is ' + getCookie('rtgLastGame', 5));
 				document.getElementById('givenRoomCode').value = gameRoomID;
+				roomID = gameRoomID;
 				showHostLobby();
 				hPlayerNotReady();
+				playerNumber = 1;
 			});
 			function getCookie(cname, cvallength) {
 				return document.cookie.substring(document.cookie.search(cname) + cname.length + 1, (document.cookie.search(cname) + cname.length + 1 + cvallength));
@@ -239,6 +242,7 @@
 				document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.5)';
 				document.getElementById('createJoinButton').disabled = true;
 			};
+
 			function hPlayerReady() {
 				commName = document.getElementById('CommName1').value;
 				kingdomPref = document.getElementById('KingdomPref1').value;
@@ -253,6 +257,22 @@
 			};
 			function cPlayerNotReady() {
 				document.getElementById('cLobbySlot' + playerNumber.toString()).innerHTML = "<div id='LobbyInfoP" + playerNumber.toString() + "'>Commander name: <input id='CommName" + playerNumber.toString() + "' type='text' name='commanderName' maxlength='15' value='" + commName + "'> <select name='kingdomPref' id='KingdomPref" + playerNumber.toString() + "' value='" + kingdomPref + "'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select> <button id='readyP" + playerNumber.toString() + "' onclick='cPlayerReady()'>V</button></div>";
+			};
+
+			function hostLeave() {
+				hideHostLobby();
+				socket.emit('host leaves', roomID);
+				roomID = '';
+				playerNumber = 0;
+				commName = '';
+				kingdomPref = 0;
+			}
+			socket.on('dc by host') {
+				hideClientLobby();
+				roomID = '';
+				playerNumber = 0;
+				commName = '';
+				kingdomPref = 0;
 			};
 
 			function newGameWarning() {

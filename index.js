@@ -78,6 +78,16 @@ io.on('connection', function(socket) {
 		});
 	});
 
+	socket.on('host leaves', function(roomID) {
+		io.broadcast.to(roomID).emit('dc by host');
+		for (var socketId in io.nsps['/'].adapter.rooms[roomID]) {
+			console.log(socketId);
+			socketId.leave(roomID);
+		};
+		console.log('All these sockets have been removed from room ' + roomID);
+		//deleteGRID();
+	});
+
 	socket.on('disconnect', function() {
 		console.log('User ' + userID + ' disconnected');
 	});
@@ -175,6 +185,7 @@ io.on('connection', function(socket) {
 							};
 						});
 						socket.emit('return generated GRID', gameRoomID);
+						socket.join(gameRoomID);
 						callback(null, 'ID successfully assigned');
 					} else {
 						console.log('Game room ID ' + gameRoomID + ' not available. New attempt required');
