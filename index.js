@@ -87,8 +87,6 @@ io.on('connection', function(socket) {
 				console.log('Checking for lobby for room ' + roomID);
 				status = row.status;
 				console.log('Status: ' + status);
-				status = row[1];
-				console.log('Status: ' + status);
 				if(err) {
 					throw new Error('Error querying for game room ID.');
 					gameRoomID = '';
@@ -97,7 +95,7 @@ io.on('connection', function(socket) {
 					if(status == 0) {
 						console.log('Game room ' + roomID + ' in lobby');
 						for (i = 2; i < 5; i++) {
-							if (row[i] != '') {
+							if (row.playerid[i-1] != '') {
 								client.query('UPDATE "GRIDs" SET p' + i + 'id = \'' + UID + '\';', function(err, data) {
 									if(err) {
 										throw new Error('Error adding ' + UID + ' to game room ' + roomID);
