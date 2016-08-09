@@ -96,7 +96,7 @@ io.on('connection', function(socket) {
 					console.log('Query passed');
 					if(status == 0) {
 						console.log('Game room ' + roomID + ' in lobby');
-						for (i = 2, i < 5, i++) {
+						for (i = 2; i < 5; i++) {
 							if (row[i] != '') {
 								client.query('UPDATE "GRIDs" SET p' + i + 'id = \'' + UID + '\';', function(err, data) {
 									if(err) {
