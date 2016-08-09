@@ -286,12 +286,14 @@
 				hideJoinNewGame();
 				alert('This game is already in progress.')
 			});
-			socket.on('join lobby request accepted', function(pNumber) {
+			socket.on('join lobby request accepted', function(pNumber, gameInfoObj) {
 				playerNumber = pNumber;
 				joinLobby();
+				conosle.log()
+				gameInfoObj.
 			});
 			socket.on('update lobby info', function(pNumber, pCommName, pKingdomPref){
-				
+
 			});
 
 			function newGameWarning() {

@@ -132,13 +132,16 @@ io.on('connection', function(socket) {
 	socket.on('host leaves', function(roomID) {
 		socket.broadcast.to(roomID).emit('dc by host');
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err;
+			if (err) {
+				throw err;
+			};
 			console.log('Connected to postgres');
 			client.query('DELETE FROM "GRIDs" WHERE idname=\'' + roomID + '\';');
+		});
 	});
 	socket.on('leave room', function(roomID) {
 		socket.leave(roomID);
-	})
+	});
 
 	socket.on('disconnect', function() {
 		console.log('User ' + userID + ' disconnected');
