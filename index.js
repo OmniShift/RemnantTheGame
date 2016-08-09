@@ -13,7 +13,7 @@ const   fs				= require('fs'),
 			if (err) throw err;
 			console.log('Checking database connection.');
 			client
-			 .query('SELECT * FROM "TakenIDs" ORDER BY idtype, idname;')
+			 .query('SELECT * FROM "GRIDs" ORDER BY idname;')
 			 .on('row', function(row) {
 				console.log(JSON.stringify(row));
 			});
@@ -40,7 +40,6 @@ function pausecomp(millis) {
 io.on('connection', function(socket) {
 	var userID = '';
 	var gameRoomID = '';
-	var attempts = 0;
 	var hits = 0;
 	socket.on('existing user connection', function(UID) {
 		userID = UID;
@@ -78,10 +77,64 @@ io.on('connection', function(socket) {
 		});
 	});
 
+	socket.on('join lobby request', function(roomID, UID) {
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err;
+			console.log('Connected to postgres');
+			client
+			 .query('SELECT * FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
+			 .on('row', function(row) {
+				console.log('Checking for lobby for room ' + roomID);
+				status = row.status;
+				console.log('Status: ' + status);
+				status = row[1];
+				console.log('Status: ' + status);
+				if(err) {
+					throw new Error('Error querying for game room ID.');
+					gameRoomID = '';
+				} else {
+					console.log('Query passed');
+					if(status == 0) {
+						console.log('Game room ' + roomID + ' in lobby');
+						for (i = 2, i < 5, i++) {
+							if (row[i] != '') {
+								client.query('UPDATE "GRIDs" SET p' + i + 'id = \'' + UID + '\';', function(err, data) {
+									if(err) {
+										throw new Error('Error adding ' + UID + ' to game room ' + roomID);
+									};
+								});
+								gameRoomID = roomID;
+								socket.join(roomID);
+								client
+								 .query('SELECT * FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
+								 .on('row', function(row) {
+									socket.emit('join lobby request accepted', i, row);
+								});
+								break;
+							} else {
+								if (i = 4) {
+									socket.emit('room full');
+								};
+							};
+						};
+					} else if(status == 1) {
+						console.log('Game room ' + roomID + ' has already started');
+						socket.emit('game already started');
+					} else {
+						console.log('Game room ID ' + gameRoomID + ' not available. New attempt required');
+					};
+				gameRoomID = '';
+				};
+			});
+		});
+	});
+
 	socket.on('host leaves', function(roomID) {
-		//broadcast shouldn't be necessary
 		socket.broadcast.to(roomID).emit('dc by host');
-		//deleteGRID();
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err;
+			console.log('Connected to postgres');
+			client.query('DELETE FROM "GRIDs" WHERE idname=\'' + roomID + '\';');
 	});
 	socket.on('leave room', function(roomID) {
 		socket.leave(roomID);
@@ -116,7 +169,7 @@ io.on('connection', function(socket) {
 			if (err) throw err;
 			console.log('Connected to postgres');
 			client
-			 .query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + userID + '\';')
+			 .query('SELECT COUNT(idname) FROM "UIDs" WHERE idname=\'' + userID + '\';')
 			 .on('row', function(row) {
 				console.log('Query started for ' + userID);
 				hits = JSON.stringify(row).substring(10, (JSON.stringify(row).length - 2));
@@ -128,13 +181,13 @@ io.on('connection', function(socket) {
 					console.log('Query passed');
 					if(hits == 0) {
 						console.log('User ID ' + userID + ' available. Inserting it into database');
-						client.query('INSERT INTO "TakenIDs" (idname, idtype) VALUES (\'' + userID + '\', 1);', function(err, data) {
+						client.query('INSERT INTO "UIDs" (idname) VALUES (\'' + userID + '\');', function(err, data) {
 							if(err) {
 								throw new Error('Error inserting user ID ' + userID);
 							};
 						});
 						/*client
-							.query('SELECT * FROM "TakenIDs";')
+							.query('SELECT * FROM "UIDs";')
 							.on('row', function(row) {
 								console.log(JSON.stringify(row));
 							});*/
@@ -166,7 +219,7 @@ io.on('connection', function(socket) {
 			if (err) throw err;
 			console.log('Connected to postgres');
 			client
-			 .query('SELECT COUNT(idname) FROM "TakenIDs" WHERE idname=\'' + gameRoomID + '\';')
+			 .query('SELECT COUNT(idname) FROM "GRIDs" WHERE idname=\'' + gameRoomID + '\';')
 			 .on('row', function(row) {
 				console.log('Query started for ' + gameRoomID);
 				hits = JSON.stringify(row).substring(10, (JSON.stringify(row).length - 2));
@@ -178,7 +231,8 @@ io.on('connection', function(socket) {
 					console.log('Query passed');
 					if(hits == 0) {
 						console.log('Game room ' + gameRoomID + ' available. Inserting it into database');
-						client.query('INSERT INTO "TakenIDs" (idname, idtype) VALUES (\'' + gameRoomID + '\', 2);', function(err, data) {
+						//insert more
+						client.query('INSERT INTO "GRIDs" (idname, status) VALUES (\'' + gameRoomID + '\', 0);', function(err, data) {
 							if(err) {
 								throw new Error('Error inserting game room ID ' + gameRoomID);
 							};

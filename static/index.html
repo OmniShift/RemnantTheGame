@@ -133,7 +133,7 @@
 					<div class='lobbyPlayerSlot' id='hLobbySlot2'>Waiting for player to join...</div><BR>
 					<div class='lobbyPlayerSlot' id='hLobbySlot3'>Waiting for player to join...</div><BR>
 					<div class='lobbyPlayerSlot' id='hLobbySlot4'>Waiting for player to join...</div><BR>
-					<button id='startGameButton' onclick='roomCodeCheck()' disabled=''>Start game</button>
+					<button id='startGameButton' onclick='' disabled=''>Start game</button>
 					<button onclick='hostLeave()'>Cancel</button>
 				</div>
 			</div>
@@ -146,7 +146,6 @@
 					<div class='lobbyPlayerSlot' id='cLobbySlot2'>Waiting for player to join...</div><BR>
 					<div class='lobbyPlayerSlot' id='cLobbySlot3'>Waiting for player to join...</div><BR>
 					<div class='lobbyPlayerSlot' id='cLobbySlot4'>Waiting for player to join...</div><BR>
-					<button id='startGameButton' onclick='roomCodeCheck()' disabled=''>Start game</button>
 					<button onclick='hideClientLobby()'>Cancel</button>
 					<!--<button onclick='playerReady()'>test</button>
 					<button onclick='playerNotReady()'>test2</button>-->
@@ -192,6 +191,7 @@
 				window.location.href = '/setTesters.html';
 			};
 
+			//hiding/showing windows
 			function hideAYSPrompt() {
 				document.getElementById('AYSprompt').style.visibility = 'hidden';
 				document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
@@ -243,6 +243,7 @@
 				document.getElementById('createJoinButton').disabled = true;
 			};
 
+			//player ready functions
 			function hPlayerReady() {
 				commName = document.getElementById('CommName1').value;
 				kingdomPref = document.getElementById('KingdomPref1').value;
@@ -259,6 +260,7 @@
 				document.getElementById('cLobbySlot' + playerNumber.toString()).innerHTML = "<div id='LobbyInfoP" + playerNumber.toString() + "'>Commander name: <input id='CommName" + playerNumber.toString() + "' type='text' name='commanderName' maxlength='15' value='" + commName + "'> <select name='kingdomPref' id='KingdomPref" + playerNumber.toString() + "' value='" + kingdomPref + "'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select> <button id='readyP" + playerNumber.toString() + "' onclick='cPlayerReady()'>V</button></div>";
 			};
 
+			//joining/leaving lobbies
 			function hostLeave() {
 				hideHostLobby();
 				socket.emit('host leaves', roomID);
@@ -270,13 +272,26 @@
 			socket.on('dc by host', function() {
 				socket.emit('leave room', roomID);
 				hideClientLobby();
-				//if(playerNumber != 1) {
-					alert('Host has left the lobby.');
-				//};
 				roomID = '';
 				playerNumber = 0;
 				commName = '';
 				kingdomPref = 0;
+				alert('Host has left the lobby.');
+			});
+			socket.on('room full', function() {
+				hideJoinNewGame();
+				alert('This room is full.');
+			});
+			socket.on('game already started', function() {
+				hideJoinNewGame();
+				alert('This game is already in progress.')
+			});
+			socket.on('join lobby request accepted', function(pNumber) {
+				playerNumber = pNumber;
+				joinLobby();
+			});
+			socket.on('update lobby info', function(pNumber, pCommName, pKingdomPref){
+				
 			});
 
 			function newGameWarning() {
@@ -311,10 +326,14 @@
 			};
 
 			function roomCodeCheck() {
+				socket.emit('join lobby request', document.getElementById('roomCode').value, userID);
 				if (document.getElementById('roomCode').value === 'TESTr') {
 					console.log('Room code accepted for testing purposes.');
 					joinLobby();
 					//Insert lobby code here
+				/*} else if (document.getElementById('roomCode').value === 'TESTr') {
+					console.log('Room code accepted.');
+					joinLobby();*/
 				} else {
 					alert('Room code not found. Please check for spelling errors.');
 				};
