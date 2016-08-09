@@ -233,16 +233,11 @@ io.on('connection', function(socket) {
 					if(hits == 0) {
 						console.log('Game room ' + gameRoomID + ' available. Inserting it into database');
 						//insert more
-						client.query('INSERT INTO "GRIDs" (idname, status, playerready, playerkingdompref) VALUES (\'' + gameRoomID + '\', 0, ARRAY[0,0,0,0], ARRAY[0,0,0,0]);', function(err, data) {
+						client.query('INSERT INTO "GRIDs" (idname, status, playerid, playerready, playercommname, playerkingdompref) VALUES (\'' + gameRoomID + '\', 0, ARRAY[0,0,0,0], ARRAY[\'\',\'\',\'\',\'\'], ARRAY[0,0,0,0], ARRAY[\'\',\'\',\'\',\'\']);', function(err, data) {
 							if(err) {
 								throw new Error('Error inserting game room ID ' + gameRoomID);
 							};
 						});
-						/*client.query('INSERT INTO "GRIDs" (idname, status, playerid, playerready, playercommname, playerkingdompref) VALUES (\'' + gameRoomID + '\', 0, "{\'\',\'\',\'\',\'\'}", "{0,0,0,0}", "{\'\',\'\',\'\',\'\'}", "{0,0,0,0}");', function(err, data) {
-							if(err) {
-								throw new Error('Error inserting game room ID ' + gameRoomID);
-							};
-						});*/
 						socket.emit('return generated GRID', gameRoomID);
 						socket.join(gameRoomID);
 						callback(null, 'ID successfully assigned');
