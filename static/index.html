@@ -270,11 +270,13 @@
 			socket.on('dc by host', function() {
 				socket.emit('leave room', roomID);
 				hideClientLobby();
+				//if(playerNumber != 1) {
+					alert('Host has left the lobby.');
+				//};
 				roomID = '';
 				playerNumber = 0;
 				commName = '';
 				kingdomPref = 0;
-				alert('Host has left the lobby.');
 			});
 
 			function newGameWarning() {

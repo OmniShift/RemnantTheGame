@@ -80,9 +80,12 @@ io.on('connection', function(socket) {
 
 	socket.on('host leaves', function(roomID) {
 		//broadcast shouldn't be necessary
-		io.to(roomID).emit('dc by host');
+		socket.broadcast.to(roomID).emit('dc by host');
 		//deleteGRID();
 	});
+	socket.on('leave room', function(roomID) {
+		socket.leave(roomID);
+	})
 
 	socket.on('disconnect', function() {
 		console.log('User ' + userID + ' disconnected');
