@@ -135,7 +135,6 @@ io.on('connection', function(socket) {
 			if (err) {
 				throw err;
 			};
-			console.log('Connected to postgres');
 			client.query('DELETE FROM "GRIDs" WHERE idname=\'' + roomID + '\';');
 		});
 	});
