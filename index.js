@@ -134,6 +134,7 @@ io.on('connection', function(socket) {
 				throw err;
 			};
 			client.query('DELETE FROM "GRIDs" WHERE idname=\'' + roomID + '\';');
+			console.log(roomID = ' deleted');
 		});
 	});
 	socket.on('leave room', function(roomID) {
@@ -232,7 +233,7 @@ io.on('connection', function(socket) {
 					if(hits == 0) {
 						console.log('Game room ' + gameRoomID + ' available. Inserting it into database');
 						//insert more
-						client.query('INSERT INTO "GRIDs" (idname, status) VALUES (\'' + gameRoomID + '\', 0);', function(err, data) {
+						client.query('INSERT INTO "GRIDs" (idname, status, playerid, playerready, playercommname, playerkingdompref) VALUES (\'' + gameRoomID + '\', 0, "{\'\',\'\',\'\',\'\'}", "{0,0,0,0}", "{\'\',\'\',\'\',\'\'}", "{0,0,0,0}");', function(err, data) {
 							if(err) {
 								throw new Error('Error inserting game room ID ' + gameRoomID);
 							};
