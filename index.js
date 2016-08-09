@@ -96,7 +96,7 @@ io.on('connection', function(socket) {
 						console.log('Game room ' + roomID + ' in lobby');
 						for (i = 2; i < 5; i++) {
 							if (row.playerid[i-1] != '') {
-								client.query('UPDATE "GRIDs" SET p' + i + 'id = \'' + UID + '\';', function(err, data) {
+								client.query('UPDATE "GRIDs" SET p' + i + 'id = \'' + UID + '\' WHERE idname=\'' + roomID + '\';', function(err, data) {
 									if(err) {
 										throw new Error('Error adding ' + UID + ' to game room ' + roomID);
 									};

@@ -290,7 +290,7 @@
 			socket.on('join lobby request accepted', function(pNumber, gameInfoObj) {
 				playerNumber = pNumber;
 				joinLobby();
-				//conosle.log();
+				cPlayerNotReady();
 			});
 			socket.on('update lobby info', function(pNumber, pCommName, pKingdomPref){
 
@@ -329,16 +329,6 @@
 
 			function roomCodeCheck() {
 				socket.emit('join lobby request', document.getElementById('roomCode').value, userID);
-				if (document.getElementById('roomCode').value === 'TESTr') {
-					console.log('Room code accepted for testing purposes.');
-					joinLobby();
-					//Insert lobby code here
-				/*} else if (document.getElementById('roomCode').value === 'TESTr') {
-					console.log('Room code accepted.');
-					joinLobby();*/
-				} else {
-					alert('Room code not found. Please check for spelling errors.');
-				};
 			};
 
 			function joinLobby() {
