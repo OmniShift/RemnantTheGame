@@ -95,7 +95,7 @@ io.on('connection', function(socket) {
 					if(status == 0) {
 						for (i = 2; i < 5; i++) {
 							if (row.playerid[i-1] != '') {
-								client.query('UPDATE "GRIDs" SET p' + i + 'id = \'' + UID + '\' WHERE idname=\'' + roomID + '\';', function(err, data) {
+								client.query('UPDATE "GRIDs" SET playerid[' + i + '] = \'' + UID + '\' WHERE idname=\'' + roomID + '\';', function(err, data) {
 									if(err) {
 										throw new Error('Error adding ' + UID + ' to game room ' + roomID);
 									};
@@ -105,9 +105,10 @@ io.on('connection', function(socket) {
 								client
 								 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
 								 .on('row', function(row) {
-								 	socket.emit('join lobby request accepted', i);
-								 	socket.to(roomID).emit('update lobby info', row);
+									socket.emit('join lobby request accepted', i, row);
+									console.log(JSON.stringify(row));
 								});
+								socket.broadcast.to(roomID).emit('player joined lobby', i);
 								break;
 							} else {
 								if (i = 4) {
@@ -126,11 +127,21 @@ io.on('connection', function(socket) {
 			});
 		});
 	});
+
 	//needs more work
-	socket.on('update lobby info', function(roomID) {
+	socket.on('update lobby info', function(roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
+		client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
+			if(err) {
+				throw new Error('Error updating room ' + roomID + ' with new info');
+			};
+		});
 		client
 		 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
-		 .on('row', function(row) {
+		 .on('row', function(err, row) {
+			if(err) {
+				throw new Error('Error selecting room ' + roomID + ' player status info');
+			};
+		 	console.log(JSON.stringify(row));
 		 	socket.broadcast.to(roomID).emit('update lobby info', row);
 		});
 	});
