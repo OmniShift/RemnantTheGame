@@ -130,6 +130,8 @@ io.on('connection', function(socket) {
 
 	//needs more work
 	socket.on('update lobby info', function(roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err;
 		client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
 			if(err) {
 				throw new Error('Error updating room ' + roomID + ' with new info');
