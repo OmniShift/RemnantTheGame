@@ -244,7 +244,7 @@
 				document.getElementById('createJoinButton').disabled = true;
 			};
 
-			//player ready functions
+			//pre-game player status
 			function hPlayerReady() {
 				commName = document.getElementById('CommName1').value;
 				kingdomPref = document.getElementById('KingdomPref1').value;
@@ -255,11 +255,41 @@
 				document.getElementById("KingdomPref1").selectedIndex = kingdomPref;
 			};
 			function cPlayerReady() {
+				commName = document.getElementById('CommName' + playerNumber.toString()).value;
+				kingdomPref = document.getElementById('KingdomPref' + playerNumber.toString()).value;
 				document.getElementById('cLobbySlot' + playerNumber.toString()).innerHTML = "Commander " + commName + ", attempting command of " + kingdomArray[kingdomPref] + " is ready <button id='notReadyP2' onclick='cPlayerNotReady()'>X</button>";
 			};
 			function cPlayerNotReady() {
 				document.getElementById('cLobbySlot' + playerNumber.toString()).innerHTML = "<div id='LobbyInfoP" + playerNumber.toString() + "'>Commander name: <input id='CommName" + playerNumber.toString() + "' type='text' name='commanderName' maxlength='15' value='" + commName + "'> <select name='kingdomPref' id='KingdomPref" + playerNumber.toString() + "' value='" + kingdomPref + "'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select> <button id='readyP" + playerNumber.toString() + "' onclick='cPlayerReady()'>V</button></div>";
 			};
+			socket.on('update lobby info', function(gameInfoObj){
+				console.log('player 4 commander is ' + gameInfoObj.playercommname[4]);
+				console.log('player 2 kingdom is ' + gameInfoObj.playerkingdompref[2] + ', (' + kingdomArray[gameInfoObj.playerkingdompref[2]] + ')');
+				console.log('player 3 UID is ' + gameInfoObj.playerid[3]);
+				console.log('player 1 ready state is ' + gameInfoObj.playerready[1]);
+				//check if player is host or not
+				for (i = 1; i < 5; i++) {
+					if (playerNumber != i) {
+						if (gameInfoObj.playerid[i] != '') {
+							if (playerNumber == 1) {
+								if (gameInfoObj.playerready[i] == 0) {
+									document.getElementById('hLobbySlot' + i).innerHTML = "Waiting for player to get ready...";
+								} else {
+									document.getElementById('hLobbySlot' + i).innerHTML = "Commander " + gameInfoObj.playercommname[i] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[i]] + " is ready for war";
+								};
+							} else {
+								if (gameInfoObj.playerready[i] == 0) {
+									document.getElementById('cLobbySlot' + i).innerHTML = "Waiting for player to get ready...";
+								} else {
+									document.getElementById('cLobbySlot' + i).innerHTML = "Commander " + gameInfoObj.playercommname[i] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[i]] + " is ready for war";
+								};
+							};
+						} else {
+							document.getElementById('hLobbySlot' + i).innerHTML = "Waiting for player to join...";
+						};
+					};
+				};
+			});
 
 			//joining/leaving lobbies
 			function hostLeave() {
@@ -287,13 +317,10 @@
 				hideJoinNewGame();
 				alert('This game is already in progress.')
 			});
-			socket.on('join lobby request accepted', function(pNumber, gameInfoObj) {
+			socket.on('join lobby request accepted', function(pNumber) {
 				playerNumber = pNumber;
 				joinLobby();
 				cPlayerNotReady();
-			});
-			socket.on('update lobby info', function(pNumber, pCommName, pKingdomPref){
-
 			});
 
 			function newGameWarning() {
