@@ -133,7 +133,7 @@ io.on('connection', function(socket) {
 	//needs more work
 	var updateLobbyInfo = function(client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
 		return updateLobbyInfo1 (client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref)
-		.then(updateLobbyInfo2 (client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref))
+		.then(return updateLobbyInfo2 (client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref));
 	};
 	socket.on('update lobby info', function(roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
@@ -183,7 +183,7 @@ io.on('connection', function(socket) {
 				throw err;
 			};
 			client.query('DELETE FROM "GRIDs" WHERE idname=\'' + roomID + '\';');
-			console.log(roomID + ' deleted');
+			console.log('Room ' + roomID + ' deleted');
 		});
 	});
 	socket.on('leave room', function(roomID) {
