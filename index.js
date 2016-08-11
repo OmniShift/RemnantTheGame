@@ -134,7 +134,7 @@ io.on('connection', function(socket) {
 	socket.on('update lobby info', function(roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
-		updateLobbyInfo(roomID, pNumber, pID, pReady, pCommName, pKingdomPref);
+		updateLobbyInfo(client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref);
 		/*pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
 			client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
@@ -153,7 +153,7 @@ io.on('connection', function(socket) {
 			});*/
 		});
 	});
-	var updateLobbyInfo = function(roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
+	var updateLobbyInfo = function(client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
 		client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
 			if(err) {
 				throw new Error('Error updating room ' + roomID + ' with new info');
