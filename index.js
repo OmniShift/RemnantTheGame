@@ -131,14 +131,30 @@ io.on('connection', function(socket) {
 	});
 
 	//needs more work
-	var updateLobbyInfo = function(client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
-		return updateLobbyInfo1 (client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref)
-		.then(return updateLobbyInfo2 (client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref));
-	};
+	/*var updateLobbyInfo = function(client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
+		return 
+		client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
+			if(err) {
+				throw new Error('Error updating room ' + roomID + ' with new info');
+			};
+		});
+		.then(return 
+		client
+		 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
+		 .on('row', function(err, row) {
+			if(err) {
+				throw new Error('Error selecting room ' + roomID + ' player status info');
+			};
+		 	console.log(JSON.stringify(row));
+		 	socket.broadcast.to(roomID).emit('update lobby info', row);
+		});
+	};*/
 	socket.on('update lobby info', function(roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err;
-			updateLobbyInfo(client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref);
+		async.parallel([updateLobbyInfo1, updateLobbyInfo2], function(err, result) {
+			if (err) {
+				console.log(err);
+				return;
+			};
 		/*pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
 			client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
@@ -158,21 +174,29 @@ io.on('connection', function(socket) {
 		});
 	});
 	var updateLobbyInfo1 = function(client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
-		client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
-			if(err) {
-				throw new Error('Error updating room ' + roomID + ' with new info');
-			};
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err;
+			client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
+				if(err) {
+					throw new Error('Error updating room ' + roomID + ' with new info');
+				};
+				callback(null, 'Room ' + roomID + ' updated');
+			});
 		});
 	};
 	var updateLobbyInfo2 = function(client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
-		client
-		 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
-		 .on('row', function(err, row) {
-			if(err) {
-				throw new Error('Error selecting room ' + roomID + ' player status info');
-			};
-		 	console.log(JSON.stringify(row));
-		 	socket.broadcast.to(roomID).emit('update lobby info', row);
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err;
+			client
+			 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
+			 .on('row', function(err, row) {
+				if(err) {
+					throw new Error('Error selecting room ' + roomID + ' player status info');
+				};
+			 	console.log(JSON.stringify(row));
+			 	socket.broadcast.to(roomID).emit('update lobby info', row);
+				callback(null, 'Room info broadcasted back to clients');
+			});
 		});
 	};
 
