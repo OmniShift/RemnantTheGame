@@ -69,6 +69,7 @@ io.on('connection', function(socket) {
 	});
 	socket.on('generate GRID', function() {
 		console.log('Generate GRID request received');
+		//possibly change to promise
 		async.parallel([genGRID, checkGRIDs], function(err, result) {
 			if (err) {
 				console.log(err);
@@ -158,7 +159,7 @@ io.on('connection', function(socket) {
 					throw new Error('Error updating room ' + roomID + ' with new info');
 				};
 			});
-			/*client
+			client
 			 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
 			 .on('row', function(err, row) {
 				if(err) {
@@ -166,7 +167,7 @@ io.on('connection', function(socket) {
 				};
 			 	console.log(JSON.stringify(row));
 			 	socket.broadcast.to(roomID).emit('update lobby info', row);
-			});*/
+			});
 		});
 	};
 
