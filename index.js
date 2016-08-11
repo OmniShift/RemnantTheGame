@@ -131,10 +131,14 @@ io.on('connection', function(socket) {
 	});
 
 	//needs more work
+	var updateLobbyInfo = function(client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
+		return updateLobbyInfo1 (client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref)
+		.then(updateLobbyInfo2 (client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref))
+	};
 	socket.on('update lobby info', function(roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
-		updateLobbyInfo(client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref);
+			updateLobbyInfo(client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref);
 		/*pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
 			client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
@@ -153,13 +157,15 @@ io.on('connection', function(socket) {
 			});*/
 		});
 	});
-	var updateLobbyInfo = function(client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
+	var updateLobbyInfo1 = function(client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
 		client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
 			if(err) {
 				throw new Error('Error updating room ' + roomID + ' with new info');
 			};
 		});
-		/*client
+	};
+	var updateLobbyInfo2 = function(client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
+		client
 		 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
 		 .on('row', function(err, row) {
 			if(err) {
@@ -167,7 +173,7 @@ io.on('connection', function(socket) {
 			};
 		 	console.log(JSON.stringify(row));
 		 	socket.broadcast.to(roomID).emit('update lobby info', row);
-		});*/
+		});
 	};
 
 	socket.on('host leaves', function(roomID) {
