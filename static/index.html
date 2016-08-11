@@ -156,7 +156,7 @@
 
 		<script type='text/javascript'>
 			var socket = io();
-			var userID = '';
+			var userID = document.cookie.substring(document.cookie.search('rtgUID') + 7, (document.cookie.search('rtgUID') + 14));
 			var roomID = '';
 			var playerNumber = 0;
 			var commName = '';
@@ -172,9 +172,9 @@
 				console.log('Your room code is ' + getCookie('rtgLastGame', 5));
 				document.getElementById('givenRoomCode').value = gameRoomID;
 				roomID = gameRoomID;
+				playerNumber = 1;
 				showHostLobby();
 				hPlayerNotReady();
-				playerNumber = 1;
 			});
 			function getCookie(cname, cvallength) {
 				return document.cookie.substring(document.cookie.search(cname) + cname.length + 1, (document.cookie.search(cname) + cname.length + 1 + cvallength));
