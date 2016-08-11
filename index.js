@@ -150,7 +150,7 @@ io.on('connection', function(socket) {
 		});
 	};*/
 	socket.on('update lobby info', function(roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
-		async.parallel([updateLobbyInfo1, updateLobbyInfo2], function(err, result) {
+		async.parallel([updateLobbyInfo1(roomID, pNumber, pID, pReady, pCommName, pKingdomPref), updateLobbyInfo2(roomID, pNumber, pID, pReady, pCommName, pKingdomPref)], function(err, result) {
 			if (err) {
 				console.log(err);
 				return;
@@ -173,7 +173,7 @@ io.on('connection', function(socket) {
 			});*/
 		});
 	});
-	var updateLobbyInfo1 = function(client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
+	var updateLobbyInfo1 = function(roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
 			client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
@@ -184,7 +184,7 @@ io.on('connection', function(socket) {
 			});
 		});
 	};
-	var updateLobbyInfo2 = function(client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
+	var updateLobbyInfo2 = function(roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
 			client
