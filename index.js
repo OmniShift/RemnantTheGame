@@ -8,6 +8,7 @@ const   fs				= require('fs'),
 		var io = require('socket.io').listen(server);
 		var pg = require('pg');
 		var async = require('async');
+		var promise = ('promise');
 		pg.defaults.ssl = true;
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
@@ -130,7 +131,8 @@ io.on('connection', function(socket) {
 
 	//needs more work
 	socket.on('update lobby info', function(roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
+		updateLobbyInfo(roomID, pNumber, pID, pReady, pCommName, pKingdomPref);
+		/*pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
 			client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
 				if(err) {
@@ -146,8 +148,27 @@ io.on('connection', function(socket) {
 			 	console.log(JSON.stringify(row));
 			 	socket.broadcast.to(roomID).emit('update lobby info', row);
 			});
-		});
+		});*/
 	});
+	var updateLobbyInfo = function(roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err;
+			client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
+				if(err) {
+					throw new Error('Error updating room ' + roomID + ' with new info');
+				};
+			});
+			/*client
+			 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
+			 .on('row', function(err, row) {
+				if(err) {
+					throw new Error('Error selecting room ' + roomID + ' player status info');
+				};
+			 	console.log(JSON.stringify(row));
+			 	socket.broadcast.to(roomID).emit('update lobby info', row);
+			});*/
+		});
+	};
 
 	socket.on('host leaves', function(roomID) {
 		socket.broadcast.to(roomID).emit('dc by host');
