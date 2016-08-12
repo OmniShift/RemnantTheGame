@@ -15,7 +15,10 @@ const   fs				= require('fs'),
 			console.log('Checking database connection.');
 			client
 			 .query('SELECT * FROM "GRIDs" ORDER BY idname;')
-			 .on('row', function(row) {
+			 .on('row', function(err, row) {
+			 	if(err) {
+					throw new Error(err + ' --- Error selecting room TESTr player status info');
+				};
 				console.log(JSON.stringify(row));
 			});
 		});
