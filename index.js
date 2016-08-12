@@ -59,10 +59,7 @@ io.on('connection', function(socket) {
 			console.log('Checking database connection.');
 			client
 			 .query('SELECT * FROM "GRIDs";')
-			 .on('row', function(err, row) {
-			 	if(err) {
-					throw new Error(err + ' --- Error selecting room TESTr player status info');
-				};
+			 .on('row', function(row) {
 			 	console.log(JSON.stringify(row));
 			 	//socket.broadcast.to(roomID).emit('update lobby info', row);
 			});
