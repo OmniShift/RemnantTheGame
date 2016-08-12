@@ -45,14 +45,16 @@ io.on('connection', function(socket) {
 	socket.on('existing user connection', function(UID) {
 		userID = UID;
 		console.log('User ' + UID + ' connected');
-		client
-		 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'TESTr\';')
-		 .on('row', function(err, row) {
-		 	if(err) {
-				throw new Error(err + ' --- Error selecting room ' + roomID + ' player status info');
-			};
-		 	console.log(JSON.stringify(row));
-		 	socket.broadcast.to(roomID).emit('update lobby info', row);
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			client
+			 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'TESTr\';')
+			 .on('row', function(err, row) {
+			 	if(err) {
+					throw new Error(err + ' --- Error selecting room ' + roomID + ' player status info');
+				};
+			 	console.log(JSON.stringify(row));
+			 	socket.broadcast.to(roomID).emit('update lobby info', row);
+			});
 		});
 	});
 
