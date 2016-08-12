@@ -64,7 +64,7 @@ io.on('connection', function(socket) {
 					throw new Error(err + ' --- Error selecting room TESTr player status info');
 				};
 			 	console.log(JSON.stringify(row));
-			 	socket.broadcast.to(roomID).emit('update lobby info', row);
+			 	//socket.broadcast.to(roomID).emit('update lobby info', row);
 			});
 		});
 	});
