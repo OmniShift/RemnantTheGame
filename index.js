@@ -150,12 +150,31 @@ io.on('connection', function(socket) {
 		});
 	};*/
 	socket.on('update lobby info', function(roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
-		async.parallel([updateLobbyInfo1(roomID, pNumber, pID, pReady, pCommName, pKingdomPref), updateLobbyInfo2(roomID, pNumber, pID, pReady, pCommName, pKingdomPref)], function(err, result) {
-			if (err) {
-				console.log(err);
-				return;
-			};
+		new Promise(function(resolve, reject) {
+			pg.connect(process.env.DATABASE_URL, function(err, client) {
+				if (err) throw err;
+				client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
+					if(err) {
+						throw new Error('Error updating room ' + roomID + ' with new info');
+					};
+				});
+				.then(function() {
+					client
+					 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
+					 .on('row', function(err, row) {
+						if(err) {
+							throw new Error('Error selecting room ' + roomID + ' player status info');
+						};
+					 	console.log(JSON.stringify(row));
+					 	socket.broadcast.to(roomID).emit('update lobby info', row);
+					});
+				});
+			});
+		});
 		/*pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err;
+			updateLobbyInfo(roomID, pNumber, pID, pReady, pCommName, pKingdomPref);
+		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
 			client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
 				if(err) {
@@ -173,32 +192,26 @@ io.on('connection', function(socket) {
 			});*/
 		});
 	});
-	var updateLobbyInfo1 = function(roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err;
-			client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
-				if(err) {
-					throw new Error('Error updating room ' + roomID + ' with new info');
-				};
-				callback(null, 'Room ' + roomID + ' updated');
-			});
+	/*var updateLobbyInfo1 = function(client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
+		client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
+			if(err) {
+				throw new Error('Error updating room ' + roomID + ' with new info');
+			};
+			callback(null, 'Room ' + roomID + ' updated');
 		});
 	};
-	var updateLobbyInfo2 = function(roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
-		pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err;
-			client
-			 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
-			 .on('row', function(err, row) {
-				if(err) {
-					throw new Error('Error selecting room ' + roomID + ' player status info');
-				};
-			 	console.log(JSON.stringify(row));
-			 	socket.broadcast.to(roomID).emit('update lobby info', row);
-				callback(null, 'Room info broadcasted back to clients');
-			});
+	var updateLobbyInfo2 = function(client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
+		client
+		 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
+		 .on('row', function(err, row) {
+			if(err) {
+				throw new Error('Error selecting room ' + roomID + ' player status info');
+			};
+		 	console.log(JSON.stringify(row));
+		 	socket.broadcast.to(roomID).emit('update lobby info', row);
+			callback(null, 'Room info broadcasted back to clients');
 		});
-	};
+	};*/
 
 	socket.on('host leaves', function(roomID) {
 		socket.broadcast.to(roomID).emit('dc by host');
