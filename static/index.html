@@ -154,7 +154,7 @@
 		</div><!--end of overlay-->
 		</div><!--end of backgroundMain-->
 
-		<script type='text/javascript'>$(document).ready(function() {
+		<script type='text/javascript'>
 			var socket = io();
 			var userID = document.cookie.substring(document.cookie.search('rtgUID') + 7, (document.cookie.search('rtgUID') + 13));
 			var roomID = '';
@@ -385,5 +385,5 @@
 			hideJoinNewGame();
 			hideHostLobby()
 			hideClientLobby()
-		});</script>
+		</script>
 	</body>
