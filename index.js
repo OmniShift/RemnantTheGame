@@ -87,6 +87,7 @@ io.on('connection', function(socket) {
 			 .query('SELECT * FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
 			 .on('row', function(row) {
 				console.log('Checking for lobby for room ' + roomID);
+				console.log(JSON.stringify(row));
 				status = row.status;
 				console.log('Status: ' + status);
 				if(err) {
@@ -144,9 +145,9 @@ io.on('connection', function(socket) {
 					 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
 					 .on('row', function(row) {
 					 	console.log(JSON.stringify(row));
+						console.log('Room info broadcasted');
 					 	socket.broadcast.to(roomID).emit('update lobby info', row);
 					});
-				console.log('Room info broadcasted');
 				});
 			});
 		});

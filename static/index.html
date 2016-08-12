@@ -154,7 +154,7 @@
 		</div><!--end of overlay-->
 		</div><!--end of backgroundMain-->
 
-		<script type='text/javascript'>
+		<script type='text/javascript'>$(document).ready(function() {
 			var socket = io();
 			var userID = document.cookie.substring(document.cookie.search('rtgUID') + 7, (document.cookie.search('rtgUID') + 13));
 			var roomID = '';
@@ -259,12 +259,12 @@
 			function cPlayerReady() {
 				commName = document.getElementById('CommName' + playerNumber.toString()).value;
 				kingdomPref = document.getElementById('KingdomPref' + playerNumber.toString()).value;
-				document.getElementById('cLobbySlot' + playerNumber.toString()).innerHTML = "Commander " + commName + ", attempting command of " + kingdomArray[kingdomPref] + " is ready <button id='notReadyP2' onclick='cPlayerNotReady()'>X</button>";
+				document.getElementById('cLobbySlot' + playerNumber.toString()).innerHTML = "Commander " + commName + ", attempting command of " + kingdomArray[kingdomPref] + " is ready <button id='notReadyP" + playerNumber.toString() + "' onclick='cPlayerNotReady()'>X</button>";
 				socket.emit('update lobby info', roomID, playerNumber, userID, 1, commName, kingdomPref);
 			};
 			function cPlayerNotReady() {
 				document.getElementById('cLobbySlot' + playerNumber.toString()).innerHTML = "<div id='LobbyInfoP" + playerNumber.toString() + "'>Commander name: <input id='CommName" + playerNumber.toString() + "' type='text' name='commanderName' maxlength='15' value='" + commName + "'> <select name='kingdomPref' id='KingdomPref" + playerNumber.toString() + "' value='" + kingdomPref + "'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select> <button id='readyP" + playerNumber.toString() + "' onclick='cPlayerReady()'>V</button></div>";
-				document.getElementById("KingdomPref1").selectedIndex = kingdomPref;
+				document.getElementById("KingdomPref" + playerNumber.toString()).selectedIndex = kingdomPref;
 				socket.emit('update lobby info', roomID, playerNumber, userID, 0, commName, kingdomPref);
 			};
 			socket.on('player joined lobby', function(newPlayerNumber){
@@ -385,5 +385,5 @@
 			hideJoinNewGame();
 			hideHostLobby()
 			hideClientLobby()
-		</script>
+		});</script>
 	</body>
