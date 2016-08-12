@@ -46,6 +46,15 @@ io.on('connection', function(socket) {
 		userID = UID;
 		console.log('User ' + UID + ' connected');
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
+			if (err) throw err;
+			console.log('Checking database connection.');
+			client
+			 .query('SELECT * FROM "GRIDs" ORDER BY idname;')
+			 .on('row', function(row) {
+				console.log(JSON.stringify(row));
+			});
+		});
+		/*pg.connect(process.env.DATABASE_URL, function(err, client) {
 			client
 			 .query('SELECT * FROM "GRIDs";')
 			 .on('row', function(err, row) {
@@ -55,7 +64,7 @@ io.on('connection', function(socket) {
 			 	console.log(JSON.stringify(row));
 			 	socket.broadcast.to(roomID).emit('update lobby info', row);
 			});
-		});
+		});*/
 	});
 
 	socket.on('news request', function() {
