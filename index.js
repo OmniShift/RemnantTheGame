@@ -155,18 +155,20 @@ io.on('connection', function(socket) {
 				if (err) throw err;
 				client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
 					if(err) {
-						throw new Error(err + '--- Error updating room ' + roomID + ' with new info');
+						throw new Error(err + ' --- Error updating room ' + roomID + ' with new info');
 					};
+				console.log('Room info updated');
 				}).then(function() {
 					client
 					 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
 					 .on('row', function(err, row) {
 					 	if(err) {
-							throw new Error(err + '--- Error selecting room ' + roomID + ' player status info');
+							throw new Error(err + ' --- Error selecting room ' + roomID + ' player status info');
 						};
 					 	console.log(JSON.stringify(row));
 					 	socket.broadcast.to(roomID).emit('update lobby info', row);
 					});
+				console.log('Room info broadcasted');
 				});
 			});
 		});
