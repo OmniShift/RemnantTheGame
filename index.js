@@ -157,8 +157,7 @@ io.on('connection', function(socket) {
 					if(err) {
 						throw new Error('Error updating room ' + roomID + ' with new info');
 					};
-				});
-				.then(function() {
+				}).then(function() {
 					client
 					 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
 					 .on('row', function(err, row) {
@@ -189,8 +188,8 @@ io.on('connection', function(socket) {
 				};
 			 	console.log(JSON.stringify(row));
 			 	socket.broadcast.to(roomID).emit('update lobby info', row);
-			});*/
-		});
+			});
+		});*/
 	});
 	/*var updateLobbyInfo1 = function(client, roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
 		client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
