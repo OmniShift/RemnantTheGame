@@ -15,10 +15,7 @@ const   fs				= require('fs'),
 			console.log('Checking database connection.');
 			client
 			 .query('SELECT * FROM "GRIDs" ORDER BY idname;')
-			 .on('row', function(err, row) {
-			 	if(err) {
-					throw new Error(err + ' --- Error selecting room TESTr player status info');
-				};
+			 .on('row', function(row) {
 				console.log(JSON.stringify(row));
 			});
 		});
@@ -48,20 +45,11 @@ io.on('connection', function(socket) {
 	socket.on('existing user connection', function(UID) {
 		userID = UID;
 		console.log('User ' + UID + ' connected');
-		/*pg.connect(process.env.DATABASE_URL, function(err, client) {
-			if (err) throw err;
-			console.log('Checking database connection.');
-			client
-			 .query('SELECT * FROM "GRIDs" ORDER BY idname;')
-			 .on('row', function(row) {
-				console.log(JSON.stringify(row));
-			});
-		});*/
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
 			console.log('Checking database connection.');
 			client
-			 .query('SELECT * FROM "GRIDs";')
+					 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'TESTr\';')
 			 .on('row', function(row) {
 			 	console.log(JSON.stringify(row));
 			 	//socket.broadcast.to(roomID).emit('update lobby info', row);
