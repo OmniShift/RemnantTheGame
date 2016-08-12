@@ -47,7 +47,7 @@ io.on('connection', function(socket) {
 		console.log('User ' + UID + ' connected');
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			client
-			 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'TESTr\';')
+			 .query('SELECT * FROM "GRIDs" WHERE idname=\'TESTr\';')
 			 .on('row', function(err, row) {
 			 	if(err) {
 					throw new Error(err + ' --- Error selecting room TESTr player status info');
