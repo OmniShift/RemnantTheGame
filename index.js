@@ -140,6 +140,7 @@ io.on('connection', function(socket) {
 						throw new Error(err + ' --- Error updating room ' + roomID + ' with new info');
 					};
 				console.log('Room info updated');
+				//for whatever reason, the code below doesnt fire when readying client player
 				}).then(function() {
 					client
 					 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
@@ -172,13 +173,6 @@ io.on('connection', function(socket) {
 	});
 
 	setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
-
-	/*function pausecomp(millis) {
-		var date = new Date();
-		var curDate = null;
-		do { curDate = new Date(); }
-		while(curDate-date < millis);
-	};*/
 
 	var genUID = function(callback) {
 		var possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
