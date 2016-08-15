@@ -265,7 +265,7 @@
 			function cPlayerNotReady() {
 				document.getElementById('cLobbySlot' + playerNumber.toString()).innerHTML = "<div id='LobbyInfoP" + playerNumber.toString() + "'>Commander name: <input id='CommName" + playerNumber.toString() + "' type='text' name='commanderName' maxlength='15' value='" + commName + "'> <select name='kingdomPref' id='KingdomPref" + playerNumber.toString() + "' value='" + kingdomPref + "'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select> <button id='readyP" + playerNumber.toString() + "' onclick='cPlayerReady()'>V</button></div>";
 				document.getElementById("KingdomPref" + playerNumber.toString()).selectedIndex = kingdomPref;
-				//maybe some of these variables arent set yet at this point in time?
+				//roomID, and possible commName and kingdomPref arent set yet at this point
 				console.log(roomID);
 				console.log(playerNumber);
 				console.log(userID);

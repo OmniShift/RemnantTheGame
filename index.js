@@ -132,6 +132,7 @@ io.on('connection', function(socket) {
 	});
 
 	socket.on('update lobby info', function(roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
+		console.log('Room ID: ' + roomID + ', sent player number: ' + pNumber + ', sent player ID: ' + pID + ', sent player ready: ' + pReady + ', sent player commander: ' + pCommName + ', sent player kingdom preference: ' + pKingdomPref);
 		new Promise(function(resolve, reject) {
 			pg.connect(process.env.DATABASE_URL, function(err, client) {
 				if (err) throw err;
