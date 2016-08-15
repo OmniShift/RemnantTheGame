@@ -111,7 +111,11 @@ io.on('connection', function(socket) {
 									 .query('SELECT (playerid[' + j + '], playerready[' + j + '], playercommname[' + j + '], playerkingdompref[' + j + ']) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
 									 .on('row', function(row) {
 										console.log(JSON.stringify(row));
-										socket.emit('client lobby initialization', j, row);
+										console.log(row[1]);
+										console.log(row[2]);
+										console.log(row[3]);
+										console.log(row[4]);
+										//socket.emit('client lobby initialization', j, row);
 									});
 								};
 								break;
