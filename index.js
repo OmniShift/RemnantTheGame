@@ -104,13 +104,17 @@ io.on('connection', function(socket) {
 								});
 								gameRoomID = roomID;
 								socket.join(roomID);
-								client
-								 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
-								 .on('row', function(row) {
-									socket.emit('join lobby request accepted', i, roomID, row);
-									console.log(JSON.stringify(row));
-								});
+								socket.emit('join lobby request accepted', i, roomID);
 								socket.broadcast.to(roomID).emit('player joined lobby', i);
+								for (i = 2; i < 5; i++) {
+									client
+									 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
+									 .on('row', function(row) {
+										console.log(JSON.stringify(row));
+										console.log(row.playerid[i]);
+										socket.emit('client lobby initialization', i, row);
+									});
+								};
 								break;
 							} else {
 								if (i = 4) {
@@ -140,7 +144,6 @@ io.on('connection', function(socket) {
 						throw new Error(err + ' --- Error updating room ' + roomID + ' with new info');
 					};
 					console.log('Room info updated');
-				//for whatever reason, the code below doesnt fire when readying client player
 				}).then(function() {
 					client
 					 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')

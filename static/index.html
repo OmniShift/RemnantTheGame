@@ -265,22 +265,34 @@
 			function cPlayerNotReady() {
 				document.getElementById('cLobbySlot' + playerNumber.toString()).innerHTML = "<div id='LobbyInfoP" + playerNumber.toString() + "'>Commander name: <input id='CommName" + playerNumber.toString() + "' type='text' name='commanderName' maxlength='15' value='" + commName + "'> <select name='kingdomPref' id='KingdomPref" + playerNumber.toString() + "' value='" + kingdomPref + "'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select> <button id='readyP" + playerNumber.toString() + "' onclick='cPlayerReady()'>V</button></div>";
 				document.getElementById("KingdomPref" + playerNumber.toString()).selectedIndex = kingdomPref;
-				//roomID, and possible commName and kingdomPref arent set yet at this point
-				console.log(roomID);
+				/*console.log(roomID);
 				console.log(playerNumber);
 				console.log(userID);
 				console.log(commName);
-				console.log(kingdomPref);
+				console.log(kingdomPref);*/
 				socket.emit('update lobby info', roomID, playerNumber, userID, 0, commName, kingdomPref);
 			};
-			socket.on('player joined lobby', function(newPlayerNumber){
+			socket.on('player joined lobby', function(newPlayerNumber ){
 				if (playerNumber == 1) {
 					document.getElementById('hLobbySlot' + newPlayerNumber).innerHTML = "Player joined. Waiting for them to get ready...";
 				} else {
 					document.getElementById('cLobbySlot' + newPlayerNumber).innerHTML = "Player joined. Waiting for them to get ready...";
 				};
 			});
-			socket.on('update lobby info', function(gameInfoObj){
+			socket.on('client lobby initialization', function (pNumber, gameInfoObj) {
+				if (playerNumber != i) {
+					if (gameInfoObj.playerid != '') {
+						if (gameInfoObj.playerready == 0) {
+							document.getElementById('cLobbySlot' + pNumber).innerHTML = "Waiting for player to get ready...";
+						} else {
+							document.getElementById('cLobbySlot' + pNumber).innerHTML = "Commander " + gameInfoObj.playercommname[i] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[pNumber]] + " is ready for war";
+						};
+					} else {
+						document.getElementById('cLobbySlot' + i).innerHTML = "Waiting for player to join...";
+					};
+				};
+			});
+			socket.on('update lobby info', function(gameInfoObj) {
 				console.log(JSON.stringify(gameInfoObj));
 				console.log('player 4 commander is ' + gameInfoObj.playercommname[4]);
 				console.log('player 2 kingdom is ' + gameInfoObj.playerkingdompref[2] + ', (' + kingdomArray[gameInfoObj.playerkingdompref[2]] + ')');
@@ -345,7 +357,7 @@
 				roomID = sentRoomID;
 				joinLobby();
 				cPlayerNotReady();
-				for (i = 1; i < 5; i++) {
+				/*for (i = 1; i < 5; i++) {
 					if (playerNumber != i) {
 						if (gameInfoObj.playerid[i] != '') {
 							if (gameInfoObj.playerready[i] == 0) {
@@ -357,7 +369,7 @@
 							document.getElementById('cLobbySlot' + i).innerHTML = "Waiting for player to join...";
 						};
 					};
-				};
+				};*/
 			});
 
 			function newGameWarning() {
