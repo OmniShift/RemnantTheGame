@@ -279,7 +279,7 @@
 					document.getElementById('cLobbySlot' + newPlayerNumber).innerHTML = "Player joined. Waiting for them to get ready...";
 				};
 			});
-			socket.on('client lobby initialization', function (pNumber, gameInfoObj) {
+			/*socket.on('client lobby initialization', function (pNumber, gameInfoObj) {
 				if (playerNumber != pNumber) {
 					if (gameInfoObj.playerid != '') {
 						if (gameInfoObj.playerready == 0) {
@@ -291,7 +291,7 @@
 						document.getElementById('cLobbySlot' + pNumber).innerHTML = "Waiting for player to join...";
 					};
 				};
-			});
+			});*/
 			socket.on('update lobby info', function(gameInfoObj) {
 				console.log(JSON.stringify(gameInfoObj));
 				console.log('player 4 commander is ' + gameInfoObj.playercommname[4]);
@@ -357,6 +357,7 @@
 				roomID = sentRoomID;
 				joinLobby();
 				cPlayerNotReady();
+				console.log(gameInfoObj.playerid[i]);
 				/*for (i = 1; i < 5; i++) {
 					if (playerNumber != i) {
 						if (gameInfoObj.playerid[i] != '') {

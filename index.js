@@ -104,20 +104,21 @@ io.on('connection', function(socket) {
 								});
 								gameRoomID = roomID;
 								socket.join(roomID);
-								socket.emit('join lobby request accepted', i, roomID);
-								socket.broadcast.to(roomID).emit('player joined lobby', i);
-								for (j = 1; j < 5; j++) {
+								client
+								 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
+								 .on('row', function(row) {
+									console.log(JSON.stringify(row));
+									socket.emit('join lobby request accepted', i, roomID, row);
+									socket.broadcast.to(roomID).emit('player joined lobby', i);
+								});
+								/*for (j = 1; j < 5; j++) {
 									client
 									 .query('SELECT (playerid[' + j + '], playerready[' + j + '], playercommname[' + j + '], playerkingdompref[' + j + ']) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
 									 .on('row', function(row) {
 										console.log(JSON.stringify(row));
-										console.log(row[1]);
-										console.log(row[2]);
-										console.log(row[3]);
-										console.log(row[4]);
 										//socket.emit('client lobby initialization', j, row);
 									});
-								};
+								};*/
 								break;
 							} else {
 								if (i = 4) {
