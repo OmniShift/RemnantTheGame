@@ -8,7 +8,6 @@ const   fs				= require('fs'),
 		var io = require('socket.io').listen(server);
 		var pg = require('pg');
 		var async = require('async');
-		var promise = ('promise');
 		pg.defaults.ssl = true;
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
