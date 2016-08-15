@@ -108,7 +108,7 @@ io.on('connection', function(socket) {
 								client
 								 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
 								 .on('row', function(row) {
-									socket.emit('join lobby request accepted', i, row);
+									socket.emit('join lobby request accepted', i, roomID, row);
 									console.log(JSON.stringify(row));
 								});
 								socket.broadcast.to(roomID).emit('player joined lobby', i);
@@ -140,7 +140,7 @@ io.on('connection', function(socket) {
 					if(err) {
 						throw new Error(err + ' --- Error updating room ' + roomID + ' with new info');
 					};
-				console.log('Room info updated');
+					console.log('Room info updated');
 				//for whatever reason, the code below doesnt fire when readying client player
 				}).then(function() {
 					client
