@@ -113,7 +113,7 @@
 				</div>
 				<div class='popUpBottom'>
 					<p style='font-size:1.2em'>Please insert your room code:<BR>
-					<input id='roomCode' type='text' name='roomCode' autocomplete='off'></p>
+					<input id='roomCode' type='text' name='roomCode' autocomplete='off' maxlength="5" autofocus=""></p>
 					<button onclick='roomCodeCheck()'>Join game</button>
 					<button onclick='hideJoinNewGame()'>Cancel</button>
 				</div>
@@ -358,11 +358,11 @@
 				joinLobby();
 				cPlayerNotReady();
 				console.log(gameInfoObj);
-				console.log(JSON.stringify(gameInfoObj));
+				/*console.log(JSON.stringify(gameInfoObj));
 				console.log(gameInfoObj.row[1]);
 				console.log(gameInfoObj.row[1][1]);
 				console.log(gameInfoObj.row.playerid);
-				console.log(gameInfoObj.row.playerid[1]);
+				console.log(gameInfoObj.row.playerid[1]);*/
 				console.log(gameInfoObj.playerid[1]);
 				/*for (i = 1; i < 5; i++) {
 					if (playerNumber != i) {
