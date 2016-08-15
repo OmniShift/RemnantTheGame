@@ -106,12 +106,12 @@ io.on('connection', function(socket) {
 								socket.join(roomID);
 								socket.emit('join lobby request accepted', i, roomID);
 								socket.broadcast.to(roomID).emit('player joined lobby', i);
-								for (i = 2; i < 5; i++) {
+								for (i = 1; i < 5; i++) {
 									client
-									 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
+									 .query('SELECT (playerid[' + i + '], playerready[' + i + '], playercommname[' + i + '], playerkingdompref[' + i + ']) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
 									 .on('row', function(row) {
 										console.log(JSON.stringify(row));
-										console.log(row.playerid[i]);
+										console.log(row.playerid);
 										socket.emit('client lobby initialization', i, row);
 									});
 								};
