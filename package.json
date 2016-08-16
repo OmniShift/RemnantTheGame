@@ -13,6 +13,7 @@
     "async": "^2.0.1",
     "express": "^3.21.2",
     "pg": "6.0.3",
+    "promise": "^7.1.1",
     "socketio": "1.0.0"
   },
   "repository": {

@@ -67,7 +67,6 @@ io.on('connection', function(socket) {
 				userID += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
 			};
 			console.log('Checking for ID ' + userID);
-			return userID;
 		}).then(function() {
 			console.log('Connecting to postgres...');
 			pg.connect(process.env.DATABASE_URL, function(err, client) {
