@@ -133,7 +133,7 @@ io.on('connection', function(socket) {
 					console.log('Query passed');
 					if(status == 0) {
 						for (i = 2; i < 5; i++) {
-							if (row.playerid[i-1] != '') {
+							if (row.playerid[i-1] != '\'\'') {
 								client.query('UPDATE "GRIDs" SET playerid[' + i + '] = \'' + UID + '\' WHERE idname=\'' + roomID + '\';', function(err, data) {
 									if(err) {
 										throw new Error('Error adding ' + UID + ' to game room ' + roomID);
