@@ -67,7 +67,8 @@ io.on('connection', function(socket) {
 				userID += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
 			};
 			console.log('Checking for ID ' + userID);
-		}).then
+		}).then(function() {
+			console.log('Connecting to postgres...');
 			pg.connect(process.env.DATABASE_URL, function(err, client) {
 				if (err) throw err;
 				console.log('Connected to postgres');
@@ -98,7 +99,7 @@ io.on('connection', function(socket) {
 					};
 				});
 			});
-	});
+		});
 		/*async.parallel([genUID, checkUIDs], function(err, result) {
 			if (err) {
 				console.log(err);
@@ -106,6 +107,7 @@ io.on('connection', function(socket) {
 			};
 			console.log(result);
 		});*/
+	});
 	socket.on('generate GRID', function() {
 		console.log('Generate GRID request received');
 		//possibly change to promise
