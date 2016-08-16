@@ -133,7 +133,7 @@ io.on('connection', function(socket) {
 					console.log('Query passed');
 					if(status == 0) {
 						for (i = 1; i < 4; i++) {
-							if (row.playerid[i] == '\'\'') {
+							if (row.playerid[i] === '\'\'') {
 								client.query('UPDATE "GRIDs" SET playerid[' + i + '] = \'' + UID + '\' WHERE idname=\'' + roomID + '\';', function(err, data) {
 									if(err) {
 										throw new Error('Error adding ' + UID + ' to game room ' + roomID);
@@ -141,13 +141,9 @@ io.on('connection', function(socket) {
 								});
 								gameRoomID = roomID;
 								socket.join(roomID);
-								/*client
-								 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
-								 .on('row', function(row) {*/
-									console.log(JSON.stringify(row));
-									socket.emit('join lobby request accepted', (i+1), roomID, row);
-									socket.broadcast.to(roomID).emit('player joined lobby', (i+1));
-								//});
+								console.log(JSON.stringify(row));
+								socket.emit('join lobby request accepted', (i+1), roomID, row);
+								socket.broadcast.to(roomID).emit('player joined lobby', (i+1));
 								break;
 							} else {
 								if (i = 3) {
