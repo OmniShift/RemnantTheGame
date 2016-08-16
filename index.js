@@ -150,7 +150,7 @@ io.on('connection', function(socket) {
 								//});
 								break;
 							} else {
-								if (i = 4) {
+								if (i = 3) {
 									socket.emit('room full');
 								};
 							};
