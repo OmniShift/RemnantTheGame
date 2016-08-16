@@ -104,15 +104,15 @@ button {
 }
 
 #hostLobby {
-	width: 40%;
+	width: 50%;
 	margin-top: -10%;
-	margin-left: -20%;
+	margin-left: -25%;
 }
 
 #clientLobby {
-	width: 40%;
+	width: 50%;
 	margin-top: -10%;
-	margin-left: -20%;
+	margin-left: -25%;
 }
 
 .lobbyPlayerSlot {
