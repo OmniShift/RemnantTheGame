@@ -295,12 +295,9 @@
 			//somewhere in this code, the gameInfoObj is a value row with a long string, and this only occurs with the host, not the (first) client)
 			socket.on('update lobby info', function(gameInfoObj) {
 				console.log(JSON.stringify(gameInfoObj));
-				console.log('player 4 commander is ' + gameInfoObj.playercommname[4]);
-				console.log('player 2 kingdom is ' + gameInfoObj.playerkingdompref[2] + ', (' + kingdomArray[gameInfoObj.playerkingdompref[2]] + ')');
-				console.log('player 3 UID is ' + gameInfoObj.playerid[3]);
-				console.log('player 1 ready state is ' + gameInfoObj.playerready[1]);
 				//check if player is host or not
 				for (i = 1; i < 5; i++) {
+					console.log(gameInfoObj.playerid[i]);
 					if (playerNumber != i) {
 						if (gameInfoObj.playerid[i] != '') {
 							if (playerNumber == 1) {
