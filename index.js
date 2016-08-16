@@ -148,10 +148,12 @@ io.on('connection', function(socket) {
 						throw new Error(err + ' --- Error updating room ' + roomID + ' with new info');
 					};
 					console.log('Room info updated');
+					console.log(JSON.stringify(data));
+					console.log(data);
 				}).then(function() {
 					client
 					 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
-					 .on('row', function(gameInfo) {
+					 .on('row', function(row) {
 					 	console.log(JSON.stringify(row));
 						console.log('Room info broadcasted');
 					 	socket.broadcast.to(roomID).emit('update lobby info', row);
