@@ -68,7 +68,7 @@ io.on('connection', function(socket) {
 				userID += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
 			};
 			console.log('Checking for ID ' + userID);
-			resolve('UID part 1 complete');
+			resolve('UID generation complete');
 		}).then(function() {
 			console.log('Connecting to postgres...');
 			pg.connect(process.env.DATABASE_URL, function(err, client) {
@@ -184,6 +184,7 @@ io.on('connection', function(socket) {
 						throw new Error(err + ' --- Error updating room ' + roomID + ' with new info');
 					};
 					console.log('Room info updated');
+					resolve('lobbies updated');
 				}).then(function() {
 					client
 					 .query('SELECT * FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
