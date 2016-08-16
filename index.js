@@ -111,14 +111,6 @@ io.on('connection', function(socket) {
 									socket.emit('join lobby request accepted', i, roomID, row);
 									socket.broadcast.to(roomID).emit('player joined lobby', i);
 								//});
-								/*for (j = 1; j < 5; j++) {
-									client
-									 .query('SELECT (playerid[' + j + '], playerready[' + j + '], playercommname[' + j + '], playerkingdompref[' + j + ']) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
-									 .on('row', function(row) {
-										console.log(JSON.stringify(row));
-										//socket.emit('client lobby initialization', j, row);
-									});
-								};*/
 								break;
 							} else {
 								if (i = 4) {
@@ -148,11 +140,9 @@ io.on('connection', function(socket) {
 						throw new Error(err + ' --- Error updating room ' + roomID + ' with new info');
 					};
 					console.log('Room info updated');
-					console.log(JSON.stringify(data));
-					console.log(data);
 				}).then(function() {
 					client
-					 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
+					 .query('SELECT * FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
 					 .on('row', function(row) {
 					 	console.log(JSON.stringify(row));
 						console.log('Room info broadcasted');
