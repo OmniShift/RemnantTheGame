@@ -8,7 +8,7 @@ const   fs				= require('fs'),
 		var io = require('socket.io').listen(server);
 		var pg = require('pg');
 		var async = require('async');
-		var Promise = require('promise');
+		//var Promise = require('promise');
 		pg.defaults.ssl = true;
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
@@ -102,13 +102,6 @@ io.on('connection', function(socket) {
 				});
 			});
 		});
-		/*async.parallel([genUID, checkUIDs], function(err, result) {
-			if (err) {
-				console.log(err);
-				return;
-			};
-			console.log(result);
-		});*/
 	});
 	socket.on('generate GRID', function() {
 		console.log('Generate GRID request received');
