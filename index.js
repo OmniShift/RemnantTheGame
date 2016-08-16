@@ -58,13 +58,54 @@ io.on('connection', function(socket) {
 
 	socket.on('generate UID', function() {
 		console.log('Generate UID request received');
-		async.parallel([genUID, checkUIDs], function(err, result) {
+		new Promise(function(resolve, reject) {
+			var possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+			console.log('ID generation started');
+			//preventing the userID from growing 5 characters with each failed attempt
+			userID = '';
+			for(var j=0; j < 6; j++) {
+				userID += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
+			};
+			console.log('Checking for ID ' + userID);
+		}).then
+			pg.connect(process.env.DATABASE_URL, function(err, client) {
+				if (err) throw err;
+				console.log('Connected to postgres');
+				client
+				 .query('SELECT COUNT(idname) FROM "UIDs" WHERE idname=\'' + userID + '\';')
+				 .on('row', function(row) {
+					console.log(row);
+					hits = JSON.stringify(row).substring(10, (JSON.stringify(row).length - 2));
+					console.log(hits + ' matches');
+					if(err) {
+						userID = '';
+						throw new Error(err + ' --- Error querying for user ID.');
+					} else {
+						console.log('Query passed');
+						if(hits == 0) {
+							console.log('User ID ' + userID + ' available. Inserting it into database');
+							client.query('INSERT INTO "UIDs" (idname) VALUES (\'' + userID + '\');', function(err, data) {
+								if(err) {
+									throw new Error(err + ' --- Error inserting user ID ' + userID);
+								};
+							});
+							socket.emit('return generated UID', userID);
+							console.log('ID successfully assigned');
+						} else {
+							console.log('User ID ' + userID + ' not available. New attempt required');
+							userID = '';
+						};
+					};
+				});
+			});
+		});
+		/*async.parallel([genUID, checkUIDs], function(err, result) {
 			if (err) {
 				console.log(err);
 				return;
 			};
 			console.log(result);
-		});
+		});*/
 	});
 	socket.on('generate GRID', function() {
 		console.log('Generate GRID request received');
@@ -173,7 +214,7 @@ io.on('connection', function(socket) {
 
 	setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
 
-	var genUID = function(callback) {
+	/*var genUID = function(callback) {
 		var possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 		console.log('ID generation started');
 		//preventing the userID from growing 5 characters with each failed attempt
@@ -206,11 +247,6 @@ io.on('connection', function(socket) {
 								throw new Error('Error inserting user ID ' + userID);
 							};
 						});
-						/*client
-							.query('SELECT * FROM "UIDs";')
-							.on('row', function(row) {
-								console.log(JSON.stringify(row));
-							});*/
 						socket.emit('return generated UID', userID);
 						callback(null, 'ID successfully assigned');
 					} else {
@@ -221,7 +257,7 @@ io.on('connection', function(socket) {
 				};
 			});
 		});
-	};
+	};*/
 
 	var genGRID = function(callback) {
 		var possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

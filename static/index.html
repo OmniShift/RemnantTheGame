@@ -54,7 +54,9 @@
 	<body>
 		<div id='backgroundMain'>
 		<div id='overlay'>
+		<!--if the server time is not displayed or doesn't update, there's no connection-->
 			<div id='serverTime' style='text-align:center'></div><BR>
+			<!--if the news is not shown, but the clock does tick, the userID is probably not generated, passed or returned-->
 			<div id='newsBoard'><b>News</b><BR>
 				<div style='width:600px; height:2px; display:inline-block; background-color:black'></div><BR>
 				<table id='newsTable' style='padding:5px'></table>
