@@ -297,9 +297,12 @@
 				console.log(JSON.stringify(gameInfoObj));
 				//check if player is host or not
 				for (i = 0; i < 4; i++) {
+					//Don't update your own information, which is done locally
 					if (playerNumber != (i+1)) {
+						//Check if there is a player in this slot
 						if (gameInfoObj.playerid[i] != '\'\'') {
-							if (playerNumber == 0) {
+							//Check if you are the host
+							if (playerNumber == 1) {
 								if (gameInfoObj.playerready[i] == 0) {
 									document.getElementById('hLobbySlot' + (i+1)).innerHTML = "Waiting for player to get ready...";
 								} else {
