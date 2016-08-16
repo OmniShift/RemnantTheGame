@@ -151,10 +151,10 @@ io.on('connection', function(socket) {
 				}).then(function() {
 					client
 					 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
-					 .on('row', function(row) {
-					 	console.log(JSON.stringify(row));
+					 .on('row', function(gameInfo) {
+					 	console.log(JSON.stringify(gameInfo));
 						console.log('Room info broadcasted');
-					 	socket.broadcast.to(roomID).emit('update lobby info', row);
+					 	socket.broadcast.to(roomID).emit('update lobby info', gameInfo);
 					});
 				});
 			});

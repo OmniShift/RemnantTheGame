@@ -292,6 +292,7 @@
 					};
 				};
 			});*/
+			//somewhere in this code, the gameInfoObj is a value row with a long string, and this only occurs with the host, not the (first) client)
 			socket.on('update lobby info', function(gameInfoObj) {
 				console.log(JSON.stringify(gameInfoObj));
 				console.log('player 4 commander is ' + gameInfoObj.playercommname[4]);
@@ -357,8 +358,8 @@
 				roomID = sentRoomID;
 				joinLobby();
 				cPlayerNotReady();
-				console.log(gameInfoObj);
-				/*console.log(JSON.stringify(gameInfoObj));
+				/*console.log(gameInfoObj);
+				console.log(JSON.stringify(gameInfoObj));
 				console.log(gameInfoObj.idname);
 				console.log(gameInfoObj.playerid[0]);
 				console.log(JSON.stringify(gameInfoObj.playercommname));*/
