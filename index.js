@@ -145,8 +145,8 @@ io.on('connection', function(socket) {
 								 .query('SELECT (playerid, playerready, playercommname, playerkingdompref) FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
 								 .on('row', function(row) {*/
 									console.log(JSON.stringify(row));
-									socket.emit('join lobby request accepted', i, roomID, row);
-									socket.broadcast.to(roomID).emit('player joined lobby', i);
+									socket.emit('join lobby request accepted', (i+1), roomID, row);
+									socket.broadcast.to(roomID).emit('player joined lobby', (i+1));
 								//});
 								break;
 							} else {
