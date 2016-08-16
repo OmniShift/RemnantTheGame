@@ -248,7 +248,7 @@
 			function hPlayerReady() {
 				commName = document.getElementById('CommName1').value;
 				kingdomPref = document.getElementById('KingdomPref1').value;
-				document.getElementById('hLobbySlot1').innerHTML =  "Commander " + commName + ", attempting command of " + kingdomArray[kingdomPref] + " is ready <button id='notReadyP1' onclick='hPlayerNotReady()'>X</button>";
+				document.getElementById('hLobbySlot1').innerHTML =  "Commander " + commName + ", attempting command of " + kingdomArray[kingdomPref] + " is ready for war <button id='notReadyP1' onclick='hPlayerNotReady()'>X</button>";
 				socket.emit('update lobby info', roomID, playerNumber, userID, 1, commName, kingdomPref);
 			};
 			function hPlayerNotReady() {
@@ -259,7 +259,7 @@
 			function cPlayerReady() {
 				commName = document.getElementById('CommName' + playerNumber.toString()).value;
 				kingdomPref = document.getElementById('KingdomPref' + playerNumber.toString()).value;
-				document.getElementById('cLobbySlot' + playerNumber.toString()).innerHTML = "Commander " + commName + ", attempting command of " + kingdomArray[kingdomPref] + " is ready <button id='notReadyP" + playerNumber.toString() + "' onclick='cPlayerNotReady()'>X</button>";
+				document.getElementById('cLobbySlot' + playerNumber.toString()).innerHTML = "Commander " + commName + ", attempting command of " + kingdomArray[kingdomPref] + " is ready for war <button id='notReadyP" + playerNumber.toString() + "' onclick='cPlayerNotReady()'>X</button>";
 				socket.emit('update lobby info', roomID, playerNumber, userID, 1, commName, kingdomPref);
 			};
 			function cPlayerNotReady() {
@@ -297,7 +297,6 @@
 				console.log(JSON.stringify(gameInfoObj));
 				//check if player is host or not
 				for (i = 0; i < 4; i++) {
-					console.log(gameInfoObj.playerid[i]);
 					if (playerNumber != (i+1)) {
 						if (gameInfoObj.playerid[i] != '\'\'') {
 							if (playerNumber == 0) {
@@ -362,7 +361,7 @@
 				console.log(JSON.stringify(gameInfoObj.playercommname));*/
 				for (i = 0; i < 4; i++) {
 					if (playerNumber != (i+1)) {
-						if (gameInfoObj.playerid[i] != '') {
+						if (gameInfoObj.playerid[i] != '\'\'') {
 							if (gameInfoObj.playerready[i] == 0) {
 								document.getElementById('cLobbySlot' + (i+1)).innerHTML = "Waiting for player to get ready...";
 							} else {
