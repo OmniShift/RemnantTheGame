@@ -98,7 +98,7 @@ io.on('connection', function(socket) {
 					};
 				});
 			});
-		});
+	});
 		/*async.parallel([genUID, checkUIDs], function(err, result) {
 			if (err) {
 				console.log(err);
@@ -106,7 +106,6 @@ io.on('connection', function(socket) {
 			};
 			console.log(result);
 		});*/
-	});
 	socket.on('generate GRID', function() {
 		console.log('Generate GRID request received');
 		//possibly change to promise
