@@ -68,7 +68,7 @@ io.on('connection', function(socket) {
 			};
 			console.log('Checking for ID ' + userID);
 			return userID;
-		}).then(function(userID) {
+		}).then(function() {
 			console.log('Connecting to postgres...');
 			pg.connect(process.env.DATABASE_URL, function(err, client) {
 				if (err) throw err;
