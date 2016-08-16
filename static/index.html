@@ -296,28 +296,28 @@
 			socket.on('update lobby info', function(gameInfoObj) {
 				console.log(JSON.stringify(gameInfoObj));
 				//check if player is host or not
-				for (i = 1; i < 5; i++) {
+				for (i = 0; i < 4; i++) {
 					console.log(gameInfoObj.playerid[i]);
-					if (playerNumber != i) {
-						if (gameInfoObj.playerid[i] != '') {
-							if (playerNumber == 1) {
+					if (playerNumber != (i+1)) {
+						if (gameInfoObj.playerid[i] != '\'\'') {
+							if (playerNumber == 0) {
 								if (gameInfoObj.playerready[i] == 0) {
-									document.getElementById('hLobbySlot' + i).innerHTML = "Waiting for player to get ready...";
+									document.getElementById('hLobbySlot' + (i+1)).innerHTML = "Waiting for player to get ready...";
 								} else {
-									document.getElementById('hLobbySlot' + i).innerHTML = "Commander " + gameInfoObj.playercommname[i] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[i]] + " is ready for war";
+									document.getElementById('hLobbySlot' + (i+1)).innerHTML = "Commander " + gameInfoObj.playercommname[i] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[i]] + " is ready for war";
 								};
 							} else {
 								if (gameInfoObj.playerready[i] == 0) {
-									document.getElementById('cLobbySlot' + i).innerHTML = "Waiting for player to get ready...";
+									document.getElementById('cLobbySlot' + (i+1)).innerHTML = "Waiting for player to get ready...";
 								} else {
-									document.getElementById('cLobbySlot' + i).innerHTML = "Commander " + gameInfoObj.playercommname[i] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[i]] + " is ready for war";
+									document.getElementById('cLobbySlot' + (i+1)).innerHTML = "Commander " + gameInfoObj.playercommname[i] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[i]] + " is ready for war";
 								};
 							};
 						} else {
 							if (playerNumber == 1) {
-								document.getElementById('hLobbySlot' + i).innerHTML = "Waiting for player to join...";
+								document.getElementById('hLobbySlot' + (i+1)).innerHTML = "Waiting for player to join...";
 							} else {
-								document.getElementById('cLobbySlot' + i).innerHTML = "Waiting for player to join...";
+								document.getElementById('cLobbySlot' + (i+1)).innerHTML = "Waiting for player to join...";
 							};
 						};
 					};
@@ -361,7 +361,7 @@
 				console.log(gameInfoObj.playerid[0]);
 				console.log(JSON.stringify(gameInfoObj.playercommname));*/
 				for (i = 0; i < 4; i++) {
-					if (playerNumber != i+1) {
+					if (playerNumber != (i+1)) {
 						if (gameInfoObj.playerid[i] != '') {
 							if (gameInfoObj.playerready[i] == 0) {
 								document.getElementById('cLobbySlot' + (i+1)).innerHTML = "Waiting for player to get ready...";
