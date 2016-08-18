@@ -105,14 +105,55 @@ io.on('connection', function(socket) {
 	});
 	socket.on('generate GRID', function() {
 		console.log('Generate GRID request received');
+		new Promise(function(resolve, reject) {
+			var possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+			console.log('GRID generation started');
+			//preventing the userID from growing 5 characters with each failed attempt
+			gameRoomID = '';
+			for(var j=0; j < 5; j++) {
+				gameRoomID += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
+			};
+			console.log('Checking for game room ' + gameRoomID);
+			resolve('GRID generation complete');
+		}).then(function() {
+			pg.connect(process.env.DATABASE_URL, function(err, client) {
+				if (err) throw err;
+				console.log('Connected to postgres');
+				client
+				 .query('SELECT COUNT(idname) FROM "GRIDs" WHERE idname=\'' + gameRoomID + '\';')
+				 .on('row', function(row) {
+					hits = JSON.stringify(row).substring(10, (JSON.stringify(row).length - 2));
+					console.log(hits + ' matches');
+					if(err) {
+						gameRoomID = '';
+						throw new Error('Error querying for game room ID.');
+					} else {
+						console.log('Query passed');
+						if(hits == 0) {
+							console.log('Game room ' + gameRoomID + ' available. Inserting it into database');
+							client.query('INSERT INTO "GRIDs" (idname, status, playerid, playerready, playercommname, playerkingdompref) VALUES (\'' + gameRoomID + '\', 0, ARRAY[$$\'\'$$,$$\'\'$$,$$\'\'$$,$$\'\'$$], ARRAY[0,0,0,0], ARRAY[$$\'\'$$,$$\'\'$$,$$\'\'$$,$$\'\'$$], ARRAY[0,0,0,0]);', function(err, data) {
+								if(err) {
+									throw new Error('Error inserting game room ID ' + gameRoomID);
+								};
+							});
+							socket.emit('return generated GRID', gameRoomID);
+							socket.join(gameRoomID);
+						} else {
+							console.log('Game room ID ' + gameRoomID + ' not available. New attempt required');
+							gameRoomID = '';
+						};
+					};
+				});
+			});
+		});
 		//possibly change to promise
-		async.parallel([genGRID, checkGRIDs], function(err, result) {
+		/*async.parallel([genGRID, checkGRIDs], function(err, result) {
 			if (err) {
 				console.log(err);
 				return;
 			};
 			console.log(result);
-		});
+		});*/
 	});
 
 	socket.on('join lobby request', function(roomID, UID) {
@@ -252,7 +293,7 @@ io.on('connection', function(socket) {
 		});
 	};*/
 
-	var genGRID = function(callback) {
+	/*var genGRID = function(callback) {
 		var possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 		console.log('GRID generation started');
 		//preventing the userID from growing 5 characters with each failed attempt
@@ -296,5 +337,5 @@ io.on('connection', function(socket) {
 				};
 			});
 		});
-	};
+	};*/
 });
