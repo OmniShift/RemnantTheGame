@@ -213,6 +213,7 @@ io.on('connection', function(socket) {
 				 .query('SELECT * FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
 				 .on('row', function(info) {
 				 	console.log(JSON.stringify(info));
+				});
 				}).then(function() {
 				client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
 					if(err) {
