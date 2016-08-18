@@ -209,6 +209,11 @@ io.on('connection', function(socket) {
 		new Promise(function(resolve, reject) {
 			pg.connect(process.env.DATABASE_URL, function(err, client) {
 				if (err) throw err;
+				client
+				 .query('SELECT * FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
+				 .on('row', function(info) {
+				 	console.log(JSON.stringify(info));
+				}).then(function() {
 				client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
 					if(err) {
 						throw new Error(err + ' --- Error updating room ' + roomID + ' with new info');
