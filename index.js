@@ -142,8 +142,8 @@ io.on('connection', function(socket) {
 								gameRoomID = roomID;
 								socket.join(roomID);
 								console.log(JSON.stringify(row));
-								socket.emit('join lobby request accepted', (i+1), roomID, row);
-								socket.broadcast.to(roomID).emit('player joined lobby', (i+1));
+								socket.emit('join lobby request accepted', i, roomID, row);
+								socket.broadcast.to(roomID).emit('player joined lobby', i);
 								break;
 							} else {
 								if (i = 3) {
@@ -155,7 +155,7 @@ io.on('connection', function(socket) {
 						console.log('Game room ' + roomID + ' has already started');
 						socket.emit('game already started');
 					} else {
-						console.log('Game room ID ' + gameRoomID + ' not available. New attempt required');
+						console.log('Game room ID ' + gameRoomID + ' not available. Please check for typing errors');
 					};
 				gameRoomID = '';
 				};

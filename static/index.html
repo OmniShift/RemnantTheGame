@@ -54,7 +54,7 @@
 	<body>
 		<div id='backgroundMain'>
 		<div id='overlay'>
-		<!--if the server time is not displayed or doesn't update, there's no connection-->
+			<!--if the server time is not displayed or doesn't update, there's no connection-->
 			<div id='serverTime' style='text-align:center'></div><BR>
 			<!--if the news is not shown, but the clock does tick, the userID is probably not generated, passed or returned-->
 			<div id='newsBoard'><b>News</b><BR>
@@ -127,14 +127,14 @@
 				</div>
 				<div class='popUpBottom'>
 					<p style='font-size:1.2em'>Room code: <input id='givenRoomCode' type='text' name='roomCode' readonly style='background-color:#cccccc'></p>
-					<div class='lobbyPlayerSlot' id='hLobbySlot1'>Waiting for player to join...</div>
+					<div class='lobbyPlayerSlot' id='hLobbySlot0'>Waiting for player to join...</div>
 						<!--<form id='hLobbyInfoP1'>Commander name: <input id='CommName1' type='text' name='commanderName1'> 
 						<select name='kingdomPref1' id='KingdomPref1'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select> 
 						<button id='readyP1' onclick='playerReady()'>V</button><button id='notReadyP1' onclick='playerNotReady()'>X</button></form>-->
 					</div><BR>
+					<div class='lobbyPlayerSlot' id='hLobbySlot1'>Waiting for player to join...</div><BR>
 					<div class='lobbyPlayerSlot' id='hLobbySlot2'>Waiting for player to join...</div><BR>
 					<div class='lobbyPlayerSlot' id='hLobbySlot3'>Waiting for player to join...</div><BR>
-					<div class='lobbyPlayerSlot' id='hLobbySlot4'>Waiting for player to join...</div><BR>
 					<button id='startGameButton' onclick='' disabled=''>Start game</button>
 					<button onclick='hostLeave()'>Cancel</button>
 				</div>
@@ -144,10 +144,10 @@
 					<div style='font-weight:bold; font-size:1.7em; padding-top:15px; padding-bottom: 25px'>Lobby</div>
 				</div>
 				<div class='popUpBottom'>
+					<div class='lobbyPlayerSlot' id='cLobbySlot0'>Waiting for player to join...</div><BR>
 					<div class='lobbyPlayerSlot' id='cLobbySlot1'>Waiting for player to join...</div><BR>
 					<div class='lobbyPlayerSlot' id='cLobbySlot2'>Waiting for player to join...</div><BR>
 					<div class='lobbyPlayerSlot' id='cLobbySlot3'>Waiting for player to join...</div><BR>
-					<div class='lobbyPlayerSlot' id='cLobbySlot4'>Waiting for player to join...</div><BR>
 					<button onclick='hideClientLobby()'>Cancel</button>
 					<!--<button onclick='playerReady()'>test</button>
 					<button onclick='playerNotReady()'>test2</button>-->
@@ -160,9 +160,9 @@
 			var socket = io();
 			var userID = document.cookie.substring(document.cookie.search('rtgUID') + 7, (document.cookie.search('rtgUID') + 13));
 			var roomID = '';
-			var playerNumber = 0;
+			var playerNumber = -99;
 			var commName = '';
-			var kingdomPref = 0;
+			var kingdomPref = -99;
 			var kingdomArray = ['any willing kingdom', 'Mantle', 'Minstral', 'Vacuo', 'Vale'];
 
 			function generateGRID() {
@@ -174,7 +174,7 @@
 				console.log('Your room code is ' + getCookie('rtgLastGame', 5));
 				document.getElementById('givenRoomCode').value = gameRoomID;
 				roomID = gameRoomID;
-				playerNumber = 1;
+				playerNumber = 0;
 				showHostLobby();
 				hPlayerNotReady();
 			});
@@ -248,13 +248,13 @@
 
 			//pre-game player status
 			function hPlayerReady() {
-				commName = document.getElementById('CommName1').value;
-				kingdomPref = document.getElementById('KingdomPref1').value;
+				commName = document.getElementById('CommName0').value;
+				kingdomPref = document.getElementById('KingdomPref0').value;
 				document.getElementById('hLobbySlot1').innerHTML =  "Commander " + commName + ", attempting command of " + kingdomArray[kingdomPref] + " is ready for war <button id='notReadyP1' onclick='hPlayerNotReady()'>X</button>";
 				socket.emit('update lobby info', roomID, playerNumber, userID, 1, commName, kingdomPref);
 			};
 			function hPlayerNotReady() {
-				document.getElementById('hLobbySlot1').innerHTML = "<div id='LobbyInfoP1'>Commander name: <input id='CommName1' type='text' name='commanderName1' maxlength='15' value='" + commName + "'> <select name='kingdomPref1' id='KingdomPref1'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select> <button id='readyP1' onclick='hPlayerReady()'>V</button></div>";
+				document.getElementById('hLobbySlot0').innerHTML = "<div id='LobbyInfoP0'>Commander name: <input id='CommName0' type='text' name='commanderName0' maxlength='15' value='" + commName + "'> <select name='kingdomPref0' id='KingdomPref0'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select> <button id='readyP1' onclick='hPlayerReady()'>V</button></div>";
 				document.getElementById("KingdomPref1").selectedIndex = kingdomPref;
 				socket.emit('update lobby info', roomID, playerNumber, userID, 0, commName, kingdomPref);
 			};
@@ -275,7 +275,7 @@
 				socket.emit('update lobby info', roomID, playerNumber, userID, 0, commName, kingdomPref);
 			};
 			socket.on('player joined lobby', function(newPlayerNumber ){
-				if (playerNumber == 1) {
+				if (playerNumber == 0) {
 					document.getElementById('hLobbySlot' + newPlayerNumber).innerHTML = "Player joined. Waiting for them to get ready...";
 				} else {
 					document.getElementById('cLobbySlot' + newPlayerNumber).innerHTML = "Player joined. Waiting for them to get ready...";
@@ -297,31 +297,30 @@
 			//somewhere in this code, the gameInfoObj is a value row with a long string, and this only occurs with the host, not the (first) client)
 			socket.on('update lobby info', function(gameInfoObj) {
 				console.log(JSON.stringify(gameInfoObj));
-				//check if player is host or not
 				for (i = 0; i < 4; i++) {
 					//Don't update your own information, which is done locally
-					if (playerNumber != (i+1)) {
+					if (playerNumber != i) {
 						//Check if there is a player in this slot
 						if (gameInfoObj.playerid[i] != '\'\'') {
 							//Check if you are the host
-							if (playerNumber == 1) {
+							if (playerNumber == 0) {
 								if (gameInfoObj.playerready[i] == 0) {
-									document.getElementById('hLobbySlot' + (i+1)).innerHTML = "Waiting for player to get ready...";
+									document.getElementById('hLobbySlot' + i).innerHTML = "Waiting for player to get ready...";
 								} else {
-									document.getElementById('hLobbySlot' + (i+1)).innerHTML = "Commander " + gameInfoObj.playercommname[i] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[i]] + " is ready for war";
+									document.getElementById('hLobbySlot' + i).innerHTML = "Commander " + gameInfoObj.playercommname[i] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[i]] + " is ready for war";
 								};
 							} else {
 								if (gameInfoObj.playerready[i] == 0) {
-									document.getElementById('cLobbySlot' + (i+1)).innerHTML = "Waiting for player to get ready...";
+									document.getElementById('cLobbySlot' + i).innerHTML = "Waiting for player to get ready...";
 								} else {
-									document.getElementById('cLobbySlot' + (i+1)).innerHTML = "Commander " + gameInfoObj.playercommname[i] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[i]] + " is ready for war";
+									document.getElementById('cLobbySlot' + i).innerHTML = "Commander " + gameInfoObj.playercommname[i] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[i]] + " is ready for war";
 								};
 							};
 						} else {
-							if (playerNumber == 1) {
-								document.getElementById('hLobbySlot' + (i+1)).innerHTML = "Waiting for player to join...";
+							if (playerNumber == 0) {
+								document.getElementById('hLobbySlot' + i).innerHTML = "Waiting for player to join...";
 							} else {
-								document.getElementById('cLobbySlot' + (i+1)).innerHTML = "Waiting for player to join...";
+								document.getElementById('cLobbySlot' + i).innerHTML = "Waiting for player to join...";
 							};
 						};
 					};
@@ -333,17 +332,17 @@
 				hideHostLobby();
 				socket.emit('host leaves', roomID);
 				roomID = '';
-				playerNumber = 0;
+				playerNumber = -99;
 				commName = '';
-				kingdomPref = 0;
+				kingdomPref = -99;
 			};
 			socket.on('dc by host', function() {
 				socket.emit('leave room', roomID);
 				hideClientLobby();
 				roomID = '';
-				playerNumber = 0;
+				playerNumber = -99;
 				commName = '';
-				kingdomPref = 0;
+				kingdomPref = -99;
 				alert('Host has left the lobby.');
 			});
 			socket.on('room full', function() {
@@ -365,15 +364,15 @@
 				console.log(gameInfoObj.playerid[0]);
 				console.log(JSON.stringify(gameInfoObj.playercommname));*/
 				for (i = 0; i < 4; i++) {
-					if (playerNumber != (i+1)) {
+					if (playerNumber != i) {
 						if (gameInfoObj.playerid[i] != '\'\'') {
 							if (gameInfoObj.playerready[i] == 0) {
-								document.getElementById('cLobbySlot' + (i+1)).innerHTML = "Waiting for player to get ready...";
+								document.getElementById('cLobbySlot' + i).innerHTML = "Waiting for player to get ready...";
 							} else {
-								document.getElementById('cLobbySlot' + (i+1)).innerHTML = "Commander " + gameInfoObj.playercommname[i] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[i]] + " is ready for war";
+								document.getElementById('cLobbySlot' + i).innerHTML = "Commander " + gameInfoObj.playercommname[i] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[i]] + " is ready for war";
 							};
 						} else {
-							document.getElementById('cLobbySlot' + (i+1)).innerHTML = "Waiting for player to join...";
+							document.getElementById('cLobbySlot' + i).innerHTML = "Waiting for player to join...";
 						};
 					};
 				};
