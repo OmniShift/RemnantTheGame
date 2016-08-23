@@ -1,431 +1,451 @@
 <!DOCTYPE html>
 
-<html lang='en'>
-	<head>
-		<meta charset='utf-8' />
-		<link type='text/css' rel='stylesheet' href='style.css'/>
-		<title>Remnant - The Game</title>
-	</head>
-	<script src='/socket.io/socket.io.js'></script>
-	<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js'></script>
-	<script>
-		$(document).ready(function() {
-			var socket = io();
-			var el = document.getElementById('serverTime');
-			var newsDate = '';
-			var newsContent = '';
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <link type="text/css" rel="stylesheet" href="style.css"/>
+        <title>Remnant - The Game</title>
+    </head>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var socket = io();
+            var el = document.getElementById('serverTime');
+            var newsDate = '';
+            var newsContent = '';
 
-			socket.on('time', function(timeString) {
-				el.innerHTML = 'Server time: ' + timeString;
-			});
-			socket.emit('news request');
-			socket.on('news', function(newsObject) {
-				newsDate = newsObject.substring((newsObject.search('newsdate') + 11), (newsObject.search(',') - 1));
-				newsContent = newsObject.substring((newsObject.search('newscontent') + 14), (newsObject.length - 2));
-				$('<tr></tr>').append('<td class=\'newsTime\'>' + newsDate + '</td><td class=\'newsContent\'>' + newsContent + '</td>').prependTo('#newsTable');
-			});
+            socket.on('time', function (timeString) {
+                el.innerHTML = 'Server time: ' + timeString;
+            });
+            socket.emit('news request');
+            socket.on('news', function (newsObject) {
+                newsDate = newsObject.substring((newsObject.search('newsdate') + 11), (newsObject.search(',') - 1));
+                newsContent = newsObject.substring((newsObject.search('newscontent') + 14), (newsObject.length - 2));
+                $('<tr></tr>').append('<td class=\'newsTime\'>' + newsDate + '</td><td class=\'newsContent\'>' + newsContent + '</td>').prependTo('#newsTable');
+            });
 
-			//UserID is checked or generates
-			//document.cookie = "rtgUID=AdmUsr; expires=Thu, 31 Dec 2026 12:00:00 GMT";
-			function checkCookie() {
-				var userID = getCookie('rtgUID', 6);
-				if (userID != '') {
-					console.log('User ' + userID + ' is connected.');
-					socket.emit('existing user connection', userID);
-				} else {
-					console.log('New user connected. ID will be generated.');
-					generateUID();
-				};
-			};
-			function getCookie(cname, cvallength) {
-				return document.cookie.substring(document.cookie.search(cname) + cname.length + 1, (document.cookie.search(cname) + cname.length + 1 + cvallength));
-			};
-			function generateUID() {
-				socket.emit('generate UID');
-				console.log('generate UID request sent');
-			};
-			socket.on('return generated UID', function(userID) {
-				document.cookie = 'rtgUID=' + userID + '; expires=Thu, 31 Dec 2026 12:00:00 GMT';
-				console.log('Your new ID is ' + getCookie('rtgUID', 6));
-			});
-			checkCookie();
-		});
-	</script>
-	<body>
-		<div id='backgroundMain'>
-		<div id='overlay'>
-			<!--if the server time is not displayed or doesn't update, there's no connection-->
-			<div id='serverTime' style='text-align:center'></div><BR>
-			<!--if the news is not shown, but the clock does tick, the userID is probably not generated, passed or returned-->
-			<div id='newsBoard'><b>News</b><BR>
-				<div style='width:600px; height:2px; display:inline-block; background-color:black'></div><BR>
-				<table id='newsTable' style='padding:5px'></table>
-			</div>
+            //UserID is checked or generates document.cookie = "rtgUID=AdmUsr; expires=Thu, 31 Dec 2026 12:00:00 GMT";
+            function checkCookie() {
+                var userID = getCookie('rtgUID', 6);
+                if (userID != '') {
+                    console.log('User ' + userID + ' is connected.');
+                    socket.emit('existing user connection', userID);
+                } else {
+                    console.log('New user connected. ID will be generated.');
+                    generateUID();
+                };
+            };
+            function getCookie(cname, cvallength) {
+                return document.cookie.substring(document.cookie.search(cname) + cname.length + 1, (document.cookie.search(cname) + cname.length + 1 + cvallength));
+            };
+            function generateUID() {
+                socket.emit('generate UID');
+                console.log('generate UID request sent');
+            };
+            socket.on('return generated UID', function (userID) {
+                document.cookie = 'rtgUID=' + userID + '; expires=Thu, 31 Dec 2026 12:00:00 GMT';
+                console.log('Your new ID is ' + getCookie('rtgUID', 6));
+            });
+            checkCookie();
+        });
+    </script>
+    <body>
+        <div id="backgroundMain">
+            <div id="overlay">
+                <!--if the server time is not displayed or doesn"t update, there"s no connection-->
+                <div id="serverTime" style="text-align:center"></div><br>
+                <!--if the news is not shown, but the clock does tick, the userID is probably not generated, passed or returned-->
+                <div id="newsBoard">
+                    <b>News</b><br>
+                    <div style="width:600px; height:2px; display:inline-block; background-color:black"></div><br>
+                    <table id="newsTable" style="padding:5px"></table>
+                </div>
 
-			<div style='text-align:center'><h1>Remnant - The Game</h1>
-			<h2>Show those pesky Remnantians who was meant to rule them</h2>
-			<button id='createJoinButton' onclick='newGameWarning()'>Create/Join New Game</button><BR>
-			<button id='continueGameButton' onclick='continueGame()' disabled=''>Continue Game</button><BR>
-			<button id='testerIDButton' onclick='toTestersPage()'>To Testers Page</button><BR>
-			<!--<button onclick='testFunc()'>php test</button><BR>
-			<button onclick="showNewGameSettings()">test button 2</button></div>-->
+                <div style="text-align:center">
+                    <h1>Remnant - The Game</h1>
+                    <h2>Show those pesky Remnantians who was meant to rule them</h2>
+                    <button id="createJoinButton" onclick="newGameWarning()">Create/Join New Game</button><br>
+                    <button id="continueGameButton" onclick="continueGame()" disabled="">Continue Game</button><br>
+                    <button id="testerIDButton" onclick="toTestersPage()">To Testers Page</button><br>
+                    <!--
+										<button onclick="testFunc()">php test</button><br>
+										<button onclick="showNewGameSettings()">test button 2</button></div>
+										-->
+                    <div class="popUp" id="newGameSettings">
+                        <div class="popUpTop" style="text-align:center">
+                            <div style="font-weight:bold; font-size:1.7em; padding:7px">New game</div>
+                            <p style="text-align:center; font-size:1.5em">There are no settings yet this early on in the game"s development, so you have no options to choose from.</p>
+                            <p style="text-align:center; font-size:1.5em">...you lucky devil!</p>
+                        </div>
+                        <!--
+												<br>
+												<div class="popUpList">
+													<b><u>Base game:</u></b><br>
+													<select>
+														<option id="baseGamePack" value="original">Original</option>
+													</select><br>
+													<br>
+													<b><u>Expansions:</u></b><br>
+													<input id="semblanceExp" type="checkbox" name="semblance" disabled="">test1 (N/A)<br>
+													<input id="modernDayHeroesExp" type="checkbox" name="modernDayHeroes" disabled="">test2 (N/A)<br>
+												</div>
+												<div class="popUpList">
+													<b><u>"Features":</u></b><br>
+													<input type="checkbox" name="tuck" disabled="">test (N/A)<br>
+												</div>
+												<br>
+												-->
+                        <div class="popUpBottom">
+                            <button onclick="createLobby()">Create</button>
+                            <button onclick="hideNewGameSettings()">Cancel</button>
+                        </div>
+                    </div>
 
-			<div class='popUp' id='newGameSettings'>
-				<div class='popUpTop' style='text-align:center'><div style='font-weight:bold; font-size:1.7em; padding:7px'>New game</div>
-					<p style='text-align:center; font-size:1.5em'>There are no settings yet this early on in the game's development, so you have no options to choose from.</p>
-					<p style='text-align:center; font-size:1.5em'>...you lucky devil!</p>
-				</div>
-				<!--<BR>
-				<div class="popUpList">
-					<b><u>Base game:</u></b><BR>
-					<select>
-						<option id="baseGamePack" value="original">Original</option>
-					</select><BR>
-					<BR>
-					<b><u>Expansions:</u></b><BR>
-					<input id="semblanceExp" type="checkbox" name="semblance" disabled="">test1 (N/A)<BR>
-					<input id="modernDayHeroesExp" type="checkbox" name="modernDayHeroes" disabled="">test2 (N/A)<BR>
-				</div>
-				<div class="popUpList">
-					<b><u>'Features':</u></b><BR>
-					<input type="checkbox" name="tuck" disabled="">test (N/A)<BR>
-				</div>
-				<BR>-->
-				<div class='popUpBottom'>
-					<button onclick='createLobby()'>Create</button>
-					<button onclick='hideNewGameSettings()'>Cancel</button>
-				</div>
-			</div>
+                    <div class="popUp" id="AYSprompt">
+                        <div class="popUpTop" style="text-align:center">
+                            <div style="font-weight:bold; font-size:1.7em; padding:7px">Create/join new game</div>
+                            <p id="AYStextField" style="font-size:1.2em"></p>
+                        </div>
+                        <div class="popUpBottom">
+                            <button onclick="newGameSettings()">Create game</button>
+                            <button onclick="joinNewGame()">Join game</button>
+                            <button onclick="hideAYSPrompt()">Cancel</button>
+                        </div>
+                    </div>
 
-			<div class='popUp' id='AYSprompt'>
-				<div class='popUpTop' style='text-align:center'>
-					<div style='font-weight:bold; font-size:1.7em; padding:7px'>Create/join new game</div>
-					<p id='AYStextField' style='font-size:1.2em'></p>
-				</div>
-				<div class='popUpBottom'>
-					<button onclick='newGameSettings()'>Create game</button>
-					<button onclick='joinNewGame()'>Join game</button>
-					<button onclick='hideAYSPrompt()'>Cancel</button>
-				</div>
-			</div>
+                    <div class="popUp" id="joinNewGame">
+                        <div class="popUpTop" style="text-align:center">
+                            <div style="font-weight:bold; font-size:1.7em; padding:7px">Join new game</div>
+                        </div>
+                        <div class="popUpBottom">
+                            <p style="font-size:1.2em">Please insert your room code:<br>
+                                <input id="roomCode" type="text" name="roomCode" autocomplete="off" maxlength="5" autofocus=""></p>
+                            <button onclick="roomCodeCheck()">Join game</button>
+                            <button onclick="hideJoinNewGame()">Cancel</button>
+                        </div>
+                    </div>
 
-			<div class='popUp' id='joinNewGame'>
-				<div class='popUpTop' style='text-align:center'>
-					<div style='font-weight:bold; font-size:1.7em; padding:7px'>Join new game</div>
-				</div>
-				<div class='popUpBottom'>
-					<p style='font-size:1.2em'>Please insert your room code:<BR>
-					<input id='roomCode' type='text' name='roomCode' autocomplete='off' maxlength="5" autofocus=""></p>
-					<button onclick='roomCodeCheck()'>Join game</button>
-					<button onclick='hideJoinNewGame()'>Cancel</button>
-				</div>
-			</div>
+                    <div class="popUp" id="hostLobby">
+                        <div class="popUpTop" style="text-align:center">
+                            <div style="font-weight:bold; font-size:1.7em; padding:7px">Lobby</div>
+                        </div>
+                        <div class="popUpBottom">
+                            <p style="font-size:1.2em">Room code:
+                                <input id="givenRoomCode" type="text" name="roomCode" readonly style="background-color:#cccccc"></p>
+                            <div class="lobbyPlayerSlot" id="hLobbySlot0">Waiting for player to join...</div>
+                            <!--
+														<form id="hLobbyInfoP1">Commander name: <input id="CommName1" type="text" name="commanderName1">
+														<select name="kingdomPref1" id="KingdomPref1"><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select>
+														<button id="readyP1" onclick="playerReady()">V</button><button id="notReadyP1" onclick="playerNotReady()">X</button></form>
+														-->
+                        </div><br>
+                        <div class="lobbyPlayerSlot" id="hLobbySlot1">Waiting for player to join...</div><br>
+                        <div class="lobbyPlayerSlot" id="hLobbySlot2">Waiting for player to join...</div><br>
+                        <div class="lobbyPlayerSlot" id="hLobbySlot3">Waiting for player to join...</div><br>
+                        <button id="startGameButton" onclick="" disabled="">Start game</button>
+                        <button onclick="hostLeave()">Cancel</button>
+                    </div>
+                </div>
+                <div class="popUp" id="clientLobby">
+                    <div class="popUpTop" style="text-align:center">
+                        <div style="font-weight:bold; font-size:1.7em; padding-top:15px; padding-bottom: 25px">Lobby</div>
+                    </div>
+                    <div class="popUpBottom">
+                        <div class="lobbyPlayerSlot" id="cLobbySlot0">Waiting for player to join...</div><br>
+                        <div class="lobbyPlayerSlot" id="cLobbySlot1">Waiting for player to join...</div><br>
+                        <div class="lobbyPlayerSlot" id="cLobbySlot2">Waiting for player to join...</div><br>
+                        <div class="lobbyPlayerSlot" id="cLobbySlot3">Waiting for player to join...</div><br>
+                        <button onclick="hideClientLobby()">Cancel</button>
+                        <!--
+												<button onclick="playerReady()">test</button>
+												<button onclick="playerNotReady()">test2</button>
+												-->
+                    </div>
+                </div>
+            </div>
+            <!--end of overlay-->
+        </div>
+        <!--end of backgroundMain-->
 
-			<div class='popUp' id='hostLobby'>
-				<div class='popUpTop' style='text-align:center'>
-					<div style='font-weight:bold; font-size:1.7em; padding:7px'>Lobby</div>
-				</div>
-				<div class='popUpBottom'>
-					<p style='font-size:1.2em'>Room code: <input id='givenRoomCode' type='text' name='roomCode' readonly style='background-color:#cccccc'></p>
-					<div class='lobbyPlayerSlot' id='hLobbySlot0'>Waiting for player to join...</div>
-						<!--<form id='hLobbyInfoP1'>Commander name: <input id='CommName1' type='text' name='commanderName1'> 
-						<select name='kingdomPref1' id='KingdomPref1'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select> 
-						<button id='readyP1' onclick='playerReady()'>V</button><button id='notReadyP1' onclick='playerNotReady()'>X</button></form>-->
-					</div><BR>
-					<div class='lobbyPlayerSlot' id='hLobbySlot1'>Waiting for player to join...</div><BR>
-					<div class='lobbyPlayerSlot' id='hLobbySlot2'>Waiting for player to join...</div><BR>
-					<div class='lobbyPlayerSlot' id='hLobbySlot3'>Waiting for player to join...</div><BR>
-					<button id='startGameButton' onclick='' disabled=''>Start game</button>
-					<button onclick='hostLeave()'>Cancel</button>
-				</div>
-			</div>
-			<div class='popUp' id='clientLobby'>
-				<div class='popUpTop' style='text-align:center'>
-					<div style='font-weight:bold; font-size:1.7em; padding-top:15px; padding-bottom: 25px'>Lobby</div>
-				</div>
-				<div class='popUpBottom'>
-					<div class='lobbyPlayerSlot' id='cLobbySlot0'>Waiting for player to join...</div><BR>
-					<div class='lobbyPlayerSlot' id='cLobbySlot1'>Waiting for player to join...</div><BR>
-					<div class='lobbyPlayerSlot' id='cLobbySlot2'>Waiting for player to join...</div><BR>
-					<div class='lobbyPlayerSlot' id='cLobbySlot3'>Waiting for player to join...</div><BR>
-					<button onclick='hideClientLobby()'>Cancel</button>
-					<!--<button onclick='playerReady()'>test</button>
-					<button onclick='playerNotReady()'>test2</button>-->
-				</div>
-			</div>
-		</div><!--end of overlay-->
-		</div><!--end of backgroundMain-->
+        <script type="text/javascript">
+            var socket = io();
+            var userID = document.cookie.substring(document.cookie.search('rtgUID') + 7, (document.cookie.search('rtgUID') + 13));
+            var roomID = '';
+            var playerNumber = -99;
+            var commName = '';
+            var kingdomPref = 0;
+            var kingdomArray = ['any willing kingdom', 'Mantle', 'Minstral', 'Vacuo', 'Vale'];
 
-		<script type='text/javascript'>
-			var socket = io();
-			var userID = document.cookie.substring(document.cookie.search('rtgUID') + 7, (document.cookie.search('rtgUID') + 13));
-			var roomID = '';
-			var playerNumber = -99;
-			var commName = '';
-			var kingdomPref = 0;
-			var kingdomArray = ['any willing kingdom', 'Mantle', 'Minstral', 'Vacuo', 'Vale'];
+            function generateGRID() {
+                socket.emit('generate GRID');
+                console.log('generate GRID request sent');
+            };
+            socket.on('return generated GRID', function (gameRoomID) {
+                document.cookie = 'rtgLastGame=' + gameRoomID + '; expires=Thu, 31 Dec 2026 12:00:00 GMT';
+                console.log('Your room code is ' + getCookie('rtgLastGame', 5));
+                document.getElementById('givenRoomCode').value = gameRoomID;
+                roomID = gameRoomID;
+                playerNumber = 0;
+                showHostLobby();
+                hPlayerNotReady();
+            });
+            function getCookie(cname, cvallength) {
+                return document.cookie.substring(document.cookie.search(cname) + cname.length + 1, (document.cookie.search(cname) + cname.length + 1 + cvallength));
+            };
 
-			function generateGRID() {
-				socket.emit('generate GRID');
-				console.log('generate GRID request sent');
-			};
-			socket.on('return generated GRID', function(gameRoomID) {
-				document.cookie = 'rtgLastGame=' + gameRoomID + '; expires=Thu, 31 Dec 2026 12:00:00 GMT';
-				console.log('Your room code is ' + getCookie('rtgLastGame', 5));
-				document.getElementById('givenRoomCode').value = gameRoomID;
-				roomID = gameRoomID;
-				playerNumber = 0;
-				showHostLobby();
-				hPlayerNotReady();
-			});
-			function getCookie(cname, cvallength) {
-				return document.cookie.substring(document.cookie.search(cname) + cname.length + 1, (document.cookie.search(cname) + cname.length + 1 + cvallength));
-			};
+            function testFunc() {
+                document.getElementById('P2Status').innerHTML = '';
+                document.getElementById('cLobbyInfoP2').style.visibility = 'visible';
+            };
+            function testFunc2() {
+                document.getElementById('P2Status').innerHTML = 'Waiting for players again...';
+                document.getElementById('cLobbyInfoP2').style.visibility = 'hidden';
+            };
+            function toTestersPage() {
+                window.location.href = '/setTesters.html';
+            };
 
-			function testFunc() {
-				document.getElementById('P2Status').innerHTML = '';
-				document.getElementById('cLobbyInfoP2').style.visibility = 'visible';
-			};
-			function testFunc2() {
-				document.getElementById('P2Status').innerHTML = 'Waiting for players again...';
-				document.getElementById('cLobbyInfoP2').style.visibility = 'hidden';
-			};
-			function toTestersPage() {
-				window.location.href = '/setTesters.html';
-			};
+            //hiding/showing windows
+            function hideAYSPrompt() {
+                document.getElementById('AYSprompt').style.visibility = 'hidden';
+                document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
+                document.getElementById('createJoinButton').disabled = false;
+            };
+            function hideNewGameSettings() {
+                document.getElementById('newGameSettings').style.visibility = 'hidden';
+                document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
+                document.getElementById('createJoinButton').disabled = false;
+            };
+            function hideJoinNewGame() {
+                document.getElementById('joinNewGame').style.visibility = 'hidden';
+                document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
+                document.getElementById('createJoinButton').disabled = false;
+            };
+            function hideHostLobby() {
+                document.getElementById('hostLobby').style.visibility = 'hidden';
+                document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
+                document.getElementById('createJoinButton').disabled = false;
+            };
+            function hideClientLobby() {
+                document.getElementById('clientLobby').style.visibility = 'hidden';
+                document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
+                document.getElementById('createJoinButton').disabled = false;
+            };
+            function showAYSPrompt() {
+                document.getElementById('AYSprompt').style.visibility = 'visible';
+                document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.5)';
+                document.getElementById('createJoinButton').disabled = true;
+            };
+            function showNewGameSettings() {
+                document.getElementById('newGameSettings').style.visibility = 'visible';
+                document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.5)';
+                document.getElementById('createJoinButton').disabled = true;
+            };
+            function showJoinNewGame() {
+                document.getElementById('joinNewGame').style.visibility = 'visible';
+                document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.5)';
+                document.getElementById('createJoinButton').disabled = true;
+            };
+            function showHostLobby() {
+                document.getElementById('hostLobby').style.visibility = 'visible';
+                document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.5)';
+                document.getElementById('createJoinButton').disabled = true;
+            };
+            function showClientLobby() {
+                document.getElementById('clientLobby').style.visibility = 'visible';
+                document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.5)';
+                document.getElementById('createJoinButton').disabled = true;
+            };
 
-			//hiding/showing windows
-			function hideAYSPrompt() {
-				document.getElementById('AYSprompt').style.visibility = 'hidden';
-				document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
-				document.getElementById('createJoinButton').disabled = false;
-			};
-			function hideNewGameSettings() {
-				document.getElementById('newGameSettings').style.visibility = 'hidden';
-				document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
-				document.getElementById('createJoinButton').disabled = false;
-			};
-			function hideJoinNewGame() {
-				document.getElementById('joinNewGame').style.visibility = 'hidden';
-				document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
-				document.getElementById('createJoinButton').disabled = false;
-			};
-			function hideHostLobby() {
-				document.getElementById('hostLobby').style.visibility = 'hidden';
-				document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
-				document.getElementById('createJoinButton').disabled = false;
-			};
-			function hideClientLobby() {
-				document.getElementById('clientLobby').style.visibility = 'hidden';
-				document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
-				document.getElementById('createJoinButton').disabled = false;
-			};
-			function showAYSPrompt() {
-				document.getElementById('AYSprompt').style.visibility = 'visible';
-				document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.5)';
-				document.getElementById('createJoinButton').disabled = true;
-			};
-			function showNewGameSettings() {
-				document.getElementById('newGameSettings').style.visibility = 'visible';
-				document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.5)';
-				document.getElementById('createJoinButton').disabled = true;
-			};
-			function showJoinNewGame() {
-				document.getElementById('joinNewGame').style.visibility = 'visible';
-				document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.5)';
-				document.getElementById('createJoinButton').disabled = true;
-			};
-			function showHostLobby() {
-				document.getElementById('hostLobby').style.visibility = 'visible';
-				document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.5)';
-				document.getElementById('createJoinButton').disabled = true;
-			};
-			function showClientLobby() {
-				document.getElementById('clientLobby').style.visibility = 'visible';
-				document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.5)';
-				document.getElementById('createJoinButton').disabled = true;
-			};
-
-			//pre-game player status
-			function hPlayerReady() {
-				commName = document.getElementById('CommName0').value;
-				kingdomPref = document.getElementById('KingdomPref0').value;
-				document.getElementById('hLobbySlot0').innerHTML =  "Commander " + commName + ", attempting command of " + kingdomArray[kingdomPref] + " is ready for war <button id='notReadyP0' onclick='hPlayerNotReady()'>X</button>";
-				socket.emit('update lobby info', roomID, playerNumber, userID, 1, commName, kingdomPref);
-			};
-			function hPlayerNotReady() {
-				document.getElementById('hLobbySlot0').innerHTML = "<div id='LobbyInfoP0'>Commander name: <input id='CommName0' type='text' name='commanderName0' maxlength='15' value='" + commName + "'> <select name='kingdomPref0' id='KingdomPref0'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select> <button id='readyP1' onclick='hPlayerReady()'>V</button></div>";
-				document.getElementById("KingdomPref0").selectedIndex = kingdomPref;
-				socket.emit('update lobby info', roomID, playerNumber, userID, 0, commName, kingdomPref);
-			};
-			function cPlayerReady() {
-				commName = document.getElementById('CommName' + playerNumber.toString()).value;
-				kingdomPref = document.getElementById('KingdomPref' + playerNumber.toString()).value;
-				document.getElementById('cLobbySlot' + playerNumber.toString()).innerHTML = "Commander " + commName + ", attempting command of " + kingdomArray[kingdomPref] + " is ready for war <button id='notReadyP" + playerNumber.toString() + "' onclick='cPlayerNotReady()'>X</button>";
-				socket.emit('update lobby info', roomID, playerNumber, userID, 1, commName, kingdomPref);
-			};
-			function cPlayerNotReady() {
-				document.getElementById('cLobbySlot' + playerNumber.toString()).innerHTML = "<div id='LobbyInfoP" + playerNumber.toString() + "'>Commander name: <input id='CommName" + playerNumber.toString() + "' type='text' name='commanderName' maxlength='15' value='" + commName + "'> <select name='kingdomPref' id='KingdomPref" + playerNumber.toString() + "' value='" + kingdomPref + "'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select> <button id='readyP" + playerNumber.toString() + "' onclick='cPlayerReady()'>V</button></div>";
-				document.getElementById("KingdomPref" + playerNumber.toString()).selectedIndex = kingdomPref;
-				/*console.log(roomID);
-				console.log(playerNumber);
-				console.log(userID);
-				console.log(commName);
-				console.log(kingdomPref);*/
-				socket.emit('update lobby info', roomID, playerNumber, userID, 0, commName, kingdomPref);
-			};
-			socket.on('player joined lobby', function(newPlayerNumber ){
-				if (playerNumber == 0) {
-					document.getElementById('hLobbySlot' + newPlayerNumber).innerHTML = "Player joined. Waiting for them to get ready...";
-				} else {
-					document.getElementById('cLobbySlot' + newPlayerNumber).innerHTML = "Player joined. Waiting for them to get ready...";
-				};
-			});
-			/*socket.on('client lobby initialization', function (pNumber, gameInfoObj) {
-				if (playerNumber != pNumber) {
-					if (gameInfoObj.playerid != '') {
-						if (gameInfoObj.playerready == 0) {
-							document.getElementById('cLobbySlot' + pNumber).innerHTML = "Waiting for player to get ready...";
-						} else {
-							document.getElementById('cLobbySlot' + pNumber).innerHTML = "Commander " + gameInfoObj.playercommname[pNumber] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[pNumber]] + " is ready for war";
-						};
-					} else {
-						document.getElementById('cLobbySlot' + pNumber).innerHTML = "Waiting for player to join...";
-					};
-				};
-			});*/
-			//somewhere in this code, the gameInfoObj is a value row with a long string, and this only occurs with the host, not the (first) client)
-			socket.on('update lobby info', function(gameInfoObj) {
-				console.log(JSON.stringify(gameInfoObj));
-				for (i = 0; i < 4; i++) {
-					//Don't update your own information, which is done locally
-					if (playerNumber != i) {
-						//Check if there is a player in this slot
-						if (gameInfoObj.playerid[i] != '\'\'') {
-							//Check if you are the host
-							if (playerNumber == 0) {
-								if (gameInfoObj.playerready[i] == 0 || gameInfoObj.playerready[i] == null) {
-									document.getElementById('hLobbySlot' + i).innerHTML = "Waiting for player to get ready...";
+            //pre-game player status
+            function hPlayerReady() {
+                commName = document.getElementById('CommName0').value;
+                kingdomPref = document.getElementById('KingdomPref0').value;
+                document.getElementById('hLobbySlot0').innerHTML = "Commander " + commName + ", attempting command of " + kingdomArray[kingdomPref] + " is ready for war <button id='notReadyP0' onclick='hPlayerNotReady()'>X</button>";
+                // console.log(roomID);
+                // console.log(playerNumber);
+                // console.log(userID);
+                // console.log(commName);
+                // console.log(kingdomPref);
+                socket.emit('update lobby info', roomID, playerNumber, userID, 1, commName, kingdomPref);
+            };
+            function hPlayerNotReady() {
+                document.getElementById('hLobbySlot0').innerHTML = "<div id='LobbyInfoP0'>Commander name: <input id='CommName0' type='text' name='commanderName0' maxlength='15' value='" + commName + "'> <select name='kingdomPref0' id='KingdomPref0'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><optio" +
+                        "n value=4>Vale</option></select> <button id='readyP1' onclick='hPlayerReady()'>V</button></div>";
+                document.getElementById("KingdomPref0").selectedIndex = kingdomPref;
+                socket.emit('update lobby info', roomID, playerNumber, userID, 0, commName, kingdomPref);
+            };
+            function cPlayerReady() {
+                commName = document.getElementById('CommName' + playerNumber.toString()).value;
+                kingdomPref = document.getElementById('KingdomPref' + playerNumber.toString()).value;
+                document.getElementById('cLobbySlot' + playerNumber.toString()).innerHTML = "Commander " + commName + ", attempting command of " + kingdomArray[kingdomPref] + " is ready for war <button id='notReadyP" + playerNumber.toString() + "' onclick='cPlayerNotReady()'>X</button>";
+                socket.emit('update lobby info', roomID, playerNumber, userID, 1, commName, kingdomPref);
+            };
+            function cPlayerNotReady() {
+                document.getElementById('cLobbySlot' + playerNumber.toString()).innerHTML = "<div id='LobbyInfoP" + playerNumber.toString() + "'>Commander name: <input id='CommName" + playerNumber.toString() + "' type='text' name='commanderName' maxlength='15' value='" + commName + "'> <select name='kingdomPref' id='KingdomPref" + playerNumber.toString() + "' value='" + kingdomPref + "'><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select> <button id='re" +
+                        "adyP" + playerNumber.toString() + "' onclick='cPlayerReady()'>V</button></div>";
+                document.getElementById("KingdomPref" + playerNumber.toString()).selectedIndex = kingdomPref;
+                /*console.log(roomID);
+									console.log(playerNumber);
+									console.log(userID);
+									console.log(commName);
+									console.log(kingdomPref);*/
+                socket.emit('update lobby info', roomID, playerNumber, userID, 0, commName, kingdomPref);
+            };
+            socket.on('player joined lobby', function (newPlayerNumber) {
+                if (playerNumber == 0) {
+                    document.getElementById('hLobbySlot' + newPlayerNumber).innerHTML = "Player joined. Waiting for them to get ready...";
+                } else {
+                    document.getElementById('cLobbySlot' + newPlayerNumber).innerHTML = "Player joined. Waiting for them to get ready...";
+                };
+            });
+            /*socket.on('client lobby initialization', function (pNumber, gameInfoObj) {
+							if (playerNumber != pNumber) {
+								if (gameInfoObj.playerid != '') {
+									if (gameInfoObj.playerready == 0) {
+										document.getElementById('cLobbySlot' + pNumber).innerHTML = "Waiting for player to get ready...";
+									} else {
+										document.getElementById('cLobbySlot' + pNumber).innerHTML = "Commander " + gameInfoObj.playercommname[pNumber] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[pNumber]] + " is ready for war";
+									};
 								} else {
-									document.getElementById('hLobbySlot' + i).innerHTML = "Commander " + gameInfoObj.playercommname[i] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[i]] + " is ready for war";
-								};
-							} else {
-								if (gameInfoObj.playerready[i] == 0 || gameInfoObj.playerready[i] == null) {
-									document.getElementById('cLobbySlot' + i).innerHTML = "Waiting for player to get ready...";
-								} else {
-									document.getElementById('cLobbySlot' + i).innerHTML = "Commander " + gameInfoObj.playercommname[i] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[i]] + " is ready for war";
+									document.getElementById('cLobbySlot' + pNumber).innerHTML = "Waiting for player to join...";
 								};
 							};
-						} else {
-							if (playerNumber == 0) {
-								document.getElementById('hLobbySlot' + i).innerHTML = "Waiting for player to join...";
-							} else {
-								document.getElementById('cLobbySlot' + i).innerHTML = "Waiting for player to join...";
-							};
-						};
-					};
-				};
-			});
+						});*/
+            //somewhere in this code, the gameInfoObj is a value row with a long string, and this only occurs with the host, not the (first) client)
+            socket.on('update lobby info', function (gameInfoObj) {
+                console.log(JSON.stringify(gameInfoObj));
+                for (i = 0; i < 4; i++) {
+                    //Don't update your own information, which is done locally
+                    if (playerNumber != i) {
+                        //Check if there is a player in this slot
+                        if (gameInfoObj.playerid[i] != '\'\'') {
+                            //Check if you are the host
+                            if (playerNumber == 0) {
+                                if (gameInfoObj.playerready[i] == 0 || gameInfoObj.playerready[i] == null) {
+                                    document.getElementById('hLobbySlot' + i).innerHTML = "Waiting for player to get ready...";
+                                } else {
+                                    document.getElementById('hLobbySlot' + i).innerHTML = "Commander " + gameInfoObj.playercommname[i] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[i]] + " is ready for war";
+                                };
+                            } else {
+                                if (gameInfoObj.playerready[i] == 0 || gameInfoObj.playerready[i] == null) {
+                                    document.getElementById('cLobbySlot' + i).innerHTML = "Waiting for player to get ready...";
+                                } else {
+                                    document.getElementById('cLobbySlot' + i).innerHTML = "Commander " + gameInfoObj.playercommname[i] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[i]] + " is ready for war";
+                                };
+                            };
+                        } else {
+                            if (playerNumber == 0) {
+                                document.getElementById('hLobbySlot' + i).innerHTML = "Waiting for player to join...";
+                            } else {
+                                document.getElementById('cLobbySlot' + i).innerHTML = "Waiting for player to join...";
+                            };
+                        };
+                    };
+                };
+            });
 
-			//joining/leaving lobbies
-			function hostLeave() {
-				hideHostLobby();
-				socket.emit('host leaves', roomID);
-				roomID = '';
-				playerNumber = -99;
-				commName = '';
-				kingdomPref = 0;
-			};
-			socket.on('dc by host', function() {
-				socket.emit('leave room', roomID);
-				hideClientLobby();
-				roomID = '';
-				playerNumber = -99;
-				commName = '';
-				kingdomPref = 0;
-				alert('Host has left the lobby.');
-			});
-			socket.on('room full', function() {
-				hideJoinNewGame();
-				alert('This room is full.');
-			});
-			socket.on('game already started', function() {
-				hideJoinNewGame();
-				alert('This game is already in progress.')
-			});
-			socket.on('join lobby request accepted', function(pNumber, sentRoomID, gameInfoObj) {
-				playerNumber = pNumber;
-				roomID = sentRoomID;
-				joinLobby();
-				cPlayerNotReady();
-				/*console.log(gameInfoObj);
-				console.log(JSON.stringify(gameInfoObj));
-				console.log(gameInfoObj.idname);
-				console.log(gameInfoObj.playerid[0]);
-				console.log(JSON.stringify(gameInfoObj.playercommname));*/
-				for (i = 0; i < 4; i++) {
-					if (playerNumber != i) {
-						if (gameInfoObj.playerid[i] != '\'\'') {
-							if (gameInfoObj.playerready[i] == 0 || gameInfoObj.playerready[i] == null) {
-								document.getElementById('cLobbySlot' + i).innerHTML = "Waiting for player to get ready...";
-							} else {
-								document.getElementById('cLobbySlot' + i).innerHTML = "Commander " + gameInfoObj.playercommname[i] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[i]] + " is ready for war";
-							};
-						} else {
-							document.getElementById('cLobbySlot' + i).innerHTML = "Waiting for player to join...";
-						};
-					};
-				};
-			});
+            //joining/leaving lobbies
+            function hostLeave() {
+                hideHostLobby();
+                socket.emit('host leaves', roomID);
+                roomID = '';
+                playerNumber = -99;
+                commName = '';
+                kingdomPref = 0;
+            };
+            socket.on('dc by host', function () {
+                socket.emit('leave room', roomID);
+                hideClientLobby();
+                roomID = '';
+                playerNumber = -99;
+                commName = '';
+                kingdomPref = 0;
+                alert('Host has left the lobby.');
+            });
+            socket.on('room full', function () {
+                hideJoinNewGame();
+                alert('This room is full.');
+            });
+            socket.on('game already started', function () {
+                hideJoinNewGame();
+                alert('This game is already in progress.')
+            });
+            socket.on('join lobby request accepted', function (pNumber, sentRoomID, gameInfoObj) {
+                playerNumber = pNumber;
+                roomID = sentRoomID;
+                joinLobby();
+                cPlayerNotReady();
+                /*console.log(gameInfoObj);
+									console.log(JSON.stringify(gameInfoObj));
+									console.log(gameInfoObj.idname);
+									console.log(gameInfoObj.playerid[0]);
+									console.log(JSON.stringify(gameInfoObj.playercommname));*/
+                for (i = 0; i < 4; i++) {
+                    if (playerNumber != i) {
+                        if (gameInfoObj.playerid[i] != '\'\'') {
+                            if (gameInfoObj.playerready[i] == 0 || gameInfoObj.playerready[i] == null) {
+                                document.getElementById('cLobbySlot' + i).innerHTML = "Waiting for player to get ready...";
+                            } else {
+                                document.getElementById('cLobbySlot' + i).innerHTML = "Commander " + gameInfoObj.playercommname[i] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[i]] + " is ready for war";
+                            };
+                        } else {
+                            document.getElementById('cLobbySlot' + i).innerHTML = "Waiting for player to join...";
+                        };
+                    };
+                };
+            });
 
-			function newGameWarning() {
-				/*if (cookieHasUnfinishedGame == true) {
-				var AYStext = "You are about to start a new game, but still have\n\ran unfinished saved game. By starting a new game,\n\ryour previous saved game will be replaced.\n\r\n\rPlease confirm you want to do this by typing\n\r\"Clear saved game\"\n\rand choosing to create or join a new game.";
-				if (consent === "Clear saved game") {*/
-				/*};
-				} else {
-					var AYStext = "Please select whether to host a new game (Create game) or join an already hosted game based on a room code received from the host (Join game).";
-					document.getElementById('AYStextField').innerHTML = AYStext;
-					showAYSPrompt();
-				};*/
-				var AYStext = 'TEMPORARY TEXT<BR>Please select whether to host a new game (Create game) or join an already hosted game based on a room code received from the host (Join game).';
-				document.getElementById('AYStextField').innerHTML = AYStext;
-				showAYSPrompt();
-			};
+            function newGameWarning() {
+                /*if (cookieHasUnfinishedGame == true) {
+									var AYStext = "You are about to start a new game, but still have\n\ran unfinished saved game. By starting a new game,\n\ryour previous saved game will be replaced.\n\r\n\rPlease confirm you want to do this by typing\n\r\"Clear saved game\"\n\rand choosing to create or join a new game.";
+									if (consent === "Clear saved game") {*/
+                /*};
+									} else {
+										var AYStext = "Please select whether to host a new game (Create game) or join an already hosted game based on a room code received from the host (Join game).";
+										document.getElementById('AYStextField').innerHTML = AYStext;
+										showAYSPrompt();
+									};*/
+                var AYStext = 'TEMPORARY TEXT<br>Please select whether to host a new game (Create game) or join an already hosted game based on a room code received from the host (Join game).';
+                document.getElementById('AYStextField').innerHTML = AYStext;
+                showAYSPrompt();
+            };
 
-			function newGameSettings() {
-				hideAYSPrompt();
-				showNewGameSettings();
-				/*if (document.getElementById("comName").value.length > 3) {
-					console.log("Your commander is " + document.getElementById("comName").value);
-					
-				} else {
-					console.log("Your commander name must be at least 4 characters long");
-				}*/
-			};
+            function newGameSettings() {
+                hideAYSPrompt();
+                showNewGameSettings();
+                /*if (document.getElementById("comName").value.length > 3) {
+										console.log("Your commander is " + document.getElementById("comName").value);
 
-			function joinNewGame() {
-				hideAYSPrompt();
-				showJoinNewGame();
-			};
+									} else {
+										console.log("Your commander name must be at least 4 characters long");
+									}*/
+            };
 
-			function roomCodeCheck() {
-				socket.emit('join lobby request', document.getElementById('roomCode').value, userID);
-			};
+            function joinNewGame() {
+                hideAYSPrompt();
+                showJoinNewGame();
+            };
 
-			function joinLobby() {
-				hideJoinNewGame();
-				showClientLobby();
-			};
-			function createLobby() {
-				hideNewGameSettings();
-				generateGRID();
-			};
+            function roomCodeCheck() {
+                socket.emit('join lobby request', document.getElementById('roomCode').value, userID);
+            };
 
-			hideAYSPrompt();
-			hideNewGameSettings();
-			hideJoinNewGame();
-			hideHostLobby()
-			hideClientLobby()
-		</script>
-	</body>
+            function joinLobby() {
+                hideJoinNewGame();
+                showClientLobby();
+            };
+            function createLobby() {
+                hideNewGameSettings();
+                generateGRID();
+            };
+
+            hideAYSPrompt();
+            hideNewGameSettings();
+            hideJoinNewGame();
+            hideHostLobby()
+            hideClientLobby()
+        </script>
+    </body>
+</html>
