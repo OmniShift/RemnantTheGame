@@ -174,6 +174,8 @@ io.on('connection', function(socket) {
 					console.log('Query passed');
 					if(status == 0) {
 						for (i = 1; i < 4; i++) {
+							console.log(i);
+							console.log(row.playerid[i]);
 							if (row.playerid[i] === '\'\'') {
 								client.query('UPDATE "GRIDs" SET playerid[' + i + '] = \'' + UID + '\' WHERE idname=\'' + roomID + '\';', function(err, data) {
 									if(err) {
@@ -188,6 +190,7 @@ io.on('connection', function(socket) {
 								break;
 							} else {
 								if (i = 3) {
+									console.log(i + ' should be 3');
 									socket.emit('room full');
 								};
 							};
