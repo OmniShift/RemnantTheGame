@@ -205,10 +205,10 @@ io.on('connection', function(socket) {
 		console.log('Room ID: ' + roomID + ', sent player number: ' + pNumber + ', sent player ID: ' + pID + ', sent player ready: ' + pReady + ', sent player commander: ' + pCommName + ', sent player kingdom preference: ' + pKingdomPref);
 		new Promise(function(resolve, reject) {
 			console.log('Promise started');
-			pg.connect(process.env.DATABASE_URL, function(err, client) {
+			pg.connect(process.env.DATABASE_URL, function(err, pclient) {
 				if (err) throw err;
 				console.log('Connected to postrges');
-				client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
+				pclient.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
 					if(err) {
 						throw new Error(err + ' --- Error updating room ' + roomID + ' with new info');
 						reject('failed to update lobbies');
@@ -216,7 +216,7 @@ io.on('connection', function(socket) {
 					console.log('Room info updated');
 					resolve('lobbies updated');
 				}).then(function() {
-					client
+					pclient
 					 .query('SELECT * FROM "GRIDs" WHERE idname=\'' + roomID + '\';')
 					 .on('row', function(row) {
 					 	console.log(JSON.stringify(row));
