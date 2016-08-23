@@ -189,7 +189,7 @@ io.on('connection', function(socket) {
 								socket.broadcast.to(roomID).emit('player joined lobby', i);
 								break;
 							} else {
-								if (i = 3) {
+								if (i === 3) {
 									console.log(i + ' should be 3');
 									socket.emit('room full');
 								};
