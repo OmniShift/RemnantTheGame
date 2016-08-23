@@ -304,13 +304,13 @@
 						if (gameInfoObj.playerid[i] != '\'\'') {
 							//Check if you are the host
 							if (playerNumber == 0) {
-								if (gameInfoObj.playerready[i] == 0) {
+								if (gameInfoObj.playerready[i] == 0 || gameInfoObj.playerready[i] == null) {
 									document.getElementById('hLobbySlot' + i).innerHTML = "Waiting for player to get ready...";
 								} else {
 									document.getElementById('hLobbySlot' + i).innerHTML = "Commander " + gameInfoObj.playercommname[i] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[i]] + " is ready for war";
 								};
 							} else {
-								if (gameInfoObj.playerready[i] == 0) {
+								if (gameInfoObj.playerready[i] == 0 || gameInfoObj.playerready[i] == null) {
 									document.getElementById('cLobbySlot' + i).innerHTML = "Waiting for player to get ready...";
 								} else {
 									document.getElementById('cLobbySlot' + i).innerHTML = "Commander " + gameInfoObj.playercommname[i] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[i]] + " is ready for war";
@@ -366,7 +366,7 @@
 				for (i = 0; i < 4; i++) {
 					if (playerNumber != i) {
 						if (gameInfoObj.playerid[i] != '\'\'') {
-							if (gameInfoObj.playerready[i] == 0) {
+							if (gameInfoObj.playerready[i] == 0 || gameInfoObj.playerready[i] == null) {
 								document.getElementById('cLobbySlot' + i).innerHTML = "Waiting for player to get ready...";
 							} else {
 								document.getElementById('cLobbySlot' + i).innerHTML = "Commander " + gameInfoObj.playercommname[i] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[i]] + " is ready for war";
