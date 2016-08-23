@@ -7,8 +7,6 @@ const   fs				= require('fs'),
 		var server = http.createServer(app);
 		var io = require('socket.io').listen(server);
 		var pg = require('pg');
-		var async = require('async');
-		//var Promise = require('promise');
 		pg.defaults.ssl = true;
 		pg.connect(process.env.DATABASE_URL, function(err, client) {
 			if (err) throw err;
@@ -82,6 +80,7 @@ io.on('connection', function(socket) {
 					console.log(hits + ' matches');
 					if(err) {
 						userID = '';
+						reject('failed to update lobbies');
 						throw new Error(err + ' --- Error querying for user ID.');
 					} else {
 						console.log('Query passed');
@@ -89,6 +88,7 @@ io.on('connection', function(socket) {
 							console.log('User ID ' + userID + ' available. Inserting it into database');
 							client.query('INSERT INTO "UIDs" (idname) VALUES (\'' + userID + '\');', function(err, data) {
 								if(err) {
+									reject('failed to update lobbies');
 									throw new Error(err + ' --- Error inserting user ID ' + userID);
 								};
 							});
@@ -126,6 +126,7 @@ io.on('connection', function(socket) {
 					console.log(hits + ' matches');
 					if(err) {
 						gameRoomID = '';
+						reject('failed to update lobbies');
 						throw new Error('Error querying for game room ID.');
 					} else {
 						console.log('Query passed');
@@ -133,6 +134,7 @@ io.on('connection', function(socket) {
 							console.log('Game room ' + gameRoomID + ' available. Inserting it into database');
 							client.query('INSERT INTO "GRIDs" (idname, status, playerid, playerready, playercommname, playerkingdompref) VALUES (\'' + gameRoomID + '\', 0, ARRAY[$$\'\'$$,$$\'\'$$,$$\'\'$$,$$\'\'$$], ARRAY[0,0,0,0], ARRAY[$$\'\'$$,$$\'\'$$,$$\'\'$$,$$\'\'$$], ARRAY[0,0,0,0]);', function(err, data) {
 								if(err) {
+									reject('failed to update lobbies');
 									throw new Error('Error inserting game room ID ' + gameRoomID);
 								};
 							});
@@ -146,14 +148,6 @@ io.on('connection', function(socket) {
 				});
 			});
 		});
-		//possibly change to promise
-		/*async.parallel([genGRID, checkGRIDs], function(err, result) {
-			if (err) {
-				console.log(err);
-				return;
-			};
-			console.log(result);
-		});*/
 	});
 
 	socket.on('join lobby request', function(roomID, UID) {
@@ -210,11 +204,14 @@ io.on('connection', function(socket) {
 	socket.on('update lobby info', function(roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
 		console.log('Room ID: ' + roomID + ', sent player number: ' + pNumber + ', sent player ID: ' + pID + ', sent player ready: ' + pReady + ', sent player commander: ' + pCommName + ', sent player kingdom preference: ' + pKingdomPref);
 		new Promise(function(resolve, reject) {
+			console.log('Promise started');
 			pg.connect(process.env.DATABASE_URL, function(err, client) {
 				if (err) throw err;
+				console.log('Connected to postrges');
 				client.query('UPDATE "GRIDs" SET playerid[' + pNumber + '] = \'' + pID + '\', playerready[' + pNumber + '] = ' + pReady + ', playercommname[' + pNumber + '] = \'' + pCommName + '\', playerkingdompref[' + pNumber + '] = ' + pKingdomPref + ' WHERE idname=\'' + roomID + '\';', function(err, data) {
 					if(err) {
 						throw new Error(err + ' --- Error updating room ' + roomID + ' with new info');
+						reject('failed to update lobbies');
 					};
 					console.log('Room info updated');
 					resolve('lobbies updated');
