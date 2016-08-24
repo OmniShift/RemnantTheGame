@@ -1,27 +1,52 @@
 const fs = require('fs');
 const path = require('path');
-var logger = require('tracer').colorConsole();
+const url = require('url');
+const logger = require('tracer').colorConsole();
+const pg = require('pg');
+
+const params = url.parse(process.env.DATABASE_URL || 'postgres://remnant:qwerty123@localhost:5432/remnant');
+const auth = params.auth.split(':');
+const config = {
+    user: auth[0],
+    password: auth[1],
+    host: params.hostname,
+    port: params.port,
+    database: params.pathname.split('/')[1],
+    ssl: false
+};
+/*
+  Transforms, 'progres://DBuser:secret@DBHost:#####/myDB', into
+  config = {
+    user: 'DBuser',
+    password: 'secret',
+    host: 'DBHost',
+    port: '#####',
+    database: 'myDB',
+    ssl: true
+  }
+*/
+
+var pool = new pg.Pool(config);
+pool.connect()
+    .then(client => {
+        client.query('SELECT * FROM "GRIDs" ORDER BY idname;')
+            .on('row', function (row) {
+                logger.log(JSON.stringify(row));
+            })
+            .then(res => {
+                client.release();
+            })
+            .catch(e => {
+                client.release();
+                console.error('query error', e.message, e.stack);
+            });
+    });
 
 var express = require('express');
 var app = express();
 var http = require('http');
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
-var pg = require('pg');
-pg.defaults.ssl = false;
-
-var conString = process.env.DATABASE_URL || 'postgres://remnant:qwerty123@localhost:5432/remnant';
-pg.connect(conString, function (err, client) {
-    if (err) {
-        throw err;
-    }
-    logger.log('Checking database connection.');
-    client
-        .query('SELECT * FROM "GRIDs" ORDER BY idname;')
-        .on('row', function (row) {
-            logger.log(JSON.stringify(row));
-        });
-});
 
 app.set('port', (process.env.PORT || 5000));
 server.listen(app.get('port'), function () {
@@ -45,20 +70,24 @@ function pausecomp(millis) {
 
 io.on('connection', function (socket) {
     var userID = '';
-    var gameRoomID = '';
-    var hits = 0;
+    //var gameRoomID = '';
+    //var hits = 0;
     socket.on('existing user connection', function (UID) {
         userID = UID;
         logger.log('User ' + UID + ' connected');
     });
 
     socket.on('news request', function () {
-        pg.connect(conString, function (err, client) {
-            client
-                .query('SELECT * FROM "NewsFeed" ORDER BY newsid;')
-                .on('row', function (row) {
-                    socket.emit('news', JSON.stringify(row).substring((JSON.stringify(row).search(',') + 1), JSON.stringify(row).length));
+        logger.log('Requesting news');
+        pool.query('SELECT * FROM "NewsFeed" ORDER BY newsid;').then(res => {
+            if (res.rowCount > 0) {
+                res.rows.forEach(function (row) {
+                    socket.emit('news', {
+                        'newsdate': row.newsdate,
+                        'newscontent': row.newscontent
+                    }); //JSON.stringify(row).substring((JSON.stringify(row).search(',') + 1), JSON.stringify(row).length));
                 });
+            }
         });
     });
 
@@ -66,214 +95,190 @@ io.on('connection', function (socket) {
         logger.log('Generate UID request received');
         new Promise(function (resolve, reject) {
             var possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            logger.log('ID generation started');
+            logger.log('UID generation started');
             //preventing the userID from growing 5 characters with each failed attempt
-            userID = '';
             for (var j = 0; j < 6; j++) {
                 userID += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
             }
-            logger.log('Checking for ID ' + userID);
-            resolve('UID generation complete');
+            resolve(logger.log('UID generation complete'));
         }).then(function () {
-            logger.log('Connecting to postgres...');
-            pg.connect(conString, function (err, client) {
-                if (err) {
-                    throw err;
-                }
-                logger.log('Connected to postgres');
-                client
-                    .query('SELECT COUNT(idname) FROM "UIDs" WHERE idname=$1;', [userID])
-                    .on('row', function (row) {
-                        logger.log(row);
-                        hits = parseInt(row.count);
-                        logger.log(hits + ' matches');
-                        if (err) {
-                            userID = '';
-                            //reject('failed to update lobbies');
-                            throw new Error(err + ' --- Error querying for user ID.');
-                        } else {
-                            logger.log('Query passed');
-                            if (hits === 0) {
-                                logger.log('User ID ' + userID + ' available. Inserting it into database');
-                                client.query('INSERT INTO "UIDs" (idname) VALUES ($1);', [userID], function (err, data) {
-                                    if (err) {
-                                        //reject('failed to update lobbies');
-                                        throw new Error(err + ' --- Error inserting user ID ' + userID);
-                                    }
-                                });
-                                socket.emit('return generated UID', userID);
-                                logger.log('ID successfully assigned');
-                            } else {
-                                logger.log('User ID ' + userID + ' not available. New attempt required');
-                                userID = '';
+            logger.log('Querying for ID ' + userID);
+            pool.query('SELECT * FROM "UIDs" WHERE idname=$1;', [userID]).then(res => {
+                    var hits = parseInt(res.rowCount);
+                    logger.log(hits + ' matches');
+
+                    logger.log('Query passed');
+                    if (hits === 0) {
+                        logger.log('User ID ' + userID + ' available. Inserting it into database');
+                        pool.query('INSERT INTO "UIDs" (idname) VALUES ($1);', [userID], function (err, data) {
+                            if (err) {
+                                //reject('failed to update lobbies');
+                                throw new Error(err + ' --- Error inserting user ID ' + userID);
                             }
-                        }
-                    });
-            });
+                        });
+                        socket.emit('return generated UID', userID);
+                        logger.log('ID successfully assigned');
+                    } else {
+                        logger.log('User ID ' + userID + ' not available. New attempt required');
+                        userID = '';
+                    }
+
+                })
+                .catch(e => {
+                    logger.error('query error', e.message, e.stack);
+                });
         });
     });
     socket.on('generate GRID', function () {
         logger.log('Generate GRID request received');
+        var gameRoomID = '';
         new Promise(function (resolve, reject) {
             var possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
             logger.log('GRID generation started');
-            //preventing the userID from growing 5 characters with each failed attempt
-            gameRoomID = '';
+            //preventing the gameRoomID from growing 5 characters with each failed attempt
             for (var j = 0; j < 5; j++) {
                 gameRoomID += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
             }
             logger.log('Checking for game room ' + gameRoomID);
-            resolve('GRID generation complete');
+            resolve(logger.log('GRID generation complete'));
         }).then(function () {
-            pg.connect(conString, function (err, client) {
-                if (err) {
-                    throw err;
-                }
-                logger.log('Connected to postgres');
-                client
-                    .query('SELECT COUNT(idname) FROM "GRIDs" WHERE idname=$1;', [gameRoomID])
-                    .on('row', function (row) {
-                        hits = parseInt(row.count);
-                        logger.log(hits + ' matches');
-                        if (err) {
-                            gameRoomID = '';
-                            //reject('failed to update lobbies');
-                            throw new Error('Error querying for game room ID.');
-                        } else {
-                            logger.log('Query passed');
-                            if (hits === 0) {
-                                logger.log('Game room ' + gameRoomID + ' available. Inserting it into database');
-                                client.query(
-                                    'INSERT INTO "GRIDs" (idname, status, playerid, playerready, playercommname, playerkingdompref) VALUES ($1, $2, $3, $4, $5, $6)', [
-                                        gameRoomID, 0, ['', '', '', ''],
-                                        [0, 0, 0, 0],
-                                        ['', '', '', ''],
-                                        [0, 0, 0, 0]
-                                    ],
-                                    function (err, data) {
-                                        if (err) {
-                                            //reject('failed to update lobbies');
-                                            logger.error(err);
-                                            throw new Error('Error inserting game room ID ' + gameRoomID);
-                                        }
-                                    });
-                                socket.emit('return generated GRID', gameRoomID);
-                                socket.join(gameRoomID);
-                            } else {
-                                logger.log('Game room ID ' + gameRoomID + ' not available. New attempt required');
-                                gameRoomID = '';
-                            }
-                        }
-                    });
-            });
+            pool.query('SELECT * FROM "GRIDs" WHERE idname=$1;', [gameRoomID]).then(res => {
+                    var hits = parseInt(res.rowCount);
+                    logger.log(hits + ' matches');
+
+                    logger.log('Query passed');
+                    if (hits === 0) {
+                        logger.log('Game room ' + gameRoomID + ' available. Inserting it into database');
+                        pool.query(
+                            'INSERT INTO "GRIDs" (idname, status, playerid, playerready, playercommname, playerkingdompref) VALUES ($1, $2, $3, $4, $5, $6)', [
+                                gameRoomID, 0, ['', '', '', ''],
+                                [0, 0, 0, 0],
+                                ['', '', '', ''],
+                                [0, 0, 0, 0]
+                            ],
+                            function (err, data) {
+                                if (err) {
+                                    //reject('failed to update lobbies');
+                                    logger.error(err);
+                                    throw new Error('Error inserting game room ID ' + gameRoomID);
+                                }
+                            });
+                        socket.emit('return generated GRID', gameRoomID);
+                        socket.join(gameRoomID);
+                    } else {
+                        logger.log('Game room ID ' + gameRoomID + ' not available. New attempt required');
+                        gameRoomID = '';
+                    }
+
+                })
+                .catch(e => {
+                    logger.error('query error', e.message, e.stack);
+                });
         });
     });
 
     socket.on('join lobby request', function (roomID, UID) {
-        pg.connect(conString, function (err, client) {
-            if (err) {
-                throw err;
-            }
-            logger.log('Connected to postgres');
-            client
-                .query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID])
-                .on('row', function (row) {
+        var gameRoomID;
+        pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
+                if (res.rowCount > 0) {
                     logger.log('Checking for lobby for room ' + roomID);
-                    logger.log(JSON.stringify(row));
+                    logger.log(JSON.stringify(res.rows));
+                    var row = res.rows[0];
                     var status = parseInt(row.status);
                     logger.log('Status: ' + status);
-                    if (err) {
-                        gameRoomID = '';
-                        throw new Error('Error querying for game room ID.');
-                    } else {
-                        logger.log('Query passed');
-                        if (status === 1) {
-                            logger.log('Game room ' + roomID + ' has already started');
-                            socket.emit('game already started');
-                        } else if (status === 0) {
-                            var emptyid;
-                            logger.log(row.playerid);
-                            for (var i = 1; i <= 4; i++) {
-                                logger.log(i);
-                                logger.log(row.playerid[i]);
-                                if (row.playerid[i] === '') {
-                                    emptyid = i;
-                                    break;
-                                }
+                    logger.log('Query passed');
+                    if (status === 1) {
+                        logger.log('Game room ' + roomID + ' has already started');
+                        socket.emit('game already started');
+                    } else if (status === 0) {
+                        var emptyid;
+                        logger.log(row.playerid);
+                        for (var i = 0; i < 4; i++) {
+                            logger.log(i);
+                            logger.log(row.playerid[i]);
+                            if (row.playerid[i] === '') {
+                                emptyid = i;
+                                break;
                             }
-                            if (emptyid !== undefined) {
-                                client.query('UPDATE "GRIDs" SET playerid[$1] = $2 WHERE idname = $3;', [emptyid, UID, roomID], function (
-                                    err, data) {
-                                    if (err) {
-                                        throw new Error('Error adding ' + UID + ' to game room ' + roomID);
-                                    }
-                                });
-                                gameRoomID = roomID;
-                                socket.join(roomID);
-                                logger.log(JSON.stringify(row));
-                                socket.emit('join lobby request accepted', emptyid, roomID, row);
-                                socket.broadcast.to(roomID).emit('player joined lobby', emptyid);
-                            } else {
-                                logger.log('Could not find an empty spot in room ' + roomID);
-                                socket.emit('room full');
-                            }
-                        } else {
-                            logger.log('Game room ID ' + gameRoomID + ' not available. Please check for typing errors');
                         }
-                        gameRoomID = '';
+                        if (emptyid !== undefined) {
+                            // emptyid + 1 since postgres is 1 indexed
+                            pool.query('UPDATE "GRIDs" SET playerid[$1] = $2 WHERE idname = $3;', [emptyid + 1, UID, roomID], function (
+                                err, data) {
+                                if (err) {
+                                    throw new Error('Error adding ' + UID + ' to game room ' + roomID);
+                                }
+                            });
+                            gameRoomID = roomID;
+                            socket.join(roomID);
+                            logger.log('emptyid ' + emptyid);
+                            logger.log(JSON.stringify(row));
+                            socket.emit('join lobby request accepted', emptyid, roomID, row);
+                            socket.broadcast.to(roomID).emit('player joined lobby', emptyid);
+                        } else {
+                            logger.log('Could not find an empty spot in room ' + roomID);
+                            socket.emit('room full');
+                        }
+                    } else {
+                        logger.log('Game room ID ' + roomID + ' not available. Please check for typing errors');
                     }
-                });
-        });
+                } else {
+                    logger.log('Game room ID ' + roomID + ' not available. Please check for typing errors');
+                }
+            })
+            .catch(e => {
+                logger.error('query error', e.message, e.stack);
+            });
     });
 
     socket.on('update lobby info', function (roomID, pNumber, pID, pReady, pCommName, pKingdomPref) {
         logger.log('Room ID: ' + roomID + ', sent player number: ' + pNumber + ', sent player ID: ' + pID + ', sent player ready: ' + pReady +
             ', sent player commander: ' + pCommName + ', sent player kingdom preference: ' + pKingdomPref);
         new Promise(function (resolve, reject) {
-            logger.log('Promise started');
-            pg.connect(conString, function (err, client) {
-                if (err) {
-                    throw err;
-                }
-                // Postgres is 1 indexed, up the index by 1 to translate
-                pNumber++;
-                logger.log('Connected to postrges');
-                logger.log(
-                    'Query: UPDATE "GRIDs" SET playerid[%s] = %s, playerready[%s] = %s, playercommname[%s] = %s, playerkingdompref[%s] = %s WHERE idname = %s;',
-                    pNumber, pID, pNumber, pReady, pNumber, pCommName, pNumber, pKingdomPref, roomID);
-                client.query(
-                    'UPDATE "GRIDs" SET playerid[$1] = $2, playerready[$3] = $4, playercommname[$5] = $6, playerkingdompref[$7] = $8 WHERE idname = $9;', [
-                        pNumber, pID, pNumber, pReady, pNumber, pCommName, pNumber, pKingdomPref, roomID
-                    ],
-                    function (err, data) {
-                        if (err) {
-                            throw new Error(err + ' --- Error updating room ' + roomID + ' with new info');
-                            //reject('failed to update lobbies');
-                        }
-                        logger.log('Room info updated');
-                        resolve('lobbies updated');
-                    }).then(function () {
-                    client.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID])
-                        .on('row', function (row) {
-                            logger.log(JSON.stringify(row));
-                            logger.log('Room info broadcasted');
-                            socket.broadcast.to(roomID).emit('update lobby info', row);
-                        });
-                });
+            // Postgres is 1 indexed, up the index by 1 to translate
+            pNumber++;
+            logger.log(
+                'Query: UPDATE "GRIDs" SET playerid[%s] = %s, playerready[%s] = %s, playercommname[%s] = %s, playerkingdompref[%s] = %s WHERE idname = %s;',
+                pNumber, pID, pNumber, pReady, pNumber, pCommName, pNumber, pKingdomPref, roomID);
+            pool.query(
+                'UPDATE "GRIDs" SET playerid[$1] = $2, playerready[$3] = $4, playercommname[$5] = $6, playerkingdompref[$7] = $8 WHERE idname = $9;', [
+                    parseInt(pNumber), pID, parseInt(pNumber), pReady, parseInt(pNumber), pCommName, parseInt(pNumber), pKingdomPref, roomID
+                ],
+                function (err, data) {
+                    if (err) {
+                        throw new Error(err + ' --- Error updating room ' + roomID + ' with new info');
+                        //reject('failed to update lobbies');
+                    }
+                    logger.log('Room info updated');
+                    resolve(logger.log('lobbies updated'));
+                }).then(function () {
+                pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
+                        logger.log(JSON.stringify(res.rows[0]));
+                        logger.log('Room info broadcasted');
+                        socket.broadcast.to(roomID).emit('update lobby info', res.rows[0]);
+                    })
+                    .catch(e => {
+                        logger.error('query error', e.message, e.stack);
+                    });
             });
         });
     });
 
     socket.on('host leaves', function (roomID) {
         socket.broadcast.to(roomID).emit('dc by host');
-        pg.connect(conString, function (err, client) {
-            if (err) {
-                throw err;
-            }
-            client.query('DELETE FROM "GRIDs" WHERE idname=$1;', [roomID]);
-            logger.log('Room ' + roomID + ' deleted');
-        });
+        pool.query('DELETE FROM "GRIDs" WHERE idname=$1;', [roomID])
+            .then(function () {
+                logger.log('Room ' + roomID + ' deleted');
+            })
+            .catch(e => {
+                logger.error('query error', e.message, e.stack);
+            });
     });
+
+    socket.on('client leaves', function (roomID) {
+        //TODO: client leaving
+    });
+
     socket.on('leave room', function (roomID) {
         socket.leave(roomID);
     });

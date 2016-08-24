@@ -16,8 +16,8 @@ socket.on('time', function (timeString) {
 });
 socket.emit('news request');
 socket.on('news', function (newsObject) {
-    newsDate = newsObject.substring((newsObject.search('newsdate') + 11), (newsObject.search(',') - 1));
-    newsContent = newsObject.substring((newsObject.search('newscontent') + 14), (newsObject.length - 2));
+    newsDate = newsObject.newsdate;
+    newsContent = newsObject.newscontent;
     $('<tr></tr>').append('<td class=\'newsTime\'>' + newsDate + '</td><td class=\'newsContent\'>' + newsContent + '</td>').prependTo('#newsTable');
 });
 
@@ -131,14 +131,14 @@ function hPlayerReady() {
     document.getElementById('hLobbySlot0')
         .innerHTML = 'Commander ' + commName + ', attempting command of ' + kingdomArray[kingdomPref] +
         ' is ready for war <button id="notReadyP0" onclick="hPlayerNotReady()">X</button>';
-    console.log({
-        'roomID': roomID,
-        'playerNumber': playerNumber,
-        'userID': userID,
-        'pReady': 1,
-        'commName': commName,
-        'kingdomPref': kingdomPref
-    });
+    // console.log({
+    //     'roomID': roomID,
+    //     'playerNumber': playerNumber,
+    //     'userID': userID,
+    //     'pReady': 1,
+    //     'commName': commName,
+    //     'kingdomPref': kingdomPref
+    // });
     socket.emit('update lobby info', roomID, playerNumber, userID, 1, commName, kingdomPref);
 }
 
@@ -165,10 +165,9 @@ function cPlayerNotReady() {
     document.getElementById('cLobbySlot' + playerNumber.toString())
         .innerHTML = '<div id="LobbyInfoP' + playerNumber.toString() + '">Commander name: <input id="CommName' +
         playerNumber.toString() + '" type="text" name="commanderName" maxlength="15" value="' + commName + '"> <select name="kingdomPref" id="KingdomPref' +
-        playerNumber.toString() +
-        '" value="' + kingdomPref +
-        '"><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select> <button id="re' +
-        'adyP' + playerNumber.toString() + '" onclick="cPlayerReady()">V</button></div>';
+        playerNumber.toString() + '" value="' + kingdomPref + '">' +
+        '<option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select>' +
+        '<button id="readyP' + playerNumber.toString() + '" onclick="cPlayerReady()">V</button></div>';
     document.getElementById('KingdomPref' + playerNumber.toString()).selectedIndex = kingdomPref;
     // console.log(roomID);
     // console.log(playerNumber);
