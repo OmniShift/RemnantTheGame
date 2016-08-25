@@ -244,6 +244,15 @@ function hostLeave() {
     kingdomPref = 0;
 }
 
+function clientLeave() {
+    hideClientLobby();
+    socket.emit('client leaves', roomID, playerNumber);
+    roomID = '';
+    playerNumber = -99;
+    commName = '';
+    kingdomPref = 0;
+}
+
 socket.on('dc by host', function () {
     socket.emit('leave room', roomID);
     hideClientLobby();
