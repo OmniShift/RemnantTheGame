@@ -274,8 +274,8 @@ io.on('connection', function (socket) {
     socket.on('client leaves', function (roomID, pNumber) {
         socket.broadcast.to(roomID).emit('dc by host');
         pool.query(
-            'UPDATE "GRIDs" SET playerid[$1] = \'\', playerready[$2] = 0, playercommname[$3] = \'\', playerkingdompref[$4] = 0 WHERE idname = $5;', [
-                parseInt(pNumber), parseInt(pNumber), parseInt(pNumber), parseInt(pNumber), roomID
+            'UPDATE "GRIDs" SET playerid[$1] = $2, playerready[$3] = $4, playercommname[$6] = $6, playerkingdompref[$7] = $8 WHERE idname = $9;', [
+                parseInt(pNumber), '', parseInt(pNumber), 0, parseInt(pNumber), '', parseInt(pNumber), 0, roomID
             ]).then(function () {
                 logger.log('Player ' + pNumber + ' had left the room');
                 pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
