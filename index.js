@@ -308,6 +308,7 @@ process.on('SIGTERM', function () {
             msg: 'server disconnected with SIGTERM'
         });
     }
+    //log says app.close is not a function
     app.close();
     process.exit(-1);
 });

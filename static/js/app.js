@@ -246,6 +246,7 @@ function hostLeave() {
 
 function clientLeave() {
     hideClientLobby();
+    console.log(playerNumber);
     socket.emit('client leaves', roomID, playerNumber);
     roomID = '';
     playerNumber = -99;
