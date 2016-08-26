@@ -193,7 +193,7 @@ socket.on('update lobby info', function (gameInfoObj) {
         if (playerNumber !== i) {
             //Check if there is a player in this slot
             console.log(gameInfoObj.playerid[i]);
-            if (gameInfoObj.playerid[i] !== '\'\'' || gameInfoObj.playerid[i] !== '\"\"') {
+            if (gameInfoObj.playerid[i] !== '\'\'' || gameInfoObj.playerid[i] !== '\"\"' || gameInfoObj.playerid[i] !== '') {
                 //Check if you are the host
                 if (playerNumber === 0) {
                     if (gameInfoObj.playerready[i] === 0 || gameInfoObj.playerready[i] === null) {
