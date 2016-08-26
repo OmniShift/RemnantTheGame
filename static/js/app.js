@@ -192,6 +192,7 @@ socket.on('update lobby info', function (gameInfoObj) {
         //Don't update your own information, which is done locally
         if (playerNumber !== i) {
             //Check if there is a player in this slot
+            console.log(gameInfoObj.playerid[i]);
             if (gameInfoObj.playerid[i] !== '\'\'' || gameInfoObj.playerid[i] !== '\"\"') {
                 //Check if you are the host
                 if (playerNumber === 0) {
