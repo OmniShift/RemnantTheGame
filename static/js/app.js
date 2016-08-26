@@ -199,7 +199,7 @@ socket.on('update lobby info', function (gameInfoObj) {
                         document.getElementById('hLobbySlot' + i).innerHTML = 'Waiting for player to get ready...';
                     } else {
                         nOfPlayersReady++
-                        console.log(nOfPlayersReady + ' players are ready to start')
+                        console.log(nOfPlayersReady + ' player(s) are ready to start')
                         document.getElementById('hLobbySlot' + i).innerHTML = 'Commander ' + gameInfoObj.playercommname[i] + ', attempting command of ' +
                             kingdomArray[
                                 gameInfoObj.playerkingdompref[i]] + ' is ready for war';
@@ -222,7 +222,7 @@ socket.on('update lobby info', function (gameInfoObj) {
             }
         }
     }
-    if (nOfPlayersReady == 4) {
+    if (nOfPlayersReady == 3 && gameInfoObj.playerready[0] == 1) {
         document.getElementById('startGameButton').disabled = false;
     };
 });
