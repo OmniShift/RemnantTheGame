@@ -272,6 +272,8 @@ io.on('connection', function (socket) {
             });
     });
     socket.on('client leaves', function (roomID, pNumber) {
+        // Postgres is 1 indexed, up the index by 1 to translate
+        pNumber++;
         pool.query(
             'UPDATE "GRIDs" SET playerid[$1] = $2, playerready[$3] = $4, playercommname[$5] = $6, playerkingdompref[$7] = $8 WHERE idname = $9;', [
                 parseInt(pNumber), '', parseInt(pNumber), 0, parseInt(pNumber), '', parseInt(pNumber), 0, roomID
