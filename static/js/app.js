@@ -184,7 +184,6 @@ socket.on('player joined lobby', function (newPlayerNumber) {
         document.getElementById('cLobbySlot' + newPlayerNumber).innerHTML = 'Player joined. Waiting for them to get ready...';
     }
 });
-//somewhere in this code, the gameInfoObj is a value row with a long string, and this only occurs with the host, not the (first) client)
 socket.on('update lobby info', function (gameInfoObj) {
     console.log(JSON.stringify(gameInfoObj));
     var nOfPlayersReady = 0
@@ -192,7 +191,8 @@ socket.on('update lobby info', function (gameInfoObj) {
         //Don't update your own information, which is done locally
         if (playerNumber !== i) {
             //Check if there is a player in this slot
-            console.log(gameInfoObj.playerid[i]);
+            console.log('Player ' + i + ': ' + gameInfoObj.playerid[i] + '.');
+            //PROBLEM: the following if statement doesn't trigger the else when a client connects
             if (gameInfoObj.playerid[i] !== '\'\'' || gameInfoObj.playerid[i] !== '\"\"' || gameInfoObj.playerid[i] !== '') {
                 //Check if you are the host
                 if (playerNumber === 0) {
@@ -272,7 +272,12 @@ socket.on('join lobby request accepted', function (pNumber, sentRoomID, gameInfo
     playerNumber = pNumber;
     roomID = sentRoomID;
     joinLobby();
-    cPlayerNotReady();
+    document.getElementById('cLobbySlot' + playerNumber.toString())
+        .innerHTML = '<div id="LobbyInfoP' + playerNumber.toString() + '">Commander name: <input id="CommName' +
+        playerNumber.toString() + '" type="text" name="commanderName" maxlength="15" value="' + commName + '"> <select name="kingdomPref" id="KingdomPref' +
+        playerNumber.toString() + '" value="' + kingdomPref + '">' +
+        '<option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select>' +
+        '<button id="readyP' + playerNumber.toString() + '" onclick="cPlayerReady()">V</button></div>';
     // console.log(gameInfoObj);
     // console.log(JSON.stringify(gameInfoObj));
     // console.log(gameInfoObj.idname);
