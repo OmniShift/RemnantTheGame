@@ -187,6 +187,7 @@ socket.on('player joined lobby', function (newPlayerNumber) {
 //somewhere in this code, the gameInfoObj is a value row with a long string, and this only occurs with the host, not the (first) client)
 socket.on('update lobby info', function (gameInfoObj) {
     console.log(JSON.stringify(gameInfoObj));
+    var nOfPlayersReady = 0
     for (var i = 0; i < 4; i++) {
         //Don't update your own information, which is done locally
         if (playerNumber !== i) {
@@ -197,6 +198,8 @@ socket.on('update lobby info', function (gameInfoObj) {
                     if (gameInfoObj.playerready[i] === 0 || gameInfoObj.playerready[i] === null) {
                         document.getElementById('hLobbySlot' + i).innerHTML = 'Waiting for player to get ready...';
                     } else {
+                        nOfPlayersReady++
+                        console.log(nOfPlayersReady + ' players are ready to start')
                         document.getElementById('hLobbySlot' + i).innerHTML = 'Commander ' + gameInfoObj.playercommname[i] + ', attempting command of ' +
                             kingdomArray[
                                 gameInfoObj.playerkingdompref[i]] + ' is ready for war';
@@ -219,6 +222,9 @@ socket.on('update lobby info', function (gameInfoObj) {
             }
         }
     }
+    if (nOfPlayersReady == 4) {
+        document.getElementById('startGameButton').disabled = false;
+    };
 });
 
 //joining/leaving lobbies
