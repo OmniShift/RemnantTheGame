@@ -7,6 +7,7 @@ var newsContent = '';
 var userID = '';
 var roomID = '';
 var playerNumber = -99;
+var hostReady = false;
 var commName = '';
 var kingdomPref = 0;
 var kingdomArray = ['any willing kingdom', 'Mantle', 'Minstral', 'Vacuo', 'Vale'];
@@ -126,29 +127,23 @@ function showClientLobby() {
 
 //pre-game player status
 function hPlayerReady() {
+    hostReady = true;
     commName = document.getElementById('CommName0').value;
     kingdomPref = document.getElementById('KingdomPref0').value;
     document.getElementById('hLobbySlot0')
         .innerHTML = 'Commander ' + commName + ', attempting command of ' + kingdomArray[kingdomPref] +
         ' is ready for war <button id="notReadyP0" onclick="hPlayerNotReady()">X</button>';
-    // console.log({
-    //     'roomID': roomID,
-    //     'playerNumber': playerNumber,
-    //     'userID': userID,
-    //     'pReady': 1,
-    //     'commName': commName,
-    //     'kingdomPref': kingdomPref
-    // });
     socket.emit('update lobby info', roomID, playerNumber, userID, 1, commName, kingdomPref);
 }
 
 function hPlayerNotReady() {
+    hostReady = false;
     document.getElementById('hLobbySlot0')
         .innerHTML = '<div id="LobbyInfoP0">Commander name: <input id="CommName0" type="text" name="commanderName0" maxlength="15" value="' + commName + '">' +
         ' <select name="kingdomPref0" id="KingdomPref0"><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option>' +
         '<option value=3>Vacuo</option><option value=4>Vale</option></select> <button id="readyP1" onclick="hPlayerReady()">V</button></div>';
-    document.getElementById('KingdomPref0')
-        .selectedIndex = kingdomPref;
+    document.getElementById('KingdomPref0').selectedIndex = kingdomPref;
+    document.getElementById('startGameButton').disabled = true;
     socket.emit('update lobby info', roomID, playerNumber, userID, 0, commName, kingdomPref);
 }
 
@@ -169,11 +164,6 @@ function cPlayerNotReady() {
         '<option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select>' +
         '<button id="readyP' + playerNumber.toString() + '" onclick="cPlayerReady()">V</button></div>';
     document.getElementById('KingdomPref' + playerNumber.toString()).selectedIndex = kingdomPref;
-    // console.log(roomID);
-    // console.log(playerNumber);
-    // console.log(userID);
-    // console.log(commName);
-    // console.log(kingdomPref);
     socket.emit('update lobby info', roomID, playerNumber, userID, 0, commName, kingdomPref);
 }
 
@@ -186,7 +176,7 @@ socket.on('player joined lobby', function (newPlayerNumber) {
 });
 socket.on('update lobby info', function (gameInfoObj) {
     console.log(JSON.stringify(gameInfoObj));
-    var nOfPlayersReady = 0
+    var nOfPlayersReady = 0;
     for (var i = 0; i < 4; i++) {
         //Don't update your own information, which is done locally
         if (playerNumber !== i) {
@@ -226,8 +216,10 @@ socket.on('update lobby info', function (gameInfoObj) {
             }
         }
     }
-    if (nOfPlayersReady == 3 && gameInfoObj.playerready[0] == 1) {
+    if (nOfPlayersReady == 3 && hostReady = true) {
         document.getElementById('startGameButton').disabled = false;
+    } else {
+        document.getElementById('startGameButton').disabled = true;
     };
 });
 
@@ -280,11 +272,6 @@ socket.on('join lobby request accepted', function (pNumber, sentRoomID, gameInfo
         playerNumber.toString() + '" value="' + kingdomPref + '">' +
         '<option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select>' +
         '<button id="readyP' + playerNumber.toString() + '" onclick="cPlayerReady()">V</button></div>';
-    // console.log(gameInfoObj);
-    // console.log(JSON.stringify(gameInfoObj));
-    // console.log(gameInfoObj.idname);
-    // console.log(gameInfoObj.playerid[0]);
-    // console.log(JSON.stringify(gameInfoObj.playercommname));
     for (var i = 0; i < 4; i++) {
         if (playerNumber !== i) {
             if (gameInfoObj.playerid[i] !== '\'\'' || gameInfoObj.playerid[i] !== '\"\"' || gameInfoObj.playerid[i] !== '' || gameInfoObj.playerid[i] !== null || gameInfoObj.playerid[i] !== undefined) {
