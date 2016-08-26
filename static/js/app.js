@@ -285,7 +285,7 @@ socket.on('join lobby request accepted', function (pNumber, sentRoomID, gameInfo
     // console.log(JSON.stringify(gameInfoObj.playercommname));
     for (var i = 0; i < 4; i++) {
         if (playerNumber !== i) {
-            if (gameInfoObj.playerid[i] !== '\'\'' || gameInfoObj.playerid[i] !== '\"\"' || gameInfoObj.playerid[i] !== '') {
+            if (gameInfoObj.playerid[i] !== '\'\'' || gameInfoObj.playerid[i] !== '\"\"' || gameInfoObj.playerid[i] !== '' || gameInfoObj.playerid[i] !== null || gameInfoObj.playerid[i] !== undefined) {
                 if (gameInfoObj.playerready[i] === 0 || gameInfoObj.playerready[i] === null) {
                     document.getElementById('cLobbySlot' + i).innerHTML = 'Waiting for player to get ready...';
                 } else {
