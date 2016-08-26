@@ -8,6 +8,7 @@ var userID = '';
 var roomID = '';
 var playerNumber = -99;
 var hostReady = false;
+var nOfClientsReady = 0;
 var commName = '';
 var kingdomPref = 0;
 var kingdomArray = ['any willing kingdom', 'Mantle', 'Minstral', 'Vacuo', 'Vale'];
@@ -128,6 +129,9 @@ function showClientLobby() {
 //pre-game player status
 function hPlayerReady() {
     hostReady = true;
+    if (nOfClientsReady == 3) {
+        document.getElementById('startGameButton').disabled = false;
+    }
     commName = document.getElementById('CommName0').value;
     kingdomPref = document.getElementById('KingdomPref0').value;
     document.getElementById('hLobbySlot0')
@@ -176,7 +180,7 @@ socket.on('player joined lobby', function (newPlayerNumber) {
 });
 socket.on('update lobby info', function (gameInfoObj) {
     console.log(JSON.stringify(gameInfoObj));
-    var nOfPlayersReady = 0;
+    nOfClientsReady = 0;
     for (var i = 0; i < 4; i++) {
         //Don't update your own information, which is done locally
         if (playerNumber !== i) {
@@ -190,8 +194,8 @@ socket.on('update lobby info', function (gameInfoObj) {
                     if (gameInfoObj.playerready[i] === 0 || gameInfoObj.playerready[i] === null) {
                         document.getElementById('hLobbySlot' + i).innerHTML = 'Waiting for player to get ready...';
                     } else {
-                        nOfPlayersReady++
-                        console.log(nOfPlayersReady + ' player(s) are ready to start')
+                        nOfClientsReady++
+                        console.log(nOfClientsReady + ' player(s) are ready to start')
                         document.getElementById('hLobbySlot' + i).innerHTML = 'Commander ' + gameInfoObj.playercommname[i] + ', attempting command of ' +
                             kingdomArray[
                                 gameInfoObj.playerkingdompref[i]] + ' is ready for war';
@@ -216,7 +220,7 @@ socket.on('update lobby info', function (gameInfoObj) {
             }
         }
     }
-    if (nOfPlayersReady == 3 && hostReady == true) {
+    if (nOfClientsReady == 3 && hostReady == true) {
         document.getElementById('startGameButton').disabled = false;
     } else {
         document.getElementById('startGameButton').disabled = true;
