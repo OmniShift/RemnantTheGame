@@ -184,19 +184,6 @@ socket.on('player joined lobby', function (newPlayerNumber) {
         document.getElementById('cLobbySlot' + newPlayerNumber).innerHTML = 'Player joined. Waiting for them to get ready...';
     }
 });
-/*socket.on('client lobby initialization', function (pNumber, gameInfoObj) {
-    if (playerNumber != pNumber) {
-        if (gameInfoObj.playerid != '') {
-            if (gameInfoObj.playerready == 0) {
-                document.getElementById('cLobbySlot' + pNumber).innerHTML = "Waiting for player to get ready...";
-            } else {
-                document.getElementById('cLobbySlot' + pNumber).innerHTML = "Commander " + gameInfoObj.playercommname[pNumber] + ", attempting command of " + kingdomArray[gameInfoObj.playerkingdompref[pNumber]] + " is ready for war";
-            };
-        } else {
-            document.getElementById('cLobbySlot' + pNumber).innerHTML = "Waiting for player to join...";
-        };
-    };
-});*/
 //somewhere in this code, the gameInfoObj is a value row with a long string, and this only occurs with the host, not the (first) client)
 socket.on('update lobby info', function (gameInfoObj) {
     console.log(JSON.stringify(gameInfoObj));
@@ -204,7 +191,7 @@ socket.on('update lobby info', function (gameInfoObj) {
         //Don't update your own information, which is done locally
         if (playerNumber !== i) {
             //Check if there is a player in this slot
-            if (gameInfoObj.playerid[i] !== '\'\'') {
+            if (gameInfoObj.playerid[i] !== '\'\'' || gameInfoObj.playerid[i] !== '\"\"') {
                 //Check if you are the host
                 if (playerNumber === 0) {
                     if (gameInfoObj.playerready[i] === 0 || gameInfoObj.playerready[i] === null) {
