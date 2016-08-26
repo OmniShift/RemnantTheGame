@@ -216,7 +216,7 @@ socket.on('update lobby info', function (gameInfoObj) {
             }
         }
     }
-    if (nOfPlayersReady == 3 && hostReady = true) {
+    if (nOfPlayersReady == 3 && hostReady == true) {
         document.getElementById('startGameButton').disabled = false;
     } else {
         document.getElementById('startGameButton').disabled = true;
