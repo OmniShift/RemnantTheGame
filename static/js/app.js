@@ -193,10 +193,10 @@ socket.on('update lobby info', function (gameInfoObj) {
             //Check if there is a player in this slot
             console.log('Player ' + i + ': ' + gameInfoObj.playerid[i] + '.');
             //PROBLEM: the following if statement doesn't trigger the else when a client connects
-            if (gameInfoObj.playerid[i] != '\'\'' || gameInfoObj.playerid[i] != '\"\"' || gameInfoObj.playerid[i] != '' || gameInfoObj.playerid[i] != null || gameInfoObj.playerid[i] != undefined) {
+            if (gameInfoObj.playerid[i] !== '\'\'' || gameInfoObj.playerid[i] !== '\"\"' || gameInfoObj.playerid[i] !== '' || gameInfoObj.playerid[i] !== null || gameInfoObj.playerid[i] !== undefined) {
                 //Check if you are the host
                 if (playerNumber === 0) {
-                    console.log('Waiting for player ready');
+                    console.log('Waiting for player ' + i + ' to get ready');
                     if (gameInfoObj.playerready[i] === 0 || gameInfoObj.playerready[i] === null) {
                         document.getElementById('hLobbySlot' + i).innerHTML = 'Waiting for player to get ready...';
                     } else {
@@ -217,9 +217,10 @@ socket.on('update lobby info', function (gameInfoObj) {
                 }
             } else {
                 if (playerNumber === 0) {
-                    console.log('Waiting for player to join');
+                    console.log('Waiting for player ' + i + ' to join');
                     document.getElementById('hLobbySlot' + i).innerHTML = 'Waiting for player to join...';
                 } else {
+                    console.log('Waiting for player ' + i + ' to join');
                     document.getElementById('cLobbySlot' + i).innerHTML = 'Waiting for player to join...';
                 }
             }
@@ -242,7 +243,6 @@ function hostLeave() {
 
 function clientLeave() {
     hideClientLobby();
-    console.log(playerNumber);
     socket.emit('client leaves', roomID, playerNumber);
     roomID = '';
     playerNumber = -99;

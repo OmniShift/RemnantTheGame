@@ -278,6 +278,7 @@ io.on('connection', function (socket) {
             'UPDATE "GRIDs" SET playerid[$1] = $2, playerready[$3] = $4, playercommname[$5] = $6, playerkingdompref[$7] = $8 WHERE idname = $9;', [
                 parseInt(pNumber), '', parseInt(pNumber), 0, parseInt(pNumber), '', parseInt(pNumber), 0, roomID
             ]).then(function () {
+                socket.leave(roomID);
                 logger.log('Player ' + pNumber + ' had left the room');
                 pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
                     socket.broadcast.to(roomID).emit('update lobby info', res.rows[0]);
