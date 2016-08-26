@@ -196,6 +196,7 @@ socket.on('update lobby info', function (gameInfoObj) {
             if (gameInfoObj.playerid[i] != '\'\'' || gameInfoObj.playerid[i] != '\"\"' || gameInfoObj.playerid[i] != '' || gameInfoObj.playerid[i] != null || gameInfoObj.playerid[i] != undefined) {
                 //Check if you are the host
                 if (playerNumber === 0) {
+                    console.log('Waiting for player ready');
                     if (gameInfoObj.playerready[i] === 0 || gameInfoObj.playerready[i] === null) {
                         document.getElementById('hLobbySlot' + i).innerHTML = 'Waiting for player to get ready...';
                     } else {
@@ -216,6 +217,7 @@ socket.on('update lobby info', function (gameInfoObj) {
                 }
             } else {
                 if (playerNumber === 0) {
+                    console.log('Waiting for player to join');
                     document.getElementById('hLobbySlot' + i).innerHTML = 'Waiting for player to join...';
                 } else {
                     document.getElementById('cLobbySlot' + i).innerHTML = 'Waiting for player to join...';
