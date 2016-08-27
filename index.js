@@ -67,10 +67,10 @@ app.get('/', function (request, response) {
     }
     while (curDate - date < millis);
 }*/
-var emptyUID = '';
 
 io.on('connection', function (socket) {
     var userID = '';
+    var emptyUID = '';
     //var gameRoomID = '';
     //var hits = 0;
     socket.on('existing user connection', function (UID) {
@@ -235,7 +235,7 @@ io.on('connection', function (socket) {
 
     socket.on('update lobby info', function (roomID, pNumber, pID, pReady, pCommName, pKingdomPref, emptyUID) {
         logger.log('Room ID: ' + roomID + ', sent player number: ' + pNumber + ', sent player ID: ' + pID + ', sent player ready: ' + pReady +
-            ', sent player commander: ' + pCommName + ', sent player kingdom preference: ' + pKingdomPref);
+            ', sent player commander: ' + pCommName + ', sent player kingdom preference: ' + pKingdomPref + ', emptyUID: ' + emptyUID + '.');
         new Promise(function (resolve, reject) {
             // Postgres is 1 indexed, up the index by 1 to translate
             pNumber++;
