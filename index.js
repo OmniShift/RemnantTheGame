@@ -161,8 +161,8 @@ io.on('connection', function (socket) {
                                     throw new Error('Error inserting game room ID ' + gameRoomID);
                                 }
                             }).then(function () {
-                                pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
-                                    emptyUID = res.playerid[3];
+                                pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(result => {
+                                    emptyUID = result.playerid[3];
                                 })
                             });
                         socket.emit('return generated GRID', gameRoomID);
