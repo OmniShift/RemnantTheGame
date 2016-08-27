@@ -58,6 +58,9 @@ app.use(express.static(__dirname + '/static'));
 app.get('/', function (request, response) {
     response.render('pages/index');
 });
+app.get('/game', function (request, response) {
+    response.render('pages/game');
+});
 
 /*function pausecomp(millis) {
     var date = new Date();

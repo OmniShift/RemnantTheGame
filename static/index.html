@@ -8,116 +8,114 @@
 	</head>
 	<body>
 		<div id="backgroundMain">
-			<div id="overlay">
-				<!--if the server time is not displayed or doesn"t update, there"s no connection-->
-				<div id="serverTime" style="text-align:center"></div><br>
-				<!--if the news is not shown, but the clock does tick, the userID is probably not generated, passed or returned-->
-				<div id="newsBoard">
-					<b>News</b><br>
-					<div style="width:600px; height:2px; display:inline-block; background-color:black"></div><br>
-					<table id="newsTable" style="padding:5px"></table>
+		<div id="overlay">
+			<!--if the server time is not displayed or doesn"t update, there"s no connection-->
+			<div id="serverTime" style="text-align:center"></div><br>
+			<!--if the news is not shown, but the clock does tick, the userID is probably not generated, passed or returned-->
+			<div id="newsBoard">
+				<b>News</b><br>
+				<div style="width:600px; height:2px; display:inline-block; background-color:black"></div><br>
+				<table id="newsTable" style="padding:5px"></table>
+			</div>
+
+			<div style="text-align:center">
+				<h1>Remnant - The Game</h1>
+				<h2>Show those pesky Remnantians who was meant to rule them</h2>
+				<button id="createJoinButton" onclick="newGameWarning()">Create/Join New Game</button><br>
+				<button id="continueGameButton" onclick="continueGame()" disabled="">Continue Game</button><br>
+				<button id="testerIDButton" onclick="toTestersPage()">To Testers Page</button><br>
+				<!--
+									<button onclick="testFunc()">php test</button><br>
+									<button onclick="showNewGameSettings()">test button 2</button></div>
+									-->
+				<div class="popUp" id="newGameSettings">
+					<div class="popUpTop" style="text-align:center">
+						<div style="font-weight:bold; font-size:1.7em; padding:7px">New game</div>
+						<p style="text-align:center; font-size:1.5em">There are no settings yet this early on in the game"s development, so you have no options to choose from.</p>
+						<p style="text-align:center; font-size:1.5em">...you lucky devil!</p>
+					</div>
+					<!--
+											<br>
+											<div class="popUpList">
+												<b><u>Base game:</u></b><br>
+												<select>
+													<option id="baseGamePack" value="original">Original</option>
+												</select><br>
+												<br>
+												<b><u>Expansions:</u></b><br>
+												<input id="semblanceExp" type="checkbox" name="semblance" disabled="">test1 (N/A)<br>
+												<input id="modernDayHeroesExp" type="checkbox" name="modernDayHeroes" disabled="">test2 (N/A)<br>
+											</div>
+											<div class="popUpList">
+												<b><u>"Features":</u></b><br>
+												<input type="checkbox" name="tuck" disabled="">test (N/A)<br>
+											</div>
+											<br>
+											-->
+					<div class="popUpBottom">
+						<button onclick="createLobby()">Create</button>
+						<button onclick="hideNewGameSettings()">Cancel</button>
+					</div>
 				</div>
 
-				<div style="text-align:center">
-					<h1>Remnant - The Game</h1>
-					<h2>Show those pesky Remnantians who was meant to rule them</h2>
-					<button id="createJoinButton" onclick="newGameWarning()">Create/Join New Game</button><br>
-					<button id="continueGameButton" onclick="continueGame()" disabled="">Continue Game</button><br>
-					<button id="testerIDButton" onclick="toTestersPage()">To Testers Page</button><br>
-					<!--
-										<button onclick="testFunc()">php test</button><br>
-										<button onclick="showNewGameSettings()">test button 2</button></div>
-										-->
-					<div class="popUp" id="newGameSettings">
-						<div class="popUpTop" style="text-align:center">
-							<div style="font-weight:bold; font-size:1.7em; padding:7px">New game</div>
-							<p style="text-align:center; font-size:1.5em">There are no settings yet this early on in the game"s development, so you have no options to choose from.</p>
-							<p style="text-align:center; font-size:1.5em">...you lucky devil!</p>
-						</div>
+				<div class="popUp" id="AYSprompt">
+					<div class="popUpTop" style="text-align:center">
+						<div style="font-weight:bold; font-size:1.7em; padding:7px">Create/join new game</div>
+						<p id="AYStextField" style="font-size:1.2em"></p>
+					</div>
+					<div class="popUpBottom">
+						<button onclick="newGameSettings()">Create game</button>
+						<button onclick="joinNewGame()">Join game</button>
+						<button onclick="hideAYSPrompt()">Cancel</button>
+					</div>
+				</div>
+
+				<div class="popUp" id="joinNewGame">
+					<div class="popUpTop" style="text-align:center">
+						<div style="font-weight:bold; font-size:1.7em; padding:7px">Join new game</div>
+					</div>
+					<div class="popUpBottom">
+						<p style="font-size:1.2em">Please insert your room code:<br>
+							<input id="roomCode" type="text" name="roomCode" autocomplete="off" maxlength="5" autofocus=""></p>
+						<button onclick="roomCodeCheck()">Join game</button>
+						<button onclick="hideJoinNewGame()">Cancel</button>
+					</div>
+				</div>
+
+				<div class="popUp" id="hostLobby">
+					<div class="popUpTop" style="text-align:center">
+						<div style="font-weight:bold; font-size:1.7em; padding:7px">Lobby</div>
+					</div>
+					<div class="popUpBottom">
+						<p style="font-size:1.2em">Room code:
+							<input id="givenRoomCode" type="text" name="roomCode" readonly style="background-color:#cccccc"></p>
+						<div class="lobbyPlayerSlot" id="hLobbySlot0">Waiting for player to join...</div><br>
+						<div class="lobbyPlayerSlot" id="hLobbySlot1">Waiting for player to join...</div><br>
+						<div class="lobbyPlayerSlot" id="hLobbySlot2">Waiting for player to join...</div><br>
+						<div class="lobbyPlayerSlot" id="hLobbySlot3">Waiting for player to join...</div><br>
+						<button id="startGameButton" onclick="" disabled="">Start game</button>
+						<button onclick="hostLeave()">Cancel</button>
+					</div>
+				</div>
+				<div class="popUp" id="clientLobby">
+					<div class="popUpTop" style="text-align:center">
+						<div style="font-weight:bold; font-size:1.7em; padding-top:15px; padding-bottom: 25px">Lobby</div>
+					</div>
+					<div class="popUpBottom">
+						<div class="lobbyPlayerSlot" id="cLobbySlot0">Waiting for player to join...</div><br>
+						<div class="lobbyPlayerSlot" id="cLobbySlot1">Waiting for player to join...</div><br>
+						<div class="lobbyPlayerSlot" id="cLobbySlot2">Waiting for player to join...</div><br>
+						<div class="lobbyPlayerSlot" id="cLobbySlot3">Waiting for player to join...</div><br>
+						<button onclick="clientLeave()">Cancel</button>
 						<!--
-												<br>
-												<div class="popUpList">
-													<b><u>Base game:</u></b><br>
-													<select>
-														<option id="baseGamePack" value="original">Original</option>
-													</select><br>
-													<br>
-													<b><u>Expansions:</u></b><br>
-													<input id="semblanceExp" type="checkbox" name="semblance" disabled="">test1 (N/A)<br>
-													<input id="modernDayHeroesExp" type="checkbox" name="modernDayHeroes" disabled="">test2 (N/A)<br>
-												</div>
-												<div class="popUpList">
-													<b><u>"Features":</u></b><br>
-													<input type="checkbox" name="tuck" disabled="">test (N/A)<br>
-												</div>
-												<br>
+												<button onclick="playerReady()">test</button>
+												<button onclick="playerNotReady()">test2</button>
 												-->
-						<div class="popUpBottom">
-							<button onclick="createLobby()">Create</button>
-							<button onclick="hideNewGameSettings()">Cancel</button>
-						</div>
-					</div>
-
-					<div class="popUp" id="AYSprompt">
-						<div class="popUpTop" style="text-align:center">
-							<div style="font-weight:bold; font-size:1.7em; padding:7px">Create/join new game</div>
-							<p id="AYStextField" style="font-size:1.2em"></p>
-						</div>
-						<div class="popUpBottom">
-							<button onclick="newGameSettings()">Create game</button>
-							<button onclick="joinNewGame()">Join game</button>
-							<button onclick="hideAYSPrompt()">Cancel</button>
-						</div>
-					</div>
-
-					<div class="popUp" id="joinNewGame">
-						<div class="popUpTop" style="text-align:center">
-							<div style="font-weight:bold; font-size:1.7em; padding:7px">Join new game</div>
-						</div>
-						<div class="popUpBottom">
-							<p style="font-size:1.2em">Please insert your room code:<br>
-								<input id="roomCode" type="text" name="roomCode" autocomplete="off" maxlength="5" autofocus=""></p>
-							<button onclick="roomCodeCheck()">Join game</button>
-							<button onclick="hideJoinNewGame()">Cancel</button>
-						</div>
-					</div>
-
-					<div class="popUp" id="hostLobby">
-						<div class="popUpTop" style="text-align:center">
-							<div style="font-weight:bold; font-size:1.7em; padding:7px">Lobby</div>
-						</div>
-						<div class="popUpBottom">
-							<p style="font-size:1.2em">Room code:
-								<input id="givenRoomCode" type="text" name="roomCode" readonly style="background-color:#cccccc"></p>
-							<div class="lobbyPlayerSlot" id="hLobbySlot0">Waiting for player to join...</div><br>
-							<div class="lobbyPlayerSlot" id="hLobbySlot1">Waiting for player to join...</div><br>
-							<div class="lobbyPlayerSlot" id="hLobbySlot2">Waiting for player to join...</div><br>
-							<div class="lobbyPlayerSlot" id="hLobbySlot3">Waiting for player to join...</div><br>
-							<button id="startGameButton" onclick="" disabled="">Start game</button>
-							<button onclick="hostLeave()">Cancel</button>
-						</div>
-					</div>
-					<div class="popUp" id="clientLobby">
-						<div class="popUpTop" style="text-align:center">
-							<div style="font-weight:bold; font-size:1.7em; padding-top:15px; padding-bottom: 25px">Lobby</div>
-						</div>
-						<div class="popUpBottom">
-							<div class="lobbyPlayerSlot" id="cLobbySlot0">Waiting for player to join...</div><br>
-							<div class="lobbyPlayerSlot" id="cLobbySlot1">Waiting for player to join...</div><br>
-							<div class="lobbyPlayerSlot" id="cLobbySlot2">Waiting for player to join...</div><br>
-							<div class="lobbyPlayerSlot" id="cLobbySlot3">Waiting for player to join...</div><br>
-							<button onclick="clientLeave()">Cancel</button>
-							<!--
-													<button onclick="playerReady()">test</button>
-													<button onclick="playerNotReady()">test2</button>
-													-->
-						</div>
 					</div>
 				</div>
 			</div>
-			<!--end of overlay-->
-		</div>
-		<!--end of backgroundMain-->
+		</div><!--end of overlay-->
+		</div><!--end of backgroundMain-->
 		<script src="/socket.io/socket.io.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 		<script src="/js/js.cookie-2.1.2.min.js"></script>

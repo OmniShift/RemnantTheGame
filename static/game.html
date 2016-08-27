@@ -6,6 +6,14 @@
 		<link type="text/css" rel="stylesheet" href="style.css"/>
 		<title>Remnant - The Game</title>
 	</head>
+		<div id="backgroundMain">
+		<!--<div id="overlay">-->
+			<div id="otherPlayers"><!--This is where the card covers and number of card of the other players are displayed (left)--><div id="dummyEndDivOP"></div></div>
+			<div id="gameInfo">This is where the draw pile, possibly some options and other game information is displayed (right)</div>
+			<div id="gameBoard" style="background-image: url('images/game board.png'); background-size: 100% 100%;">This is where the gameboard is displayed (top)</div>
+			<div id="playerCards">This is where the player's own cards are displayed (bottom)</div>
+		<!--</div>end of overlay-->
+		</div><!--end of backgroundMain-->
 	<body>
 		<script src="/socket.io/socket.io.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
