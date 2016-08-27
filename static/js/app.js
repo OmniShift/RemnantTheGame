@@ -23,34 +23,6 @@ socket.on('news', function (newsObject) {
     $('<tr></tr>').append('<td class=\'newsTime\'>' + newsDate + '</td><td class=\'newsContent\'>' + newsContent + '</td>').prependTo('#newsTable');
 });
 
-function generateUID() {
-    socket.emit('generate UID');
-    console.log('generate UID request sent');
-}
-socket.on('return generated UID', function (UID) {
-    userID = UID;
-    jsCookie.set('rtgUID', userID, {
-        expires: 365
-    });
-    console.log('Your new ID is ' + jsCookie.get('rtgUID'));
-});
-
-function generateGRID() {
-    socket.emit('generate GRID');
-    console.log('generate GRID request sent');
-}
-socket.on('return generated GRID', function (gameRoomID) {
-    jsCookie.set('rtgLastGame', gameRoomID, {
-        expires: 365
-    });
-    console.log('Your room code is ' + jsCookie.get('rtgLastGame'));
-    document.getElementById('givenRoomCode').value = gameRoomID;
-    roomID = gameRoomID;
-    playerNumber = 0;
-    showHostLobby();
-    hPlayerNotReady();
-});
-
 function testFunc() {
     document.getElementById('P2Status').innerHTML = '';
     document.getElementById('cLobbyInfoP2').style.visibility = 'visible';
@@ -126,6 +98,80 @@ function showClientLobby() {
     document.getElementById('createJoinButton').disabled = true;
 }
 
+function generateUID() {
+    socket.emit('generate UID');
+    console.log('generate UID request sent');
+}
+socket.on('return generated UID', function (UID) {
+    userID = UID;
+    jsCookie.set('rtgUID', userID, {
+        expires: 365
+    });
+    console.log('Your new ID is ' + jsCookie.get('rtgUID'));
+});
+
+function newGameWarning() {
+    /*if (cookieHasUnfinishedGame == true) {
+                var AYStext = "You are about to start a new game, but still have\n\ran unfinished saved game. By starting a new game,\n\ryour previous saved game will be replaced.\n\r\n\rPlease confirm you want to do this by typing\n\r\"Clear saved game\"\n\rand choosing to create or join a new game.";
+                if (consent === 'Clear saved game') {*/
+    /*};
+                } else {
+                    var AYStext = 'Please select whether to host a new game (Create game) or join an already hosted game based on a room code received from the host (Join game).';
+                    document.getElementById('AYStextField').innerHTML = AYStext;
+                    showAYSPrompt();
+                };*/
+    var AYStext =
+        'TEMPORARY TEXT<br>Please select whether to host a new game (Create game) or join an already hosted game based on a room code received from the host (Join game).';
+    document.getElementById('AYStextField').innerHTML = AYStext;
+    showAYSPrompt();
+}
+
+function newGameSettings() {
+    hideAYSPrompt();
+    showNewGameSettings();
+    /*if (document.getElementById('comName').value.length > 3) {
+                    console.log('Your commander is ' + document.getElementById('comName').value);
+
+                } else {
+                    console.log('Your commander name must be at least 4 characters long');
+                }*/
+}
+
+function joinNewGame() {
+    hideAYSPrompt();
+    showJoinNewGame();
+}
+
+function roomCodeCheck() {
+    socket.emit('join lobby request', document.getElementById('roomCode').value, userID);
+}
+
+function joinLobby() {
+    hideJoinNewGame();
+    showClientLobby();
+}
+
+function createLobby() {
+    hideNewGameSettings();
+    generateGRID();
+}
+
+function generateGRID() {
+    socket.emit('generate GRID');
+    console.log('generate GRID request sent');
+}
+socket.on('return generated GRID', function (gameRoomID) {
+    jsCookie.set('rtgLastGame', gameRoomID, {
+        expires: 365
+    });
+    console.log('Your room code is ' + jsCookie.get('rtgLastGame'));
+    document.getElementById('givenRoomCode').value = gameRoomID;
+    roomID = gameRoomID;
+    playerNumber = 0;
+    showHostLobby();
+    hPlayerNotReady();
+});
+
 //pre-game player status
 function hPlayerReady() {
     hostReady = true;
@@ -171,6 +217,32 @@ function cPlayerNotReady() {
     socket.emit('update lobby info', roomID, playerNumber, userID, 0, commName, kingdomPref);
 }
 
+socket.on('join lobby request accepted', function (pNumber, sentRoomID, gameInfoObj, emptyUID) {
+    playerNumber = pNumber;
+    roomID = sentRoomID;
+    joinLobby();
+    document.getElementById('cLobbySlot' + playerNumber.toString())
+        .innerHTML = '<div id="LobbyInfoP' + playerNumber.toString() + '">Commander name: <input id="CommName' +
+        playerNumber.toString() + '" type="text" name="commanderName" maxlength="15" value="' + commName + '"> <select name="kingdomPref" id="KingdomPref' +
+        playerNumber.toString() + '" value="' + kingdomPref + '">' +
+        '<option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select>' +
+        '<button id="readyP' + playerNumber.toString() + '" onclick="cPlayerReady()">V</button></div>';
+    for (var i = 0; i < 4; i++) {
+        if (playerNumber !== i) {
+            if (gameInfoObj.playerid[i] !== '\'\'' || gameInfoObj.playerid[i] !== '\"\"' || gameInfoObj.playerid[i] !== '' || gameInfoObj.playerid[i] !== null || gameInfoObj.playerid[i] !== undefined || gameInfoObj.playerid[i] !== emptyUID) {
+                if (gameInfoObj.playerready[i] === 0 || gameInfoObj.playerready[i] === null) {
+                    document.getElementById('cLobbySlot' + i).innerHTML = 'Waiting for player to get ready...';
+                } else {
+                    document.getElementById('cLobbySlot' + i).innerHTML = 'Commander ' + gameInfoObj.playercommname[i] + ', attempting command of ' +
+                        kingdomArray[
+                            gameInfoObj.playerkingdompref[i]] + ' is ready for war';
+                }
+            } else {
+                document.getElementById('cLobbySlot' + i).innerHTML = 'Waiting for player to join...';
+            }
+        }
+    }
+});
 socket.on('player joined lobby', function (newPlayerNumber) {
     if (playerNumber === 0) {
         document.getElementById('hLobbySlot' + newPlayerNumber).innerHTML = 'Player joined. Waiting for them to get ready...';
@@ -178,7 +250,7 @@ socket.on('player joined lobby', function (newPlayerNumber) {
         document.getElementById('cLobbySlot' + newPlayerNumber).innerHTML = 'Player joined. Waiting for them to get ready...';
     }
 });
-socket.on('update lobby info', function (gameInfoObj) {
+socket.on('update lobby info', function (gameInfoObj, emptyUID) {
     console.log(JSON.stringify(gameInfoObj));
     nOfClientsReady = 0;
     for (var i = 0; i < 4; i++) {
@@ -187,7 +259,7 @@ socket.on('update lobby info', function (gameInfoObj) {
             //Check if there is a player in this slot
             console.log('Player ' + i + ': ' + gameInfoObj.playerid[i] + '.');
             //PROBLEM: the following if statement doesn't trigger the else when a client connects
-            if (gameInfoObj.playerid[i] !== '\'\'' || gameInfoObj.playerid[i] !== '\"\"' || gameInfoObj.playerid[i] !== '' || gameInfoObj.playerid[i] !== null || gameInfoObj.playerid[i] !== undefined) {
+            if (gameInfoObj.playerid[i] !== '\'\'' || gameInfoObj.playerid[i] !== '\"\"' || gameInfoObj.playerid[i] !== '' || gameInfoObj.playerid[i] !== null || gameInfoObj.playerid[i] !== undefined || gameInfoObj.playerid[i] !== emptyUID) {
                 //Check if you are the host
                 if (playerNumber === 0) {
                     console.log('Waiting for player ' + i + ' to get ready');
@@ -261,86 +333,18 @@ socket.on('room full', function () {
     alert('This room is full.');
 });
 
+function startGameButton() {
+    console.log('Starting game!');
+    socket.emit('start game', roomID);
+}
+
 socket.on('game already started', function () {
     hideJoinNewGame();
     alert('This game is already in progress.');
 });
 
-socket.on('join lobby request accepted', function (pNumber, sentRoomID, gameInfoObj) {
-    playerNumber = pNumber;
-    roomID = sentRoomID;
-    joinLobby();
-    document.getElementById('cLobbySlot' + playerNumber.toString())
-        .innerHTML = '<div id="LobbyInfoP' + playerNumber.toString() + '">Commander name: <input id="CommName' +
-        playerNumber.toString() + '" type="text" name="commanderName" maxlength="15" value="' + commName + '"> <select name="kingdomPref" id="KingdomPref' +
-        playerNumber.toString() + '" value="' + kingdomPref + '">' +
-        '<option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select>' +
-        '<button id="readyP' + playerNumber.toString() + '" onclick="cPlayerReady()">V</button></div>';
-    for (var i = 0; i < 4; i++) {
-        if (playerNumber !== i) {
-            if (gameInfoObj.playerid[i] !== '\'\'' || gameInfoObj.playerid[i] !== '\"\"' || gameInfoObj.playerid[i] !== '' || gameInfoObj.playerid[i] !== null || gameInfoObj.playerid[i] !== undefined) {
-                if (gameInfoObj.playerready[i] === 0 || gameInfoObj.playerready[i] === null) {
-                    document.getElementById('cLobbySlot' + i).innerHTML = 'Waiting for player to get ready...';
-                } else {
-                    document.getElementById('cLobbySlot' + i).innerHTML = 'Commander ' + gameInfoObj.playercommname[i] + ', attempting command of ' +
-                        kingdomArray[
-                            gameInfoObj.playerkingdompref[i]] + ' is ready for war';
-                }
-            } else {
-                document.getElementById('cLobbySlot' + i).innerHTML = 'Waiting for player to join...';
-            }
-        }
-    }
-});
-
-function newGameWarning() {
-    /*if (cookieHasUnfinishedGame == true) {
-                var AYStext = "You are about to start a new game, but still have\n\ran unfinished saved game. By starting a new game,\n\ryour previous saved game will be replaced.\n\r\n\rPlease confirm you want to do this by typing\n\r\"Clear saved game\"\n\rand choosing to create or join a new game.";
-                if (consent === 'Clear saved game') {*/
-    /*};
-                } else {
-                    var AYStext = 'Please select whether to host a new game (Create game) or join an already hosted game based on a room code received from the host (Join game).';
-                    document.getElementById('AYStextField').innerHTML = AYStext;
-                    showAYSPrompt();
-                };*/
-    var AYStext =
-        'TEMPORARY TEXT<br>Please select whether to host a new game (Create game) or join an already hosted game based on a room code received from the host (Join game).';
-    document.getElementById('AYStextField').innerHTML = AYStext;
-    showAYSPrompt();
-}
-
-function newGameSettings() {
-    hideAYSPrompt();
-    showNewGameSettings();
-    /*if (document.getElementById('comName').value.length > 3) {
-                    console.log('Your commander is ' + document.getElementById('comName').value);
-
-                } else {
-                    console.log('Your commander name must be at least 4 characters long');
-                }*/
-}
-
-function joinNewGame() {
-    hideAYSPrompt();
-    showJoinNewGame();
-}
-
-function roomCodeCheck() {
-    socket.emit('join lobby request', document.getElementById('roomCode').value, userID);
-}
-
-function joinLobby() {
-    hideJoinNewGame();
-    showClientLobby();
-}
-
-function createLobby() {
-    hideNewGameSettings();
-    generateGRID();
-}
-
 $(document).ready(function () {
-    //UserID is checked or generates document.cookie = 'rtgUID=AdmUsr; expires=Thu, 31 Dec 2026 12:00:00 GMT';
+    //UserID is checked or generated
     function checkCookie() {
         userID = jsCookie.get('rtgUID');
         if (userID !== undefined) {
