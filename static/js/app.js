@@ -253,6 +253,7 @@ socket.on('player joined lobby', function (newPlayerNumber) {
 socket.on('update lobby info', function (gameInfoObj, emptyUID) {
     console.log(JSON.stringify(gameInfoObj));
     nOfClientsReady = 0;
+    console.log('emptyUID is ' + emptyUID + '.');
     for (var i = 0; i < 4; i++) {
         //Don't update your own information, which is done locally
         if (playerNumber !== i) {
