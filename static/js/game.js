@@ -10,11 +10,11 @@ var playerNumber = 1;
 
 $(document).ready(function () {
     //document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
-    
-    /*var img = document.createElement('img');
+
+    var img = document.createElement('img');
     img.src = 'images/Mistral_Symbol.svg.png';
     //img.src = kingdomPicArray[kingdom[playerNumber]];
-    document.getElementById('playerKingdom').appendChild(img);*/
+    document.getElementById('playerKingdom').appendChild(img);
 
     /*var img = document.createElement('img');
     img.src = 'http://gvgmaps.com/linktothepast/maps/LegendOfZelda-ALinkToThePast-LightWorld.png';
