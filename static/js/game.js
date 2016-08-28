@@ -9,7 +9,8 @@ var kingdomPicArray = ['images/Atlas_Symbol.svg.png', 'images/Mistral_Symbol.svg
 var playerNumber = 1;
 
 $(document).ready(function () {
-    document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
+    //document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
+    
     /*var img = document.createElement('img');
     img.src = 'images/Mistral_Symbol.svg.png';
     //img.src = kingdomPicArray[kingdom[playerNumber]];
