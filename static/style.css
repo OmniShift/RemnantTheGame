@@ -164,39 +164,37 @@ button {
 	background-color: pink;
 	float: left;
 	display: inline-block;
-	padding: 0.5%;
-	height: 68%;
-	width: 9%;
+	height: 75%;
+	width: 10%;
 	z-index: 1;
 }
-#otherPlayerArea {
+.otherPlayerArea {
 	background-color: lightgray;
 	display: inline-block;
-	height: 7%;
-	width: 9%;
+	height: 25%;
+	width: 10%;
 	z-index: 2;
 }
-.player3Area {
+#player2Area {
 	background-color: gray;
 	display: inline-block;
-	height: 7%;
-	width: 9%;
+	height: 25%;
+	width: 10%;
 	z-index: 2;
 }
 #gameInfo {
 	background-color: pink;
 	float: right;
 	display: inline-block;
-	padding: 0.5%;
-	height: 99%;
-	width: 9%;
+	height: 100%;
+	width: 10%;
 	z-index: 1;
 }
 #gameBoard {
 	background-color: lightgreen;
 	float: top;
 	display: inline-block;
-	height: 70%;
+	height: 75%;
 	width: 80%;
 	z-index: 1;
 }
@@ -204,8 +202,14 @@ button {
 	background-color: lightblue;
 	float: bottom;
 	display: inline-block;
-	padding: 0.5%;
-	height: 29%;
-	width: 89%;
+	height: 25%;
+	width: 90%;
 	z-index: 1;
+}
+#playerKingdom {
+	background-color: gray;
+	display: inline-block;
+	height: 100%;
+	text-align: center;
+	z-index: 2;
 }
