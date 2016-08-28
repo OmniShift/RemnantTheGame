@@ -10,22 +10,22 @@ var playerNumber = 1;
 
 $(document).ready(function () {
     document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
-    img = document.createElement('img');
+    /*var img = document.createElement('img');
     img.src = 'images/Mistral_Symbol.svg.png';
     //img.src = kingdomPicArray[kingdom[playerNumber]];
-    document.getElementById('playerKingdom').appendChild(img);
+    document.getElementById('playerKingdom').appendChild(img);*/
 
-    var img = document.createElement('img');
+    /*var img = document.createElement('img');
     img.src = 'http://gvgmaps.com/linktothepast/maps/LegendOfZelda-ALinkToThePast-LightWorld.png';
-    document.getElementById('playerKingdom').appendChild(img);
+    document.getElementById('playerKingdom').appendChild(img);*/
 
-    $('<img />').attr('src', 'images/Mistral_Symbol.svg.png').appendTo('#playerKingdom');
+    //$('<img />').attr('src', 'images/Mistral_Symbol.svg.png').appendTo('#playerKingdom');
 
-    document.getElementById('playerKingdom').innerHTML = '<img src="images/Mistral_Symbol.svg.png">';
+    //document.getElementById('playerKingdom').innerHTML = '<img src="images/Mistral_Symbol.svg.png">';
 
-    var img = new Image();
+    /*var img = new Image();
     img.src = "images/Mistral_Symbol.svg.png";
-    document.getElementById('playerKingdom').appendChild(img);
+    document.getElementById('playerKingdom').appendChild(img);*/
 
     //getElementById('gameBoard').
     //create 3 divs, 1 for each player in order after the client's player's turn
