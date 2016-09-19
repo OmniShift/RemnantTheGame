@@ -162,6 +162,7 @@ io.on('connection', function (socket) {
                                 logger.log('2nd select query started');
                                 logger.log(result);
                                 logger.log(result.rows);
+                                logger.log(result.playerid);
                                 emptyUID = result[3];
                                 logger.log('emptyUID is: ' + emptyUID);
                             })
