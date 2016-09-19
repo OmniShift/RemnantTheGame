@@ -62,15 +62,6 @@ app.get('/game', function (request, response) {
     response.render('pages/game');
 });
 
-/*function pausecomp(millis) {
-    var date = new Date();
-    var curDate = null;
-    do {
-        curDate = new Date();
-    }
-    while (curDate - date < millis);
-}*/
-
 io.on('connection', function (socket) {
     var userID = '';
     var emptyUID = '';
@@ -89,7 +80,7 @@ io.on('connection', function (socket) {
                     socket.emit('news', {
                         'newsdate': row.newsdate,
                         'newscontent': row.newscontent
-                    }); //JSON.stringify(row).substring((JSON.stringify(row).search(',') + 1), JSON.stringify(row).length));
+                    });
                 });
             }
         });
@@ -100,7 +91,7 @@ io.on('connection', function (socket) {
         new Promise(function (resolve, reject) {
             var possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
             logger.log('UID generation started');
-            //preventing the userID from growing 5 characters with each failed attempt
+            //preventing the userID from growing 6 characters with each failed attempt
             for (var j = 0; j < 6; j++) {
                 userID += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
             }
@@ -185,55 +176,55 @@ io.on('connection', function (socket) {
     socket.on('join lobby request', function (roomID, UID) {
         var gameRoomID;
         pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
-                if (res.rowCount > 0) {
-                    logger.log('Checking for lobby for room ' + roomID);
-                    logger.log(JSON.stringify(res.rows));
-                    var row = res.rows[0];
-                    var status = parseInt(row.status);
-                    logger.log('Status: ' + status);
-                    logger.log('Query passed');
-                    if (status === 1) {
-                        logger.log('Game room ' + roomID + ' has already started');
-                        socket.emit('game already started');
-                    } else if (status === 0) {
-                        var pIndex;
-                        logger.log(row.playerid);
-                        for (var i = 0; i < 4; i++) {
-                            logger.log(i);
-                            logger.log(row.playerid[i]);
-                            if (row.playerid[i] === '') {
-                                pIndex = i;
-                                break;
+            if (res.rowCount > 0) {
+                logger.log('Checking for lobby for room ' + roomID);
+                logger.log(JSON.stringify(res.rows));
+                var row = res.rows[0];
+                var status = parseInt(row.status);
+                logger.log('Status: ' + status);
+                logger.log('Query passed');
+                if (status === 1) {
+                    logger.log('Game room ' + roomID + ' has already started');
+                    socket.emit('game already started');
+                } else if (status === 0) {
+                    var pIndex;
+                    logger.log(row.playerid);
+                    for (var i = 0; i < 4; i++) {
+                        logger.log(i);
+                        logger.log(row.playerid[i]);
+                        if (row.playerid[i] === '') {
+                            pIndex = i;
+                            break;
+                        }
+                    }
+                    if (pIndex !== undefined) {
+                        // pIndex + 1 since postgres is 1 indexed
+                        pool.query('UPDATE "GRIDs" SET playerid[$1] = $2 WHERE idname = $3;', [pIndex + 1, UID, roomID], function (
+                            err, data) {
+                            if (err) {
+                                throw new Error('Error adding ' + UID + ' to game room ' + roomID);
                             }
-                        }
-                        if (pIndex !== undefined) {
-                            // pIndex + 1 since postgres is 1 indexed
-                            pool.query('UPDATE "GRIDs" SET playerid[$1] = $2 WHERE idname = $3;', [pIndex + 1, UID, roomID], function (
-                                err, data) {
-                                if (err) {
-                                    throw new Error('Error adding ' + UID + ' to game room ' + roomID);
-                                }
-                            });
-                            gameRoomID = roomID;
-                            socket.join(roomID);
-                            logger.log('pIndex ' + pIndex);
-                            logger.log(JSON.stringify(row));
-                            socket.emit('join lobby request accepted', pIndex, roomID, row, emptyUID);
-                            socket.broadcast.to(roomID).emit('player joined lobby', pIndex);
-                        } else {
-                            logger.log('Could not find an empty spot in room ' + roomID);
-                            socket.emit('room full');
-                        }
+                        });
+                        gameRoomID = roomID;
+                        socket.join(roomID);
+                        logger.log('pIndex ' + pIndex);
+                        logger.log(JSON.stringify(row));
+                        socket.emit('join lobby request accepted', pIndex, roomID, row, emptyUID);
+                        socket.broadcast.to(roomID).emit('player joined lobby', pIndex);
                     } else {
-                        logger.log('Game room ID ' + roomID + ' not available. Please check for typing errors');
+                        logger.log('Could not find an empty spot in room ' + roomID);
+                        socket.emit('room full');
                     }
                 } else {
                     logger.log('Game room ID ' + roomID + ' not available. Please check for typing errors');
                 }
-            })
-            .catch(e => {
-                logger.error('query error', e.message, e.stack);
-            });
+            } else {
+                logger.log('Game room ID ' + roomID + ' not available. Please check for typing errors');
+            }
+        })
+        .catch(e => {
+            logger.error('query error', e.message, e.stack);
+        });
     });
 
     socket.on('update lobby info', function (roomID, pNumber, pID, pReady, pCommName, pKingdomPref, emptyUID) {
