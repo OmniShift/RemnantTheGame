@@ -27,12 +27,10 @@ function testFunc() {
     document.getElementById('P2Status').innerHTML = '';
     document.getElementById('cLobbyInfoP2').style.visibility = 'visible';
 }
-
 function testFunc2() {
     document.getElementById('P2Status').innerHTML = 'Waiting for players again...';
     document.getElementById('cLobbyInfoP2').style.visibility = 'hidden';
 }
-
 function toTestersPage() {
     window.location.href = '/setTesters.html';
 }
@@ -43,55 +41,46 @@ function hideAYSPrompt() {
     document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
     document.getElementById('createJoinButton').disabled = false;
 }
-
 function hideNewGameSettings() {
     document.getElementById('newGameSettings').style.visibility = 'hidden';
     document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
     document.getElementById('createJoinButton').disabled = false;
 }
-
 function hideJoinNewGame() {
     document.getElementById('joinNewGame').style.visibility = 'hidden';
     document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
     document.getElementById('createJoinButton').disabled = false;
 }
-
 function hideHostLobby() {
     document.getElementById('hostLobby').style.visibility = 'hidden';
     document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
     document.getElementById('createJoinButton').disabled = false;
 }
-
 function hideClientLobby() {
     document.getElementById('clientLobby').style.visibility = 'hidden';
     document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
     document.getElementById('createJoinButton').disabled = false;
 }
-
 function showAYSPrompt() {
     document.getElementById('AYSprompt').style.visibility = 'visible';
     document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.5)';
     document.getElementById('createJoinButton').disabled = true;
 }
-
 function showNewGameSettings() {
     document.getElementById('newGameSettings').style.visibility = 'visible';
     document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.5)';
     document.getElementById('createJoinButton').disabled = true;
 }
-
 function showJoinNewGame() {
     document.getElementById('joinNewGame').style.visibility = 'visible';
     document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.5)';
     document.getElementById('createJoinButton').disabled = true;
 }
-
 function showHostLobby() {
     document.getElementById('hostLobby').style.visibility = 'visible';
     document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.5)';
     document.getElementById('createJoinButton').disabled = true;
 }
-
 function showClientLobby() {
     document.getElementById('clientLobby').style.visibility = 'visible';
     document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0.5)';
@@ -125,7 +114,6 @@ function newGameWarning() {
     document.getElementById('AYStextField').innerHTML = AYStext;
     showAYSPrompt();
 }
-
 function newGameSettings() {
     hideAYSPrompt();
     showNewGameSettings();
@@ -142,12 +130,10 @@ function joinNewGame() {
     showJoinNewGame();
     document.getElementById("joinGameButton").disabled = false;
 }
-
 function roomCodeCheck() {
     document.getElementById("joinGameButton").disabled = true;
     socket.emit('join lobby request', document.getElementById('roomCode').value, userID);
 }
-
 function joinLobby() {
     hideJoinNewGame();
     showClientLobby();
@@ -157,16 +143,11 @@ function createLobby() {
     hideNewGameSettings();
     generateGRID();
 }
-
 function generateGRID() {
     socket.emit('generate GRID');
     console.log('generate GRID request sent');
 }
 socket.on('return generated GRID', function (gameRoomID) {
-    jsCookie.set('rtgLastGame', gameRoomID, {
-        expires: 365
-    });
-    console.log('Your room code is ' + jsCookie.get('rtgLastGame'));
     document.getElementById('givenRoomCode').value = gameRoomID;
     roomID = gameRoomID;
     playerNumber = 0;
@@ -188,7 +169,6 @@ function hPlayerReady() {
         ' is ready for war <button id="notReadyP0" onclick="hPlayerNotReady()">X</button>';
     socket.emit('update lobby info', roomID, playerNumber, userID, 1, commName, kingdomPref);
 }
-
 function hPlayerNotReady() {
     hostReady = false;
     document.getElementById('hLobbySlot0')
@@ -199,7 +179,6 @@ function hPlayerNotReady() {
     document.getElementById('startGameButton').disabled = true;
     socket.emit('update lobby info', roomID, playerNumber, userID, 0, commName, kingdomPref);
 }
-
 function cPlayerReady() {
     commName = document.getElementById('CommName' + playerNumber.toString()).value;
     kingdomPref = document.getElementById('KingdomPref' + playerNumber.toString()).value;
@@ -208,7 +187,6 @@ function cPlayerReady() {
         ' is ready for war <button id="notReadyP' + playerNumber.toString() + '" onclick="cPlayerNotReady()">X</button>';
     socket.emit('update lobby info', roomID, playerNumber, userID, 1, commName, kingdomPref);
 }
-
 function cPlayerNotReady() {
     document.getElementById('cLobbySlot' + playerNumber.toString())
         .innerHTML = '<div id="LobbyInfoP' + playerNumber.toString() + '">Commander name: <input id="CommName' +
@@ -299,7 +277,7 @@ socket.on('update lobby info', function (gameInfoObj) {
     };
 });
 
-//joining/leaving lobbies
+//lobby size management
 function hostLeave() {
     hideHostLobby();
     socket.emit('host leaves', roomID);
@@ -308,7 +286,6 @@ function hostLeave() {
     commName = '';
     kingdomPref = 0;
 }
-
 function clientLeave() {
     hideClientLobby();
     socket.emit('client leaves', roomID, playerNumber);
@@ -317,7 +294,6 @@ function clientLeave() {
     commName = '';
     kingdomPref = 0;
 }
-
 socket.on('dc by host', function () {
     socket.emit('leave room', roomID);
     hideClientLobby();
@@ -327,16 +303,24 @@ socket.on('dc by host', function () {
     kingdomPref = 0;
     alert('Host has left the lobby.');
 });
-
 socket.on('room full', function () {
     hideJoinNewGame();
     alert('This room is full.');
 });
 
-function startGame() {
+function startGameRequest() {
     document.getElementById("startGameButton").disabled = true;
     console.log('Starting game!');
-    socket.emit('start game', roomID);
+    jsCookie.set('rtgLastGame', gameRoomID, {
+        expires: 365
+    });
+    socket.emit('start game request', roomID);
+}
+socket.on('start game'), function() {
+    jsCookie.set('rtgLastGame', gameRoomID, {
+        expires: 365
+    });
+    socket.emit('start game');
 }
 
 socket.on('game already started', function () {

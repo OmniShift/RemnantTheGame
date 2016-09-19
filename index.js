@@ -291,7 +291,15 @@ io.on('connection', function (socket) {
         socket.leave(roomID);
     });
 
-    socket.on('start game', function (roomID) {
+    socket.on('start game request', function (roomID) {
+        socket.broadcast.to(roomID).emit('start game');
+        pool.query(
+            'UPDATE "GRIDs" SET status = 1 WHERE idname = $1;', [
+                roomID
+            ],
+        );
+    })
+    socket.on('start game', function () {
         response.render('pages/game');
     })
 
