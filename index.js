@@ -157,7 +157,7 @@ io.on('connection', function (socket) {
                                 throw new Error('Error inserting game room ID ' + gameRoomID);
                             }
                         }).then(function () {
-                            pool.query('SELECT playerid FROM "GRIDs" WHERE idname = $1;', [gameRoomID]).then(result => {
+                            pool.query('SELECT playerid[3] FROM "GRIDs" WHERE idname = $1;', [gameRoomID]).then(result => {
                                 //first log here is triggered, but the second is not
                                 logger.log('2nd select query started');
                                 logger.log(result);
