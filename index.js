@@ -157,6 +157,7 @@ io.on('connection', function (socket) {
                             }).then(function () {
                                 pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(result => {
                                     emptyUID = result.playerid[3];
+                                    logger.log(emptyUID);
                                 })
                             });
                         socket.emit('return generated GRID', gameRoomID);

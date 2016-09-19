@@ -11,7 +11,7 @@ var hostReady = false;
 var nOfClientsReady = 0;
 var commName = '';
 var kingdomPref = 0;
-var kingdomArray = ['any willing kingdom', 'Mantle', 'Minstral', 'Vacuo', 'Vale'];
+var kingdomArray = ['any willing kingdom', 'Mantle', 'Mistral', 'Vacuo', 'Vale'];
 
 socket.on('time', function (timeString) {
     el.innerHTML = 'Server time: ' + timeString;
@@ -190,7 +190,7 @@ function hPlayerNotReady() {
     hostReady = false;
     document.getElementById('hLobbySlot0')
         .innerHTML = '<div id="LobbyInfoP0">Commander name: <input id="CommName0" type="text" name="commanderName0" maxlength="15" value="' + commName + '">' +
-        ' <select name="kingdomPref0" id="KingdomPref0"><option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option>' +
+        ' <select name="kingdomPref0" id="KingdomPref0"><option value=0>Random</option><option value=1>Mantle</option><option value=2>Mistral</option>' +
         '<option value=3>Vacuo</option><option value=4>Vale</option></select> <button id="readyP1" onclick="hPlayerReady()">V</button></div>';
     document.getElementById('KingdomPref0').selectedIndex = kingdomPref;
     document.getElementById('startGameButton').disabled = true;
@@ -211,7 +211,7 @@ function cPlayerNotReady() {
         .innerHTML = '<div id="LobbyInfoP' + playerNumber.toString() + '">Commander name: <input id="CommName' +
         playerNumber.toString() + '" type="text" name="commanderName" maxlength="15" value="' + commName + '"> <select name="kingdomPref" id="KingdomPref' +
         playerNumber.toString() + '" value="' + kingdomPref + '">' +
-        '<option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select>' +
+        '<option value=0>Random</option><option value=1>Mantle</option><option value=2>Mistral</option><option value=3>Vacuo</option><option value=4>Vale</option></select>' +
         '<button id="readyP' + playerNumber.toString() + '" onclick="cPlayerReady()">V</button></div>';
     document.getElementById('KingdomPref' + playerNumber.toString()).selectedIndex = kingdomPref;
     socket.emit('update lobby info', roomID, playerNumber, userID, 0, commName, kingdomPref);
@@ -225,7 +225,7 @@ socket.on('join lobby request accepted', function (pNumber, sentRoomID, gameInfo
         .innerHTML = '<div id="LobbyInfoP' + playerNumber.toString() + '">Commander name: <input id="CommName' +
         playerNumber.toString() + '" type="text" name="commanderName" maxlength="15" value="' + commName + '"> <select name="kingdomPref" id="KingdomPref' +
         playerNumber.toString() + '" value="' + kingdomPref + '">' +
-        '<option value=0>Random</option><option value=1>Mantle</option><option value=2>Minstral</option><option value=3>Vacuo</option><option value=4>Vale</option></select>' +
+        '<option value=0>Random</option><option value=1>Mantle</option><option value=2>Mistral</option><option value=3>Vacuo</option><option value=4>Vale</option></select>' +
         '<button id="readyP' + playerNumber.toString() + '" onclick="cPlayerReady()">V</button></div>';
     for (var i = 0; i < 4; i++) {
         if (playerNumber !== i) {
