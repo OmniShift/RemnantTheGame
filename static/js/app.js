@@ -255,6 +255,7 @@ socket.on('update lobby info', function (gameInfoObj) {
                     if (gameInfoObj.playerready[i] === 0 || gameInfoObj.playerready[i] === null) {
                         document.getElementById('cLobbySlot' + i).innerHTML = 'Player joined. Waiting for them to get ready...';
                     } else {
+                        nOfClientsReady++
                         document.getElementById('cLobbySlot' + i).innerHTML = 'Commander ' + gameInfoObj.playercommname[i] + ', attempting command of ' +
                             kingdomArray[
                                 gameInfoObj.playerkingdompref[i]] + ' is ready for war';
@@ -268,8 +269,8 @@ socket.on('update lobby info', function (gameInfoObj) {
                 }
             }
         }
-        console.log(nOfClientsReady + ' player(s) are ready to start')
     }
+    console.log(nOfClientsReady + ' player(s) are ready to start')
     if (nOfClientsReady == 3 && hostReady == true) {
         document.getElementById('startGameButton').disabled = false;
     } else {
@@ -308,19 +309,21 @@ socket.on('room full', function () {
     alert('This room is full.');
 });
 
-function startGameRequest() {
+function startGame() {
     document.getElementById("startGameButton").disabled = true;
-    console.log('Starting game!');
+    console.log('Starting game');
     jsCookie.set('rtgLastGame', roomID, {
         expires: 365
     });
-    socket.emit('start game request', roomID);
+    socket.emit('start game', roomID);
+    window.location.href = "/game.html";
 }
 socket.on('start game'), function() {
+    console.log('Game started by host')
     jsCookie.set('rtgLastGame', roomID, {
         expires: 365
     });
-    socket.emit('start game');
+    window.location.href = "/game.html";
 }
 
 socket.on('game already started', function () {

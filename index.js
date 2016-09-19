@@ -292,15 +292,14 @@ io.on('connection', function (socket) {
     });
 
     socket.on('start game request', function (roomID) {
+        logger.log('start game request received');
         socket.broadcast.to(roomID).emit('start game');
         pool.query(
             'UPDATE "GRIDs" SET status = 1 WHERE idname = $1;', [
                 roomID
             ]
         );
-    })
-    socket.on('start game', function () {
-        response.render('pages/game');
+        logger.log('game status updated');
     })
 
     socket.on('disconnect', function () {
