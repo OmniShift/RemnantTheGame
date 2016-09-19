@@ -160,10 +160,10 @@ io.on('connection', function (socket) {
                             pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [gameRoomID]).then(result => {
                                 //first log here is triggered, but the second is not
                                 logger.log('2nd select query started');
-                                logger.log('results: ' + result);
-                                logger.log('rows: ' + result.rows);
-                                logger.log('playerid: ' + result.rows.playerid);
-                                logger.log('playerid3: ' + result.rows.playerid[3]);
+                                logger.log(result);
+                                logger.log(result.rows);
+                                logger.log(result.rows.playerid);
+                                logger.log(result.rows.playerid[3]);
                                 emptyUID = result.playerid[parseInt(3)];
                                 logger.log('emptyUID is: ' + emptyUID);
                             })
