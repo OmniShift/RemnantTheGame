@@ -296,7 +296,7 @@ io.on('connection', function (socket) {
         pool.query(
             'UPDATE "GRIDs" SET status = 1 WHERE idname = $1;', [
                 roomID
-            ],
+            ]
         );
     })
     socket.on('start game', function () {
