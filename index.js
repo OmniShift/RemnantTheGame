@@ -64,7 +64,7 @@ app.get('/game', function (request, response) {
 
 io.on('connection', function (socket) {
     var userID = '';
-    var emptyUID = '';
+    var emptyUID;
     //var gameRoomID = '';
     //var hits = 0;
     socket.on('existing user connection', function (UID) {
@@ -137,42 +137,45 @@ io.on('connection', function (socket) {
             resolve(logger.log('GRID generation complete'));
         }).then(function () {
             pool.query('SELECT * FROM "GRIDs" WHERE idname=$1;', [gameRoomID]).then(res => {
-                    var hits = parseInt(res.rowCount);
-                    logger.log(hits + ' matches');
-                    logger.log('Query passed');
-                    if (hits === 0) {
-                        logger.log('Game room ' + gameRoomID + ' available. Inserting it into database');
-                        pool.query(
-                            'INSERT INTO "GRIDs" (idname, status, playerid, playerready, playercommname, playerkingdompref) VALUES ($1, $2, $3, $4, $5, $6)', [
-                                gameRoomID, 0, ['', '', '', ''],
-                                [0, 0, 0, 0],
-                                ['', '', '', ''],
-                                [0, 0, 0, 0]
-                            ],
-                            function (err, data) {
-                                if (err) {
-                                    logger.error(err);
-                                    throw new Error('Error inserting game room ID ' + gameRoomID);
-                                }
-                            }).then(function () {
-                                pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [gameRoomID]).then(result => {
-                                    //logs (and therefor everything else) here are not triggered
-                                    logger.log('2nd select query started');
-                                    emptyUID = result.playerid[3];
-                                    logger.log('emptyUID is: ' + emptyUID);
-                                })
-                            });
-                        socket.emit('return generated GRID', gameRoomID);
-                        socket.join(gameRoomID);
-                    } else {
-                        logger.log('Game room ID ' + gameRoomID + ' not available. New attempt required');
-                        gameRoomID = '';
-                    }
+                var hits = parseInt(res.rowCount);
+                logger.log(hits + ' matches');
+                logger.log('Query passed');
+                if (hits === 0) {
+                    logger.log('Game room ' + gameRoomID + ' available. Inserting it into database');
+                    pool.query(
+                        'INSERT INTO "GRIDs" (idname, status, playerid, playerready, playercommname, playerkingdompref) VALUES ($1, $2, $3, $4, $5, $6)', [
+                            gameRoomID,
+                            0,
+                            ['', '', '', ''],
+                            [0, 0, 0, 0],
+                            ['', '', '', ''],
+                            [0, 0, 0, 0]
+                        ],
+                        function (err, data) {
+                            if (err) {
+                                logger.error(err);
+                                throw new Error('Error inserting game room ID ' + gameRoomID);
+                            }
+                        }).then(function () {
+                            pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [gameRoomID]).then(result => {
+                                //first log here is triggered, but the second is not
+                                logger.log('2nd select query started');
+                                logger.log(result);
+                                emptyUID = result.playerid[3];
+                                logger.log('emptyUID is: ' + emptyUID);
+                            })
+                        });
+                    socket.emit('return generated GRID', gameRoomID);
+                    socket.join(gameRoomID);
+                } else {
+                    logger.log('Game room ID ' + gameRoomID + ' not available. New attempt required');
+                    gameRoomID = '';
+                }
 
-                })
-                .catch(e => {
-                    logger.error('query error', e.message, e.stack);
-                });
+            })
+            .catch(e => {
+                logger.error('query error', e.message, e.stack);
+            });
         });
     });
 
