@@ -217,7 +217,7 @@ function cPlayerNotReady() {
     socket.emit('update lobby info', roomID, playerNumber, userID, 0, commName, kingdomPref);
 }
 
-socket.on('join lobby request accepted', function (pNumber, sentRoomID, gameInfoObj, emptyUID) {
+socket.on('join lobby request accepted', function (pNumber, sentRoomID, gameInfoObj) {
     playerNumber = pNumber;
     roomID = sentRoomID;
     joinLobby();
@@ -229,7 +229,7 @@ socket.on('join lobby request accepted', function (pNumber, sentRoomID, gameInfo
         '<button id="readyP' + playerNumber.toString() + '" onclick="cPlayerReady()">V</button></div>';
     for (var i = 0; i < 4; i++) {
         if (playerNumber !== i) {
-            if (gameInfoObj.playerid[i] !== '\'\'' || gameInfoObj.playerid[i] !== '\"\"' || gameInfoObj.playerid[i] !== '' || gameInfoObj.playerid[i] !== null || gameInfoObj.playerid[i] !== undefined || gameInfoObj.playerid[i] !== emptyUID) {
+            if (gameInfoObj.playerid[i].length == 6) {
                 if (gameInfoObj.playerready[i] === 0 || gameInfoObj.playerready[i] === null) {
                     document.getElementById('cLobbySlot' + i).innerHTML = 'Waiting for player to get ready...';
                 } else {
@@ -250,10 +250,9 @@ socket.on('player joined lobby', function (newPlayerNumber) {
         document.getElementById('cLobbySlot' + newPlayerNumber).innerHTML = 'Player joined. Waiting for them to get ready...';
     }
 });
-socket.on('update lobby info', function (gameInfoObj, emptyUID) {
+socket.on('update lobby info', function (gameInfoObj) {
     console.log(JSON.stringify(gameInfoObj));
     nOfClientsReady = 0;
-    console.log('emptyUID is ' + emptyUID + '.');
     for (var i = 0; i < 4; i++) {
         //Don't update your own information, which is done locally
         if (playerNumber !== i) {
@@ -261,7 +260,7 @@ socket.on('update lobby info', function (gameInfoObj, emptyUID) {
             console.log('Player ' + i + ': ' + gameInfoObj.playerid[i] + '.');
             console.log(gameInfoObj.playerid[i].length)
             //PROBLEM: the following if statement doesn't trigger the else when a client connects
-            if (gameInfoObj.playerid[i].length == 6/* || gameInfoObj.playerid[i] !== '\'\'' || gameInfoObj.playerid[i] !== '\"\"' || gameInfoObj.playerid[i] !== '' || gameInfoObj.playerid[i] !== null || gameInfoObj.playerid[i] !== undefined || gameInfoObj.playerid[i] !== emptyUID*/) {
+            if (gameInfoObj.playerid[i].length == 6) {
                 //Check if you are the host
                 if (playerNumber === 0) {
                     console.log('Waiting for player ' + i + ' to get ready');
