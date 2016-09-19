@@ -161,6 +161,7 @@ io.on('connection', function (socket) {
                                 //first log here is triggered, but the second is not
                                 logger.log('2nd select query started');
                                 logger.log(result);
+                                logger.log(result.playerid);
                                 emptyUID = result.playerid[3];
                                 logger.log('emptyUID is: ' + emptyUID);
                             })
