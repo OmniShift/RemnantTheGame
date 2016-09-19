@@ -140,9 +140,11 @@ function newGameSettings() {
 function joinNewGame() {
     hideAYSPrompt();
     showJoinNewGame();
+    document.getElementById("joinGameButton").disabled = false;
 }
 
 function roomCodeCheck() {
+    document.getElementById("joinGameButton").disabled = true;
     socket.emit('join lobby request', document.getElementById('roomCode').value, userID);
 }
 
@@ -170,6 +172,7 @@ socket.on('return generated GRID', function (gameRoomID) {
     playerNumber = 0;
     showHostLobby();
     hPlayerNotReady();
+    document.getElementById("startGameButton").disabled = false;
 });
 
 //pre-game player status
@@ -258,24 +261,21 @@ socket.on('update lobby info', function (gameInfoObj) {
         if (playerNumber !== i) {
             //Check if there is a player in this slot
             console.log('Player ' + i + ': ' + gameInfoObj.playerid[i] + '.');
-            console.log(gameInfoObj.playerid[i].length)
             //PROBLEM: the following if statement doesn't trigger the else when a client connects
             if (gameInfoObj.playerid[i].length == 6) {
                 //Check if you are the host
                 if (playerNumber === 0) {
-                    console.log('Waiting for player ' + i + ' to get ready');
                     if (gameInfoObj.playerready[i] === 0 || gameInfoObj.playerready[i] === null) {
-                        document.getElementById('hLobbySlot' + i).innerHTML = 'Waiting for player to get ready...';
+                        document.getElementById('hLobbySlot' + i).innerHTML = 'Player joined. Waiting for them to get ready...';
                     } else {
                         nOfClientsReady++
-                        console.log(nOfClientsReady + ' player(s) are ready to start')
                         document.getElementById('hLobbySlot' + i).innerHTML = 'Commander ' + gameInfoObj.playercommname[i] + ', attempting command of ' +
                             kingdomArray[
                                 gameInfoObj.playerkingdompref[i]] + ' is ready for war';
                     }
                 } else {
                     if (gameInfoObj.playerready[i] === 0 || gameInfoObj.playerready[i] === null) {
-                        document.getElementById('cLobbySlot' + i).innerHTML = 'Waiting for player to get ready...';
+                        document.getElementById('cLobbySlot' + i).innerHTML = 'Player joined. Waiting for them to get ready...';
                     } else {
                         document.getElementById('cLobbySlot' + i).innerHTML = 'Commander ' + gameInfoObj.playercommname[i] + ', attempting command of ' +
                             kingdomArray[
@@ -284,14 +284,13 @@ socket.on('update lobby info', function (gameInfoObj) {
                 }
             } else {
                 if (playerNumber === 0) {
-                    console.log('Waiting for player ' + i + ' to join');
                     document.getElementById('hLobbySlot' + i).innerHTML = 'Waiting for player to join...';
                 } else {
-                    console.log('Waiting for player ' + i + ' to join');
                     document.getElementById('cLobbySlot' + i).innerHTML = 'Waiting for player to join...';
                 }
             }
         }
+        console.log(nOfClientsReady + ' player(s) are ready to start')
     }
     if (nOfClientsReady == 3 && hostReady == true) {
         document.getElementById('startGameButton').disabled = false;
@@ -334,7 +333,8 @@ socket.on('room full', function () {
     alert('This room is full.');
 });
 
-function startGameButton() {
+function startGame() {
+    document.getElementById("startGameButton").disabled = true;
     console.log('Starting game!');
     socket.emit('start game', roomID);
 }
