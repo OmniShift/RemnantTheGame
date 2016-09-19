@@ -155,7 +155,8 @@ io.on('connection', function (socket) {
                                     throw new Error('Error inserting game room ID ' + gameRoomID);
                                 }
                             }).then(function () {
-                                pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(result => {
+                                pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [gameRoomID]).then(result => {
+                                    //logs (and therefor everything else) here are not triggered
                                     logger.log('2nd select query started');
                                     emptyUID = result.playerid[3];
                                     logger.log('emptyUID is: ' + emptyUID);
