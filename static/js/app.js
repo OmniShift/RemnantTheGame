@@ -259,6 +259,7 @@ socket.on('update lobby info', function (gameInfoObj, emptyUID) {
         if (playerNumber !== i) {
             //Check if there is a player in this slot
             console.log('Player ' + i + ': ' + gameInfoObj.playerid[i] + '.');
+            console.log(gameInfoObj.playerid[i].length)
             //PROBLEM: the following if statement doesn't trigger the else when a client connects
             if (gameInfoObj.playerid[i].length !== 6/* || gameInfoObj.playerid[i] !== '\'\'' || gameInfoObj.playerid[i] !== '\"\"' || gameInfoObj.playerid[i] !== '' || gameInfoObj.playerid[i] !== null || gameInfoObj.playerid[i] !== undefined || gameInfoObj.playerid[i] !== emptyUID*/) {
                 //Check if you are the host
