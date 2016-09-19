@@ -311,13 +311,13 @@ socket.on('room full', function () {
 function startGameRequest() {
     document.getElementById("startGameButton").disabled = true;
     console.log('Starting game!');
-    jsCookie.set('rtgLastGame', gameRoomID, {
+    jsCookie.set('rtgLastGame', roomID, {
         expires: 365
     });
     socket.emit('start game request', roomID);
 }
 socket.on('start game'), function() {
-    jsCookie.set('rtgLastGame', gameRoomID, {
+    jsCookie.set('rtgLastGame', roomID, {
         expires: 365
     });
     socket.emit('start game');
