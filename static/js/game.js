@@ -388,15 +388,20 @@ $(document).ready(function () {
             tbl.id = 'territoryTbl' + ter;
             tbl.style.width = '1.5%';
             tbl.style.height = '3%';
-            tbl.style.marginLeft = (document.getElementById('otherPlayers').offsetWidth + canvas.width/100*definedTerritory[(definedTerritory.length - 1)].x - 20) + 'px';
+            tbl.style.marginLeft = (document.getElementById('otherPlayers').offsetWidth + canvas.width/100*definedTerritory[(definedTerritory.length - 1)].x - 22) + 'px';
             tbl.style.marginTop = (canvas.height/100*definedTerritory[(definedTerritory.length - 1)].y - 20) + 'px';
             tbl.style.position = 'absolute';
             tbl.style.color = 'lightyellow';
             //tbl.setAttribute('border', '1px solid black');
             var tbdy = document.createElement('tbody');
+            tbdy.id = 'territoryTbdy' + ter;
             var trow = document.createElement('tr');
+            trow.id = 'territoryTrow' + ter;
             var tdata = document.createElement('td');
-            tdata.appendChild(document.createTextNode(ter));
+            tdata.id = 'territoryTdata' + ter;
+            var ttext = document.createTextNode(ter);
+            ttext.id = 'territoryTtext' + ter;
+            tdata.appendChild(ttext);
             trow.appendChild(tdata);
             tbdy.appendChild(trow);
             tbl.appendChild(tbdy);
@@ -426,10 +431,10 @@ $(document).ready(function () {
 			}
 		}
 	}
-    /*document.getElementById('territoryDiv10').textContent = '<table id="terTable10"><tr><td id="capitalTer10">★</td></tr>';
-    document.getElementById('territoryDiv18').textContent = '★';
-    document.getElementById('territoryDiv29').textContent = '★';
-    document.getElementById('territoryDiv35').textContent = '★';*/
+    //document.getElementById('territoryDiv10').textContent = '<table id="terTable10"><tr><td id="capitalTer10">★</td></tr>';
+    document.getElementById('territoryTtext18').textContent = '★';
+    //document.getElementById('territoryDiv29').textContent = '★';
+    //document.getElementById('territoryDiv35').textContent = '★';
 	function define(t){
 		ctx.beginPath();
 		var coordPercentage1 = canvas.width/100*t[0].x;
