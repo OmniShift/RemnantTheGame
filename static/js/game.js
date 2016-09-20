@@ -261,7 +261,7 @@ var cardInfo = [
 	{name:'Abanea Trenchdiggers',frequency1:uncommon,frequency2:uncommon,frequency3:0,affiliation:0,image:trapImage,description:''},
 	{name:'Dismantler',frequency1:rare,frequency2:rare,frequency3:rare,affiliation:0,image:trapImage,description:''},
 	{name:'Elemental Destabilizer',frequency1:0,frequency2:rare,frequency3:rare,affiliation:0,image:trapImage,description:''},
-	{name:'Froged Armistice',frequency1:rare,frequency2:rare,frequency3:rare,affiliation:0,image:trapImage,description:''},
+	{name:'Forged Armistice',frequency1:rare,frequency2:rare,frequency3:rare,affiliation:0,image:trapImage,description:''},
 	{name:'Frost Dust Bombs',frequency1:0,frequency2:rare,frequency3:uncommon,affiliation:0,image:trapImage,description:''},
 	{name:'Giant Nevermore',frequency1:0,frequency2:rare,frequency3:rare,affiliation:0,image:trapImage,description:''},
 	{name:'Grimm Attack',frequency1:common,frequency2:common,frequency3:uncommon,affiliation:0,image:trapImage,description:''},
@@ -408,10 +408,10 @@ $(document).ready(function () {
 			}
 		}
 	}
-    document.getElementById('territoryDiv10').textContent = '&bigstar';
-    document.getElementById('territoryDiv18').textContent = '&bigstar';
-    document.getElementById('territoryDiv29').textContent = '&bigstar';
-    document.getElementById('territoryDiv35').textContent = '&bigstar';
+    document.getElementById('territoryDiv10').textContent = '&#9733';
+    document.getElementById('territoryDiv18').textContent = '&#9733';
+    document.getElementById('territoryDiv29').textContent = '&#x2605';
+    document.getElementById('territoryDiv35').textContent = '&#x2605';
 	function define(t){
 		ctx.beginPath();
 		var coordPercentage1 = canvas.width/100*t[0].x;
