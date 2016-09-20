@@ -408,10 +408,10 @@ $(document).ready(function () {
 			}
 		}
 	}
-    document.getElementById('territodyDiv10').textContent = '+';
-    document.getElementById('territodyDiv18').textContent = '+';
-    document.getElementById('territodyDiv29').textContent = '+';
-    document.getElementById('territodyDiv35').textContent = '+';
+    document.getElementById('territoryDiv10').textContent = '+';
+    document.getElementById('territoryDiv18').textContent = '+';
+    document.getElementById('territoryDiv29').textContent = '+';
+    document.getElementById('territoryDiv35').textContent = '+';
 	function define(t){
 		ctx.beginPath();
 		var coordPercentage1 = canvas.width/100*t[0].x;
