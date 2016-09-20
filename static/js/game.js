@@ -389,7 +389,7 @@ $(document).ready(function () {
             tbl.style.width = '1.5%';
             tbl.style.height = '3%';
             tbl.style.marginLeft = (document.getElementById('otherPlayers').offsetWidth + canvas.width/100*definedTerritory[(definedTerritory.length - 1)].x - 20) + 'px';
-            tbl.style.marginTop = (canvas.height/100*definedTerritory[(definedTerritory.length - 1)].y - 0) + 'px';
+            tbl.style.marginTop = (canvas.height/100*definedTerritory[(definedTerritory.length - 1)].y - 20) + 'px';
             tbl.style.position = 'absolute';
             tbl.style.color = 'lightyellow';
             //tbl.setAttribute('border', '1px solid black');
