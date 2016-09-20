@@ -4,7 +4,10 @@ var jsCookie = Cookies.noConflict();
 //the following values are placeholders to be received from the server on page initialization
 var commName = ['Ruby Rose', 'Weiss Schnee', 'Blake Belladonna', 'Yang Xiao-Long'];
 var kingdom = [0, 1, 2, 3];
-var kingdomArray = ['Mantle', 'Minstral', 'Vacuo', 'Vale'];
+var kingdomByPlayer = ['Mantle', 'Mistral', 'Vacuo', 'Vale'];
+//playerByKingdom are the player numbers (0-3) that control which kingdom
+//order: 0=Mantle, 1=Mistral, 2=Vacuo, 3=Vale
+var playerByKingdom = [0,1,2,3];
 var kingdomPicArray = ['images/Atlas_Symbol.svg.png', 'images/Mistral_Symbol.svg.png', 'images/Vacuo_Symbol.svg.png', 'images/Vale_Symbol.svg.png'];
 //playerNumber is directly used as index, so ranges from 0 to 3
 var playerNumber = 1;
@@ -35,7 +38,7 @@ var territoryShapeInfo = [
 	[{x:27,y:29},{x:33,y:31.5},{x:32.5,y:42},{x:24,y:36},{x:24.5,y:31.5},{x:29.5,y:34}],
 	[{x:33,y:31.5},{x:40,y:36.5},{x:40,y:40.5},{x:38,y:43},{x:36.5,y:40.5},{x:34,y:40.5},{x:32.5,y:42},{x:37,y:37}],
 	[{x:25.5,y:37},{x:32.5,y:42},{x:31,y:50},{x:29.5,y:50.5},{x:26.5,y:45},{x:25.5,y:40},{x:29.5,y:43}],
-	/*end of dragon island*/
+	//end of dragon continent
 	[{x:17.5,y:35},{x:18.5,y:35},{x:19,y:41.5},{x:23,y:43},{x:22,y:51},{x:16,y:51},{x:17,y:45},{x:20,y:46}],
 	[{x:23,y:43},{x:27,y:48.5},{x:28,y:53},{x:28,y:56},{x:24,y:56},{x:23.5,y:54.5},{x:22,y:51},{x:25.5,y:51}],
 	[{x:16,y:51},{x:22,y:51},{x:23.5,y:54.5},{x:21,y:59.5},{x:14.5,y:59.5},{x:14.5,y:55},{x:19,y:55}],
@@ -183,6 +186,34 @@ var territoryShapeInfo = [
 ];
 //var territoryIndex = [];
 
+//type: 0=land, 1=sea
+var territoryStateInfo = [];
+for (var i = 0; i <= 7; i++) {
+    territoryStateInfo.push({type:0,occupiedByPlayer:-1,occupiedByUnits:[],naturalHazardIDs:[]})
+}
+for (var i = 8; i <= 14; i++) {
+    territoryStateInfo.push({type:0,occupiedByPlayer:playerByKingdom[2],occupiedByUnits:[],naturalHazardIDs:[]})
+}
+territoryStateInfo[10].capital = true;
+for (var i = 15; i <= 24; i++) {
+    territoryStateInfo.push({type:0,occupiedByPlayer:playerByKingdom[3],occupiedByUnits:[],naturalHazardIDs:[]})
+}
+territoryStateInfo[18].capital = true;
+for (var i = 25; i <= 30; i++) {
+    territoryStateInfo.push({type:0,occupiedByPlayer:playerByKingdom[0],occupiedByUnits:[],naturalHazardIDs:[]})
+}
+territoryStateInfo[29].capital = true;
+for (var i = 31; i <= 37; i++) {
+    territoryStateInfo.push({type:0,occupiedByPlayer:playerByKingdom[1],occupiedByUnits:[],naturalHazardIDs:[]})
+}
+territoryStateInfo[35].capital = true;
+for (var i = 38; i <= 41; i++) {
+    territoryStateInfo.push({type:0,occupiedByPlayer:-1,occupiedByUnits:[],naturalHazardIDs:[]})
+}
+for (var i = 42; i <= 137; i++) {
+    territoryStateInfo.push({type:0,occupiedByPlayer:-1,occupiedByUnits:[],naturalHazardIDs:[]})
+}
+
 //affiliation: 0=none, 1=mantle, 2=mistral, 3=vacuo, 4=vale
 //(transport)size: 0=normal, 1=large, 2=huge, 3=colossal, 99=immovable (structure)
 //type: 0=ground, 1=naval, 2=flying, 3=structure(ground), 4=structure(naval), 5=ground/naval
@@ -262,7 +293,7 @@ var cardInfo = [
 	{name:'Silver Eyes',frequency1:0,frequency2:0,frequency3:1,affiliation:0,duration:999,image:utilityImage,description:''},
 	{name:'Smugglers of Wind Path',frequency1:uncommon,frequency2:uncommon,frequency3:uncommon,affiliation:0,duration:0,image:utilityImage,description:''},
 	{name:'Thruster Packs',frequency1:0,frequency2:rare,frequency3:uncommon,affiliation:0,duration:999,image:utilityImage,description:''},
-	{name:'Tornado',frequency1:0,frequency2:uncommon,frequency3:rare,affiliation:0,nh0:1,nh1:1,nh2:1,duration:3,image:utilityImage,description:''},
+	{name:'Tornado',frequency1:0,frequency2:uncommon,frequency3:rare,affiliation:0,nh0:1,nh1:1,nh2:1,duration:3,image:utilityImage,description:''}
 ];
 
 $(document).ready(function () {
@@ -299,7 +330,6 @@ $(document).ready(function () {
 		drawPile = array;
 	}
 	deckShuffle(drawPile);
-	console.log(drawPile);
 
 	//just temporary
 	for (var i = 0; i < 8; i++) {
@@ -378,6 +408,10 @@ $(document).ready(function () {
 			}
 		}
 	}
+    document.getElementById(territodyDiv10).textContent = '+';
+    document.getElementById(territodyDiv18).textContent = '+';
+    document.getElementById(territodyDiv29).textContent = '+';
+    document.getElementById(territodyDiv35).textContent = '+';
 	function define(t){
 		ctx.beginPath();
 		var coordPercentage1 = canvas.width/100*t[0].x;
