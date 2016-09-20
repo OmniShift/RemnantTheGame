@@ -183,6 +183,7 @@ table#otherPlayersTable td {
 	font-size: 2em;
 	line-height: 2;
 }
+
 #gameInfo {
 	background-color: pink;
 	float: right;
@@ -202,6 +203,7 @@ table#cardPiles td {
 	color: white;
 	text-align: center;
 }
+
 #gameBoard {
 	float: top;
 	display: inline-block;
@@ -209,9 +211,10 @@ table#cardPiles td {
 	width: 80%;
 	z-index: 1;
 }
-#gameBoardCanvas {
-	/*border: 1px solid black;*/
+table.terTable10 {
+	border: 2px solid black;
 }
+
 #playerCards {
 	background-color: lightblue;
 	float: bottom;
