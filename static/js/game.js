@@ -400,7 +400,6 @@ $(document).ready(function () {
             var tdata = document.createElement('td');
             tdata.id = 'territoryTdata' + ter;
             var ttext = document.createTextNode(ter);
-            ttext.id = 'territoryTtext' + ter;
             tdata.appendChild(ttext);
             trow.appendChild(tdata);
             tbdy.appendChild(trow);
@@ -432,7 +431,7 @@ $(document).ready(function () {
 		}
 	}
     //document.getElementById('territoryDiv10').textContent = '<table id="terTable10"><tr><td id="capitalTer10">★</td></tr>';
-    document.getElementById('territoryTtext18').textContent = '★';
+    document.getElementById('territoryTdata18').textContent = '★';
     //document.getElementById('territoryDiv29').textContent = '★';
     //document.getElementById('territoryDiv35').textContent = '★';
 	function define(t){
