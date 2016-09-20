@@ -408,10 +408,10 @@ $(document).ready(function () {
 			}
 		}
 	}
-    document.getElementById('territoryDiv10').textContent = '&#9733';
+    document.getElementById('territoryDiv10').textContent = '★';
     document.getElementById('territoryDiv18').textContent = '&#9733';
     document.getElementById('territoryDiv29').textContent = '&#x2605';
-    document.getElementById('territoryDiv35').textContent = '&#x2605';
+    document.getElementById('territoryDiv35').textContent = '\&#x2605';
 	function define(t){
 		ctx.beginPath();
 		var coordPercentage1 = canvas.width/100*t[0].x;
