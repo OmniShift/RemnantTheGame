@@ -392,7 +392,7 @@ $(document).ready(function () {
             tbl.style.marginTop = (canvas.height/100*definedTerritory[(definedTerritory.length - 1)].y - 15) + 'px';
             tbl.style.position = 'absolute';
             tbl.style.color = 'lightyellow';
-            tbl.setAttribute('border', '1');
+            tbl.setAttribute('border', '1px solid black');
             var tbdy = document.createElement('tbody');
             var trow = document.createElement('tr');
             var tdata = document.createElement('td');
