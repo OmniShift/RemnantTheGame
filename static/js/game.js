@@ -430,10 +430,10 @@ $(document).ready(function () {
 			}
 		}
 	}
-    //document.getElementById('territoryDiv10').textContent = '<table id="terTable10"><tr><td id="capitalTer10">★</td></tr>';
+    document.getElementById('territoryTdata10').textContent = '★';
     document.getElementById('territoryTdata18').textContent = '★';
-    //document.getElementById('territoryDiv29').textContent = '★';
-    //document.getElementById('territoryDiv35').textContent = '★';
+    document.getElementById('territoryTdata29').textContent = '★';
+    document.getElementById('territoryTdata35').textContent = '★';
 	function define(t){
 		ctx.beginPath();
 		var coordPercentage1 = canvas.width/100*t[0].x;
