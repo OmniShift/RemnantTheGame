@@ -396,6 +396,7 @@ $(document).ready(function () {
             trow.appendChild(tdata);
             tbdy.appendChild(trow);
             tbl.appendChild(tbdy);
+            document.body.appendChild(tbl);
 			/*var div = document.createElement('div');
 			document.body.appendChild(div);
 			div.className = 'territoryDiv';
