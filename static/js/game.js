@@ -386,8 +386,8 @@ $(document).ready(function () {
             var tbl = document.createElement('table');
             tbl.style.width = '1.5%';
             tbl.style.height = '3%';
-            div.style.marginLeft = (document.getElementById('otherPlayers').offsetWidth + canvas.width/100*definedTerritory[(definedTerritory.length - 1)].x - 20) + 'px';
-            div.style.marginTop = (canvas.height/100*definedTerritory[(definedTerritory.length - 1)].y - 15) + 'px';
+            tbl.style.marginLeft = (document.getElementById('otherPlayers').offsetWidth + canvas.width/100*definedTerritory[(definedTerritory.length - 1)].x - 20) + 'px';
+            tbl.style.marginTop = (canvas.height/100*definedTerritory[(definedTerritory.length - 1)].y - 15) + 'px';
             tbl.setAttribute('border', '1');
             var tbdy = document.createElement('tbody');
             var trow = document.createElement('tr');
