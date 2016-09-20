@@ -1,4 +1,5 @@
-//var socket = io();
+var socket = io();
+var jsCookie = Cookies.noConflict();
 
 //the following values are placeholders to be received from the server on page initialization
 var commName = ['Ruby Rose', 'Weiss Schnee', 'Blake Belladonna', 'Yang Xiao-Long'];
@@ -181,8 +182,6 @@ var territoryShapeInfo = [
 	[{x:92.5,y:91.5},{x:94,y:87},{x:94.5,y:79.5},{x:95,y:73},{x:95.5,y:70},{x:97.5,y:73.5},{x:98,y:82},{x:97,y:92},{x:94.5,y:94},{x:96,y:82}],
 ];
 //var territoryIndex = [];
-
-/*----------------------------------------------------------------------*/
 
 //affiliation: 0=none, 1=mantle, 2=mistral, 3=vacuo, 4=vale
 //(transport)size: 0=normal, 1=large, 2=huge, 3=colossal, 99=immovable (structure)

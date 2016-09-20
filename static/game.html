@@ -6,6 +6,7 @@
 		<link type="text/css" rel="stylesheet" href="style.css"/>
 		<title>Remnant - The Game</title>
 	</head>
+	<body>
 		<div id="backgroundMain">
 		<div id="overlay">
 			<div id="otherPlayers"><!--This is where the card covers and number of card of the other players are displayed (left)--><table id="otherPlayersTable">
@@ -44,11 +45,9 @@
 			</table></div>
 		</div><!--end of overlay-->
 		</div><!--end of backgroundMain-->
-	<body>
-		<!--<script src="/socket.io/socket.io.js"></script>-->
+		<script src="/socket.io/socket.io.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-		<!--<script src="/js/js.cookie-2.1.2.min.js"></script>-->
-		<!--remove the static folder on deployment-->
-		<script src="/static/js/game.js"></script>
+		<script src="/js/js.cookie-2.1.2.min.js"></script>
+		<script src="/js/game.js"></script>
 	</body>
 </html>

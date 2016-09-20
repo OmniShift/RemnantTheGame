@@ -291,8 +291,8 @@ io.on('connection', function (socket) {
         socket.leave(roomID);
     });
 
-    socket.on('start game request', function (roomID) {
-        logger.log('start game request received');
+    socket.on('start game', function (roomID) {
+        logger.log('starting client games');
         socket.broadcast.to(roomID).emit('start game');
         pool.query(
             'UPDATE "GRIDs" SET status = 1 WHERE idname = $1;', [
