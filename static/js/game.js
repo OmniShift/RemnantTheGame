@@ -383,7 +383,20 @@ $(document).ready(function () {
 			define(definedTerritory);
 			ctx.stroke();
 			//creating div's only initially or it will cause big hardware lag
-			var div = document.createElement('div');
+            var tbl = document.createElement('table');
+            tbl.style.width = '1.5%';
+            tbl.style.height = '3%';
+            div.style.marginLeft = (document.getElementById('otherPlayers').offsetWidth + canvas.width/100*definedTerritory[(definedTerritory.length - 1)].x - 20) + 'px';
+            div.style.marginTop = (canvas.height/100*definedTerritory[(definedTerritory.length - 1)].y - 15) + 'px';
+            tbl.setAttribute('border', '1');
+            var tbdy = document.createElement('tbody');
+            var trow = document.createElement('tr');
+            var tdata = document.createElement('td');
+            tdata.appendChild(document.createTextNode(ter));
+            trow.appendChild(tdata);
+            tbdy.appendChild(trow);
+            tbl.appendChild(tbdy);
+			/*var div = document.createElement('div');
 			document.body.appendChild(div);
 			div.className = 'territoryDiv';
 			div.id = 'territoryDiv' + ter;
@@ -391,7 +404,7 @@ $(document).ready(function () {
 			div.style.marginTop = (canvas.height/100*definedTerritory[(definedTerritory.length - 1)].y - 15) + 'px';
 			div.style.position = 'absolute';
 			div.style.color = 'lightyellow';
-			div.textContent = ter;
+			div.textContent = ter;*/
 			/*if (ter > 9) {
 				var div = document.createElement('div');
 				document.body.appendChild(div);
