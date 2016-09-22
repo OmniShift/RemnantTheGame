@@ -330,7 +330,7 @@ io.on('connection', function (socket) {
                     //logger.log('pPPK ' + kd1 + ' length: ' + pPosPerKingdom[kd1].length);
                     logger.log('pPPK: ');
                     logger.log(pPosPerKingdom);
-                    if (pPosPerKingdom[kd1].length > 1) {
+                    if (pPosPerKingdom[kd1] !== undefined && pPosPerKingdom[kd1].length > 1) {
                         for (var spare = 1; spare < pPosPerKingdom[kd1].length; spare++) {
                             sparePIDs.push(pPosPerKingdom[kd1][spare]);
                         }
