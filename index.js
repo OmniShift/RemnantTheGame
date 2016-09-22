@@ -319,7 +319,7 @@ io.on('connection', function (socket) {
                 var sparePIDs = [];
                 for (var kd = 0; kd < 4; kd++) {
                     for (var pos = 0; pos < 4; pos++) {
-                        if (playerKingdomOrder[pos] === kd++) {
+                        if (playerKingdomOrder[pos] === (kd+1)) {
                             pPosPerKingdom[kd].push(pos);
                         } else if(playerKingdomOrder[pos] === 0) {
                             sparePIDs.push(pos);
