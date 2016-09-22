@@ -325,6 +325,8 @@ io.on('connection', function (socket) {
                             sparePIDs.push(pos);
                         }
                     }
+                    logger.log(pPosPerKingdom[kd]);
+                    logger.log(pPosPerKingdom);
                     if (pPosPerKingdom[kd].length > 1) {
                         for (var spare = 1; spare < pPosPerKingdom[kd].length; spare++) {
                             sparePIDs.push(pPosPerKingdom[kd][spare]);
