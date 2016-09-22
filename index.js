@@ -317,31 +317,33 @@ io.on('connection', function (socket) {
                 //resolving duplicate and no preferences
                 var pPosPerKingdom = [[],[],[],[]];
                 var sparePIDs = [];
-                for (var kd = 0; kd < 4; kd++) {
+                for (var kd1 = 0; kd1 < 4; kd1++) {
                     for (var pos = 0; pos < 4; pos++) {
-                        if (playerKingdomOrder[pos] === (kd+1)) {
-                            pPosPerKingdom[kd].push(pos);
+                        if (playerKingdomOrder[pos] === (kd1+1)) {
+                            pPosPerKingdom[kd1].push(pos);
                         } else if(playerKingdomOrder[pos] === 0) {
                             sparePIDs.push(pos);
                         }
                     }
-                    logger.log(pPosPerKingdom[kd]);
-                    logger.log(pPosPerKingdom);
-                    if (pPosPerKingdom[kd].length > 1) {
-                        for (var spare = 1; spare < pPosPerKingdom[kd].length; spare++) {
-                            sparePIDs.push(pPosPerKingdom[kd][spare]);
+                    logger.log('pPPK ' + kd1 + ': ' + pPosPerKingdom[kd1]);
+                    logger.log('pPPK: ' + pPosPerKingdom);
+                    if (pPosPerKingdom[kd1].length > 1) {
+                        for (var spare = 1; spare < pPosPerKingdom[kd1].length; spare++) {
+                            sparePIDs.push(pPosPerKingdom[kd1][spare]);
                         }
                         pPosPerKingdom.splice(1,4);
                     }
                 }
-                for (var kd = 0; kd < 4; kd++) {
-                    if (pPosPerKingdom[kd].length === 0) {
-                        pPosPerKingdom[kd] = sparePIDs[0];
+                logger.log('pPPK: ' + pPosPerKingdom);
+                logger.log('spares: ' + sparePIDs);
+                for (var kd2 = 0; kd2 < 4; kd2++) {
+                    if (pPosPerKingdom[kd2].length === 0) {
+                        pPosPerKingdom[kd2] = sparePIDs[0];
                         pPosPerKingdom.splice(0,1);
                     }
                 }
-                for (var kd = 0; kd < 4; kd++) {
-                    playerKingdomOrder[pPosPerKingdom[kd]] = kd;
+                for (var kd3 = 0; kd3 < 4; kd3++) {
+                    playerKingdomOrder[pPosPerKingdom[kd3]] = kd3;
                 }
                 logger.log('preferences per kingdom: ' + JSON.stringify(pidOrder));
                 logger.log('preferences per kingdom: ' + JSON.stringify(playerCommOrder));
