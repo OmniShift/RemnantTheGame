@@ -305,7 +305,9 @@ io.on('connection', function (socket) {
             tempOrderArray[currentIndex] = tempOrderArray[randomIndex];
             tempOrderArray[randomIndex] = temporaryValue;
         }
+        logger.log('starting select query');
         pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
+            logger.log('query result: ' + JSON.stringify(res));
             for (var i = 0; i < 4; i++) {
                 pidOrder[i] = res.rows[0].playerid[tempOrderArray[i]];
                 playerCommOrder[i] = res.rows[0].playercommname[tempOrderArray[i]];
