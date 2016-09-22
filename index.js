@@ -325,8 +325,10 @@ io.on('connection', function (socket) {
                             sparePIDs.push(pos);
                         }
                     }
-                    logger.log('pPPK ' + kd1 + ': ' + pPosPerKingdom[kd1]);
-                    logger.log('pPPK: ' + pPosPerKingdom);
+                    logger.log('pPPK ' + kd1 + ': ');
+                    logger.log(pPosPerKingdom[kd1]);
+                    logger.log('pPPK: ');
+                    logger.log(pPosPerKingdom);
                     if (pPosPerKingdom[kd1].length > 1) {
                         for (var spare = 1; spare < pPosPerKingdom[kd1].length; spare++) {
                             sparePIDs.push(pPosPerKingdom[kd1][spare]);
@@ -334,8 +336,10 @@ io.on('connection', function (socket) {
                         pPosPerKingdom.splice(1,4);
                     }
                 }
-                logger.log('pPPK: ' + pPosPerKingdom);
-                logger.log('spares: ' + sparePIDs);
+                logger.log('pPPK: ');
+                logger.log(pPosPerKingdom);
+                logger.log('spares: ');
+                logger.log(sparePIDs);
                 for (var kd2 = 0; kd2 < 4; kd2++) {
                     if (pPosPerKingdom[kd2].length === 0) {
                         pPosPerKingdom[kd2] = sparePIDs[0];
