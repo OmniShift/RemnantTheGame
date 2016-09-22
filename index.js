@@ -335,7 +335,7 @@ io.on('connection', function (socket) {
                         for (var spare = 1; spare < pPosPerKingdom[kd1].length; spare++) {
                             sparePIDs.push(pPosPerKingdom[kd1][spare]);
                         }
-                        pPosPerKingdom.splice(1,4);
+                        pPosPerKingdom.splice(1,9);
                     }
                 }
                 logger.log('pPPK: ');
@@ -343,12 +343,14 @@ io.on('connection', function (socket) {
                 logger.log('spares: ');
                 logger.log(sparePIDs);
                 for (var kd2 = 0; kd2 < 4; kd2++) {
+                    pPosPerKingdom[kd2] = [];
                     if (pPosPerKingdom[kd2].length === 0) {
                         pPosPerKingdom[kd2] = sparePIDs[0];
                         pPosPerKingdom.splice(0,1);
                     }
                 }
                 for (var kd3 = 0; kd3 < 4; kd3++) {
+                    pPosPerKingdom[kd3] = [];
                     playerKingdomOrder[pPosPerKingdom[kd3]] = kd3;
                 }
                 logger.log('preferences per kingdom: ' + JSON.stringify(pidOrder));
