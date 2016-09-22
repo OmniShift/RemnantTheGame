@@ -291,6 +291,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('start game', function (roomID) {
+        logger.log('starting game ' + roomID);
         var pidOrder = ['','','',''];
         var playerCommOrder = ['','','',''];
         var playerKingdomOrder = [0,0,0,0];
