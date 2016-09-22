@@ -2,7 +2,7 @@ var socket = io();
 var jsCookie = Cookies.noConflict();
 
 //the following values are placeholders to be received from the server on page initialization
-var commName = ['Ruby Rose', 'Weiss Schnee', 'Blake Belladonna', 'Yang Xiao-Long'];
+var commName = ['Ruby Blank', 'Weiss Blank', 'Blake Blank', 'Yang Xiao-Blank'];
 var kingdom = [0, 1, 2, 3];
 var kingdomByPlayer = ['Mantle', 'Mistral', 'Vacuo', 'Vale'];
 //playerByKingdom are the player numbers (0-3) that control which kingdom

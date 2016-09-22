@@ -236,8 +236,7 @@ io.on('connection', function (socket) {
             pool.query(
                 'UPDATE "GRIDs" SET playerid[$1] = $2, playerready[$3] = $4, playercommname[$5] = $6, playerkingdompref[$7] = $8 WHERE idname = $9;', [
                     parseInt(pNumber), pID, parseInt(pNumber), pReady, parseInt(pNumber), pCommName, parseInt(pNumber), pKingdomPref, roomID
-                ],
-                function (err, data) {
+                ], function (err, data) {
                     if (err) {
                         throw new Error(err + ' --- Error updating room ' + roomID + ' with new info');
                     }
@@ -292,15 +291,68 @@ io.on('connection', function (socket) {
     });
 
     socket.on('start game', function (roomID) {
-        logger.log('starting client games');
-        socket.broadcast.to(roomID).emit('start game');
-        pool.query(
-            'UPDATE "GRIDs" SET status = 1 WHERE idname = $1;', [
-                roomID
-            ]
-        );
+        var pidOrder = ['','','',''];
+        var playerCommOrder = ['','','',''];
+        var playerKingdomOrder = [0,0,0,0];
+        var tempOrderArray = [0,1,2,3];
+        //randomizing player order
+        var currentIndex = tempOrderArray.length, temporaryValue, randomIndex;
+        while (0 !== currentIndex) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+            temporaryValue = tempOrderArray[currentIndex];
+            tempOrderArray[currentIndex] = tempOrderArray[randomIndex];
+            tempOrderArray[randomIndex] = temporaryValue;
+        }
+        pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
+            for (var i = 0; i < 4; i++) {
+                pidOrder[i] = res.rows[0].playerid[tempOrderArray[i]];
+                playerCommOrder[i] = res.rows[0].playercommname[tempOrderArray[i]];
+                playerKingdomOrder[i] = res.rows[0].playerkingdompref[tempOrderArray[i]];
+            }
+            //resolving duplicate and no preferences
+            var pPosPerKingdom = [[],[],[],[]];
+            var sparePIDs = [];
+            for (var kd = 0; kd < 4; kd++) {
+                for (var pos = 0; pos < 4; pos++) {
+                    if (playerKingdomOrder[pos] === kd++) {
+                        pPosPerKingdom[kd].push(pos);
+                    } else if(playerKingdomOrder[pos] === 0) {
+                        sparePIDs.push(pos);
+                    }
+                }
+                if (pPosPerKingdom[kd].length > 1) {
+                    for (var spare = 1; spare < pPosPerKingdom[kd].length; spare++) {
+                        sparePIDs.push(pPosPerKingdom[kd][spare]);
+                    }
+                    pPosPerKingdom.splice(1,4);
+                }
+            }
+            for (var kd = 0; kd < 4; kd++) {
+                if (pPosPerKingdom[kd].length === 0) {
+                    pPosPerKingdom[kd] = sparePIDs[0];
+                    pPosPerKingdom.splice(0,1);
+                }
+            }
+            for (var kd = 0; kd < 4; kd++) {
+                playerKingdomOrder[pPosPerKingdom[kd]] = kd;
+            }
+            logger.log('preferences per kingdom: ' + JSON.stringify(pidOrder));
+            logger.log('preferences per kingdom: ' + JSON.stringify(playerCommOrder));
+            logger.log('preferences per kingdom: ' + JSON.stringify(pPosPerKingdom));
+            logger.log('preferences per kingdom: ' + JSON.stringify(playerKingdomOrder));
+        }).then(function() {
+            logger.log('starting client games');
+            socket.broadcast.to(roomID).emit('start game');
+            pool.query(
+                'UPDATE "GRIDs" SET status = 1 WHERE idname = $1;', [
+                    roomID
+                ]
+            );
+        });
+        
         logger.log('game status updated');
-    })
+    });
 
     socket.on('disconnect', function () {
         logger.log('User ' + userID + ' disconnected');
