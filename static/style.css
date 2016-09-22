@@ -210,6 +210,17 @@ table#cardPiles td {
 	height: 75%;
 	width: 80%;
 	z-index: 1;
+	/*background-size: 100% 100%;*/
+}
+#gameBoardCanvas {
+	position: absolute;
+	left: 10%;
+	top: 0%;
+}
+#gameBoard svg {
+	height: 100%;
+	width: 100%;
+	object-fit: fill;
 }
 table.terTable10 {
 	border: 2px solid black;
