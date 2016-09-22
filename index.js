@@ -315,9 +315,10 @@ io.on('connection', function (socket) {
                     playerKingdomOrder[i] = res.rows[0].playerkingdompref[tempOrderArray[i]];
                 }
                 //resolving duplicate and no preferences
-                var pPosPerKingdom = [[],[],[],[]];
+                var pPosPerKingdom = [];
                 var sparePIDs = [];
                 for (var kd1 = 0; kd1 < 4; kd1++) {
+                    pPosPerKingdom[kd1] = [];
                     for (var pos = 0; pos < 4; pos++) {
                         if (playerKingdomOrder[pos] === (kd1+1)) {
                             pPosPerKingdom[kd1].push(pos);
