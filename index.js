@@ -342,15 +342,14 @@ io.on('connection', function (socket) {
             logger.log('preferences per kingdom: ' + JSON.stringify(pPosPerKingdom));
             logger.log('preferences per kingdom: ' + JSON.stringify(playerKingdomOrder));
         }).then(function() {
-            logger.log('starting client games');
-            socket.broadcast.to(roomID).emit('start game');
             pool.query(
                 'UPDATE "GRIDs" SET status = 1, playerid = $1, playercommname = $2, playerkingdompref = $3,  WHERE idname = $4;', [
                     pidOrder, playerCommOrder, playerKingdomOrder, roomID
                 ]
             );
+            logger.log('starting client games');
+            socket.to(roomID).emit('start game');
         });
-        
         logger.log('game status updated');
     });
 

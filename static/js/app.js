@@ -312,14 +312,14 @@ socket.on('room full', function () {
 function startGame() {
     document.getElementById("startGameButton").disabled = true;
     console.log('Starting game');
-    jsCookie.set('rtgLastGame', roomID, {
+    /*jsCookie.set('rtgLastGame', roomID, {
         expires: 365
-    });
+    });*/
     socket.emit('start game', roomID);
-    window.location.href = "/game.html";
+    //window.location.href = "/game.html";
 }
 socket.on('start game'), function() {
-    console.log('Game started by host')
+    console.log('Game starting');
     jsCookie.set('rtgLastGame', roomID, {
         expires: 365
     });
