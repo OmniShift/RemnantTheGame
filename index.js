@@ -327,7 +327,7 @@ io.on('connection', function (socket) {
                     }
                     logger.log('pPPK ' + kd1 + ': ');
                     logger.log(pPosPerKingdom[kd1]);
-                    logger.log('pPPK ' + kd1 + ' length: ' + pPosPerKingdom[kd1].length);
+                    //logger.log('pPPK ' + kd1 + ' length: ' + pPosPerKingdom[kd1].length);
                     logger.log('pPPK: ');
                     logger.log(pPosPerKingdom);
                     if (pPosPerKingdom[kd1].length > 1) {
