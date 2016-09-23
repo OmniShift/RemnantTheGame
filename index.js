@@ -355,6 +355,7 @@ io.on('connection', function (socket) {
                 logger.log('Commander name order: ' + JSON.stringify(playerCommOrder));
                 logger.log('player per kingdom: ' + JSON.stringify(pPosPerKingdom));
                 logger.log('preferences per player: ' + JSON.stringify(playerKingdomOrder));
+                logger.log('testing');
             }).then(function() {
                 pool.query(
                     'UPDATE "GRIDs" SET status = 1, playerid = $1, playercommname = $2, playerkingdompref = $3,  WHERE idname = $4;', [
