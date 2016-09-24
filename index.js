@@ -344,8 +344,11 @@ io.on('connection', function (socket) {
                 logger.log(sparePIDs);
                 for (var kd2 = 0; kd2 < 4; kd2++) {
                     if (pPosPerKingdom[kd2] === undefined) {
+                        logger.log(pPosPerKingdom[kd2]);
+                        logger.log(sparePIDs[0]);
                         pPosPerKingdom[kd2] = sparePIDs[0];
                         pPosPerKingdom.splice(0,1);
+                        logger.log(pPosPerKingdom);
                     }
                 }
                 for (var kd3 = 0; kd3 < 4; kd3++) {
