@@ -326,7 +326,7 @@ io.on('connection', function (socket) {
                             sparePIDs.push(pos);
                         }
                     }
-                    logger.log('pPPK ' + kd1 + ': ');
+                    logger.log('pPPK ' + (kd1+1) + ': ');
                     logger.log(pPosPerKingdom[kd1]);
                     //logger.log('pPPK ' + kd1 + ' length: ' + pPosPerKingdom[kd1].length);
                     logger.log('pPPK: ');
@@ -335,7 +335,7 @@ io.on('connection', function (socket) {
                         for (var spare = 1; spare < pPosPerKingdom[kd1].length; spare++) {
                             sparePIDs.push(pPosPerKingdom[kd1][spare]);
                         }
-                        pPosPerKingdom.splice(1,9);
+                        pPosPerKingdom[kd1].splice(1,9);
                     }
                 }
                 logger.log('pPPK: ');
