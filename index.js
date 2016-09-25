@@ -342,9 +342,8 @@ io.on('connection', function (socket) {
                 logger.log(pPosPerKingdom);
                 logger.log('spares: ');
                 logger.log(sparePIDs);
-                logger.log(pPosPerKingdom[kd2]);
-                logger.log(sparePIDs[0]);
                 for (var kd2 = 0; kd2 < 4; kd2++) {
+                    logger.log(pPosPerKingdom[kd2]);
                     if (pPosPerKingdom[kd2] == undefined) {
                         pPosPerKingdom[kd2] = sparePIDs[0];
                         pPosPerKingdom.splice(0,1);
@@ -352,7 +351,7 @@ io.on('connection', function (socket) {
                     }
                 }
                 for (var kd3 = 0; kd3 < 4; kd3++) {
-                    logger.log(pPosPerKingdom[kd3]);
+                    logger.log(pPosPerKingdom[kd3][0]);
                     playerKingdomOrder[pPosPerKingdom[kd3]] = kd3;
                 }
                 logger.log('PID order: ' + JSON.stringify(pidOrder));
