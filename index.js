@@ -323,6 +323,7 @@ io.on('connection', function (socket) {
                         if (playerKingdomOrder[pos] === (kd1+1)) {
                             pPosPerKingdom[kd1].push(pos);
                         } else if(playerKingdomOrder[pos] === 0) {
+                            logger.log('pushing random pref player to sparePIDs');
                             sparePIDs.push(pos);
                         }
                     }
@@ -360,7 +361,7 @@ io.on('connection', function (socket) {
                 logger.log('Commander name order: ' + JSON.stringify(playerCommOrder));
                 logger.log('player per kingdom: ' + JSON.stringify(pPosPerKingdom));
                 logger.log('kingdom per player: ' + JSON.stringify(playerKingdomOrder));
-                resolve(logger.log('starting client games'));
+                resolve(logger.log('updating GRID information'));
             }).then(function() {
                 pool.query(
                     'UPDATE "GRIDs" SET status = 1, playerid = $1, playercommname = $2, playerkingdompref = $3,  WHERE idname = $4;', [
