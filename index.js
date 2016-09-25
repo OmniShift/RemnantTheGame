@@ -349,25 +349,26 @@ io.on('connection', function (socket) {
                         logger.log('if statement triggered');
                         pPosPerKingdom[kd2][0] = sparePIDs[0];
                         //pPosPerKingdom.splice(0,1);
-                        logger.log(pPosPerKingdom);
                     }
                 }
+                logger.log('new pPPK: ');
+                logger.log(pPosPerKingdom);
                 for (var kd3 = 0; kd3 < 4; kd3++) {
-                    logger.log(pPosPerKingdom[kd3][0]);
-                    playerKingdomOrder[pPosPerKingdom[kd3]] = kd3;
+                    playerKingdomOrder[pPosPerKingdom[kd3][0]] = (kd3 + 1);
                 }
                 logger.log('PID order: ' + JSON.stringify(pidOrder));
                 logger.log('Commander name order: ' + JSON.stringify(playerCommOrder));
                 logger.log('player per kingdom: ' + JSON.stringify(pPosPerKingdom));
-                logger.log('preferences per player: ' + JSON.stringify(playerKingdomOrder));
+                logger.log('kingdom per player: ' + JSON.stringify(playerKingdomOrder));
+                resolve(logger.log('starting client games'));
             }).then(function() {
                 pool.query(
                     'UPDATE "GRIDs" SET status = 1, playerid = $1, playercommname = $2, playerkingdompref = $3,  WHERE idname = $4;', [
                         pidOrder, playerCommOrder, playerKingdomOrder, roomID
                     ]
                 );
+                logger.log('starting client games');
                 socket.to(roomID).emit('start game');
-                resolve(logger.log('starting client games'));
             })
             .catch(e => {
                 logger.error('query error', e.message, e.stack);
