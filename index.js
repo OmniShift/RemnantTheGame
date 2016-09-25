@@ -298,14 +298,14 @@ io.on('connection', function (socket) {
             var playerKingdomOrder = [0,0,0,0];
             var tempOrderArray = [0,1,2,3];
             //randomizing player order
-            /*var currentIndex = tempOrderArray.length, temporaryValue, randomIndex;
+            var currentIndex = tempOrderArray.length, temporaryValue, randomIndex;
             while (0 !== currentIndex) {
                 randomIndex = Math.floor(Math.random() * currentIndex);
                 currentIndex -= 1;
                 temporaryValue = tempOrderArray[currentIndex];
                 tempOrderArray[currentIndex] = tempOrderArray[randomIndex];
                 tempOrderArray[randomIndex] = temporaryValue;
-            }*/
+            }
             logger.log('starting select query');
             pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
                 logger.log('query result: ' + JSON.stringify(res));
