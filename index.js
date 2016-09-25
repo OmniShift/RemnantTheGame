@@ -338,11 +338,12 @@ io.on('connection', function (socket) {
                         pPosPerKingdom[kd1].splice(1,9);
                     }
                 }
-                logger.log('pPPK: ');
-                logger.log(pPosPerKingdom);
                 logger.log('spares: ');
                 logger.log(sparePIDs);
+                logger.log('pPPK: ');
+                logger.log(pPosPerKingdom);
                 for (var kd2 = 0; kd2 < 4; kd2++) {
+                    logger.log('pPPK in for loop' + kd2 + ': ');
                     logger.log(pPosPerKingdom[kd2][0]);
                     if (pPosPerKingdom[kd2][0] == undefined) {
                         pPosPerKingdom[kd2][0] = sparePIDs[0];
