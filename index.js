@@ -362,7 +362,6 @@ io.on('connection', function (socket) {
                 logger.log('player per kingdom: ' + JSON.stringify(pPosPerKingdom));
                 logger.log('kingdom per player: ' + JSON.stringify(playerKingdomOrder));
                 resolve(logger.log('updating GRID information'));
-            }).then(function() {
                 pool.query(
                     'UPDATE "GRIDs" SET status = 1, playerid = $1, playercommname = $2, playerkingdompref = $3,  WHERE idname = $4;', [
                         pidOrder, playerCommOrder, playerKingdomOrder, roomID
@@ -370,6 +369,7 @@ io.on('connection', function (socket) {
                 );
                 logger.log('starting client games');
                 socket.to(roomID).emit('start game');
+            //}).then(function() {
             })
             .catch(e => {
                 logger.error('query error', e.message, e.stack);
