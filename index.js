@@ -379,7 +379,8 @@ io.on('connection', function (socket) {
                         }
                 });*/
                 logger.log('starting client games');
-                socket.to(roomID).emit('start game');
+                socket.emit('start game');
+                socket.broadcast.to(roomID).emit('start game');
             //}).then(function() {
             })
             .catch(e => {
