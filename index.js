@@ -363,10 +363,21 @@ io.on('connection', function (socket) {
                 logger.log('kingdom per player: ' + JSON.stringify(playerKingdomOrder));
                 resolve(logger.log('updating GRID information'));
                 pool.query(
+                    'UPDATE "GRIDs" SET status = 1, playerid = $1, playercommname = $2, playerkingdompref = $3 WHERE idname = $4;', [
+                        pidOrder, playerCommOrder, playerKingdomOrder, roomID
+                    ], function (err, data) {
+                        if (err) {
+                            throw new Error('Error adding ' + UID + ' to game room ' + roomID);
+                        }
+                });
+                /*pool.query(
                     'UPDATE "GRIDs" SET status = 1, playerid = $1, playercommname = $2, playerkingdompref = $3,  WHERE idname = $4;', [
                         pidOrder, playerCommOrder, playerKingdomOrder, roomID
-                    ]
-                );
+                    ], function (err, data) {
+                        if (err) {
+                            throw new Error('Error adding ' + UID + ' to game room ' + roomID);
+                        }
+                });*/
                 logger.log('starting client games');
                 socket.to(roomID).emit('start game');
             //}).then(function() {
