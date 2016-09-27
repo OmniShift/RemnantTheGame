@@ -318,13 +318,13 @@ function startGame() {
     socket.emit('start game', roomID);
     //window.location.href = "/game.html";
 }
-socket.on('start game'), function() {
+socket.on('start game', function() {
     console.log('Game starting');
     jsCookie.set('rtgLastGame', roomID, {
         expires: 365
     });
     window.location.href = "/game.html";
-}
+});
 
 socket.on('game already started', function () {
     hideJoinNewGame();

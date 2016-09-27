@@ -370,14 +370,6 @@ io.on('connection', function (socket) {
                             throw new Error('Error adding ' + UID + ' to game room ' + roomID);
                         }
                 });
-                /*pool.query(
-                    'UPDATE "GRIDs" SET status = 1, playerid = $1, playercommname = $2, playerkingdompref = $3,  WHERE idname = $4;', [
-                        pidOrder, playerCommOrder, playerKingdomOrder, roomID
-                    ], function (err, data) {
-                        if (err) {
-                            throw new Error('Error adding ' + UID + ' to game room ' + roomID);
-                        }
-                });*/
                 logger.log('starting client games');
                 socket.emit('start game');
                 socket.broadcast.to(roomID).emit('start game');
