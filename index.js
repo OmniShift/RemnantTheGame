@@ -381,11 +381,13 @@ io.on('connection', function (socket) {
     //var playerIndex = -99;
 
     socket.on('get game data', function (roomID, UID) {
+        logger.log('game data request received');
         pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
             var playerIndex = res.rows[0].playerid.indexOf(UID);
             var pIDs = res.rows[0].playerid;
             var pCommander = res.rows[0].playercommname;
             var pKingdom = res.rows[0].playerkingdompref;
+            logger.log('returning game data');
             socket.emit('return game data', playerIndex, pIDs, pCommander, pKingdom);
         });
     })

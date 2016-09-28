@@ -303,6 +303,7 @@ $(document).ready(function () {
     var pInGame = [0,0,0,0];
     socket.emit('get game data', GRID, UID);
     socket.on('return game data', function(playerIndex, pIDs, pCommander, pKingdom) {
+        console.log('received game data');
         playerNumber = playerIndex;
         //pInGame[playerNumber] = 2;
         for (var p = 0; p < 4; p++) {
