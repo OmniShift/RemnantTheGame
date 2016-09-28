@@ -315,6 +315,7 @@ $(document).ready(function () {
         }
         console.log(playerNumber);
         console.log(commName);
+        console.log(commName[playerNumber]);
         console.log(kingdom);
         console.log(playerByKingdom);
     });
