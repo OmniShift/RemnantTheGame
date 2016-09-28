@@ -336,7 +336,7 @@ $(document).ready(function () {
             for (var i = 0; i < cardInfo.length; i++) {
                 for (var j = 0; j < cardInfo[i].frequency1; j++) {
                     drawPile.push(cardInfo[i]);
-                    drawPile[(drawPile.length - 1)].id = drawPile.length;
+                    //drawPile[(drawPile.length - 1)].id = drawPile.length;
                 }
             }
             function deckShuffle(array) {
@@ -350,6 +350,9 @@ $(document).ready(function () {
                 drawPile = array;
             }
             deckShuffle(drawPile);
+            for (var cards = 0; cards < drawPile.length; cards++) {
+                drawPile[cards].id = (cards + 1);
+            }
         }
 
     	//just temporary
