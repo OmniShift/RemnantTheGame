@@ -299,6 +299,7 @@ var cardInfo = [
 $(document).ready(function () {
 	document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
     var GRID = jsCookie.set('rtgLastGame');
+    console.log(GRID);
     var UID = jsCookie.set('rtgUID');
     var pInGame = [0,0,0,0];
     socket.emit('get game data', GRID, UID);
@@ -308,24 +309,28 @@ $(document).ready(function () {
         //pInGame[playerNumber] = 2;
         for (var p = 0; p < 4; p++) {
             commName[p] = pCommander[p];
-            kingdom[p] = pKingdom[p];
+            kingdom[p] = (pKingdom[p]-1);
         }
         for (var kd = 0; kd < 4; kd++) {
             playerByKingdom[kd] = kingdom.indexOf(kd);
         }
         console.log(playerNumber);
         console.log(commName);
-        console.log(commName[playerNumber]);
         console.log(kingdom);
         console.log(playerByKingdom);
 
     	//create 3 divs, 1 for each player in order after the client's player's turn
     	var tempPlayerNumber = 0;
     	for (var pos = 1; pos < 4; pos++) {
-    		tempPlayerNumber = (playerNumber + pos);
-    		if (tempPlayerNumber > 3) {
-    			tempPlayerNumber = 0;
-    		}
+            if ((playerNumber + pos) > 3) {
+                tempPlayerNumber = (playerNumber + pos - 4);
+            } else {
+                tempPlayerNumber = (playerNumber + pos);
+            }
+            /*tempPlayerNumber = (playerNumber + pos);
+            if (tempPlayerNumber > 3) {
+                tempPlayerNumber = 0;
+            }*/
     		document.getElementById('p' + pos + 'Area').innerHTML = '<div><img src="' + kingdomPicArray[kingdom[tempPlayerNumber]] + '" width="40%"><BR>' + commName[tempPlayerNumber] + '<div id="player' + tempPlayerNumber + 'Cards" class="nOfCards">' + nOfCards[tempPlayerNumber] + '</div></div>';
     	}
 
@@ -355,7 +360,7 @@ $(document).ready(function () {
     	for (var i = 0; i < 8; i++) {
     		document.getElementsByClassName('cardImage')[i].innerHTML = drawPile[i].name;
     	}
-        
+
     	nOfCards[4] = drawPile.length;
     	var stageOfWar = 1;
     	//initial draw pile, discard pile, and card magnification area
