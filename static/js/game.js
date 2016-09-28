@@ -313,11 +313,11 @@ $(document).ready(function () {
         for (var kd = 0; kd < 4; kd++) {
             playerByKingdom[kd] = kingdom.indexOf(kd);
         }
+        console.log(playerNumber);
+        console.log(commName);
+        console.log(kingdom);
+        console.log(playerByKingdom);
     });
-    console.log(playerNumber);
-    console.log(commName);
-    console.log(kingdom);
-    console.log(playerByKingdom);
 
 	//create 3 divs, 1 for each player in order after the client's player's turn
 	var tempPlayerNumber = 0;
