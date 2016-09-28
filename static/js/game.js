@@ -318,169 +318,170 @@ $(document).ready(function () {
         console.log(commName[playerNumber]);
         console.log(kingdom);
         console.log(playerByKingdom);
+
+    	//create 3 divs, 1 for each player in order after the client's player's turn
+    	var tempPlayerNumber = 0;
+    	for (var pos = 1; pos < 4; pos++) {
+    		tempPlayerNumber = (playerNumber + pos);
+    		if (tempPlayerNumber > 3) {
+    			tempPlayerNumber = 0;
+    		}
+    		document.getElementById('p' + pos + 'Area').innerHTML = '<div><img src="' + kingdomPicArray[kingdom[tempPlayerNumber]] + '" width="40%"><BR>' + commName[tempPlayerNumber] + '<div id="player' + tempPlayerNumber + 'Cards" class="nOfCards">' + nOfCards[tempPlayerNumber] + '</div></div>';
+    	}
+
+    	//create decks for each stage using the card info arrays
+    	/*var stage1Deck = [];
+    	var stage2Deck = [];
+    	var stage3Deck = [];*/
+    	var drawPile = [];
+    	for (var i = 0; i < cardInfo.length; i++) {
+    		for (var j = 0; j < cardInfo[i].frequency1; j++) {
+    			drawPile.push(cardInfo[i]);
+    		}
+    	}
+    	function deckShuffle(array) {
+    		var m = array.length, t, i;
+    		while (m) {
+    			i = Math.floor(Math.random() * m--);
+    			t = array[m];
+    			array[m] = array[i];
+    			array[i] = t;
+    		}
+    		drawPile = array;
+    	}
+    	deckShuffle(drawPile);
+
+    	//just temporary
+    	for (var i = 0; i < 8; i++) {
+    		document.getElementsByClassName('cardImage')[i].innerHTML = drawPile[i].name;
+    	}
+        
+    	nOfCards[4] = drawPile.length;
+    	var stageOfWar = 1;
+    	//initial draw pile, discard pile, and card magnification area
+    	document.getElementById('drawPile').innerHTML = '<div style="font-size: 2em">' + nOfCards[4] + '</div><BR><div style="font-size: 1.2em">(Stage ' + stageOfWar + ')</div>';
+
+    	//initial player info
+    	document.getElementById('kingdomImage').innerHTML = '<img src="' + kingdomPicArray[kingdom[playerNumber]] + '" height="' + (document.getElementById('playerCards').offsetHeight/100*75) + '">';
+    	document.getElementById('commanderName').innerHTML = commName[playerNumber];
+    	/*document.getElementsByClassName('cardImage')[0].innerHTML = '<img src="images/card_back_placeholder.png" height="' + (document.getElementById('playerCards').offsetHeight/100*90) + '">';
+    	document.getElementsByClassName('cardOptions')[0].innerHTML = 'TEXT!';*/
+
+    	//initializing territory/border shapes and positions
+    	var canvas = document.getElementById('gameBoardCanvas');
+    	canvas.width = document.getElementById('gameBoard').offsetWidth;
+    	canvas.height = document.getElementById('gameBoard').offsetHeight;
+    	function reOffset(){
+    		var BB = canvas.getBoundingClientRect();
+    		offsetX = BB.left;
+    		offsetY = BB.top;
+    	}
+    	var offsetX, offsetY;
+    	reOffset();
+    	window.onscroll = function(e) { reOffset(); }
+    	var isDown = false;
+    	var startX, startY;
+    	var highlight = -1;
+    	ctx = canvas.getContext('2d');
+    	ctx.fillStyle = 'rgba(0,0,0,0.2)';
+    	initialDraw();
+
+    	function draw(highlight) {
+    		ctx.clearRect(0, 0, canvas.width, canvas.height);
+    		for (var ter = 0; ter < territoryShapeInfo.length; ter++) {
+    			var definedTerritory = territoryShapeInfo[ter];
+    			define(definedTerritory);
+    			ctx.stroke();
+    			if(ter == highlight){
+    				ctx.fill();
+    			}
+    		}
+    	}
+    	function initialDraw() {
+    		ctx.clearRect(0, 0, canvas.width, canvas.height);
+    		for (var ter = 0; ter < territoryShapeInfo.length; ter++) {
+    			var definedTerritory = territoryShapeInfo[ter];
+    			define(definedTerritory);
+    			ctx.stroke();
+    			//creating div's only initially or it will cause big hardware lag
+                var tbl = document.createElement('table');
+                tbl.className = 'territoryTbl';
+                tbl.id = 'territoryTbl' + ter;
+                tbl.style.width = '1.5%';
+                tbl.style.height = '3%';
+                tbl.style.marginLeft = (document.getElementById('otherPlayers').offsetWidth + canvas.width/100*definedTerritory[(definedTerritory.length - 1)].x - 22) + 'px';
+                tbl.style.marginTop = (canvas.height/100*definedTerritory[(definedTerritory.length - 1)].y - 20) + 'px';
+                tbl.style.position = 'absolute';
+                tbl.style.color = 'black';
+                //tbl.setAttribute('border', '1px solid black');
+                var tbdy = document.createElement('tbody');
+                tbdy.id = 'territoryTbdy' + ter;
+                var trow = document.createElement('tr');
+                trow.id = 'territoryTrow' + ter;
+                var tdata = document.createElement('td');
+                tdata.id = 'territoryTdata' + ter;
+                var ttext = document.createTextNode(ter);
+                tdata.appendChild(ttext);
+                trow.appendChild(tdata);
+                tbdy.appendChild(trow);
+                tbl.appendChild(tbdy);
+                document.body.appendChild(tbl);
+    			/*var div = document.createElement('div');
+    			document.body.appendChild(div);
+    			div.className = 'territoryDiv';
+    			div.id = 'territoryDiv' + ter;
+    			div.style.marginLeft = (document.getElementById('otherPlayers').offsetWidth + canvas.width/100*definedTerritory[(definedTerritory.length - 1)].x - 20) + 'px';
+    			div.style.marginTop = (canvas.height/100*definedTerritory[(definedTerritory.length - 1)].y - 15) + 'px';
+    			div.style.position = 'absolute';
+    			div.style.color = 'lightyellow';
+    			div.textContent = ter;*/
+    			/*if (ter > 9) {
+    				var div = document.createElement('div');
+    				document.body.appendChild(div);
+    				div.className = 'territoryDiv';
+    				div.id = 'territoryDiv' + (ter - 9);
+    				div.style.marginLeft = (document.getElementById('otherPlayers').offsetWidth + canvas.width/100*definedTerritory[(definedTerritory.length - 1)].x - 20) + 'px';
+    				div.style.marginTop = (canvas.height/100*definedTerritory[(definedTerritory.length - 1)].y - 15) + 'px';
+    				div.style.position = 'absolute';
+    				div.style.color = 'lightyellow';
+    				div.textContent = (ter - 9);
+    			}*/
+    			if(ter == highlight){
+    				ctx.fill();
+    			}
+    		}
+    	}
+        document.getElementById('territoryTdata10').textContent = '★';
+        document.getElementById('territoryTdata18').textContent = '★';
+        document.getElementById('territoryTdata29').textContent = '★';
+        document.getElementById('territoryTdata35').textContent = '★';
+    	function define(t){
+    		ctx.beginPath();
+    		var coordPercentage1 = canvas.width/100*t[0].x;
+    		var coordPercentage2 = canvas.height/100*t[0].y;
+    		ctx.moveTo(coordPercentage1, coordPercentage2);
+    		for (var coord = 1; coord < (t.length - 1); coord++) {
+    			coordPercentage1 = canvas.width/100*t[coord].x;
+    			coordPercentage2 = canvas.height/100*t[coord].y;
+    			ctx.lineTo(coordPercentage1, coordPercentage2);
+    		}
+    		ctx.closePath();
+    	}
+    	$("#gameBoardCanvas").mousemove(function(e) { handleMouseMove(e); });
+    	function handleMouseMove(e){
+    		e.preventDefault();
+    		e.stopPropagation();
+    		var mouseX = parseInt(e.clientX-offsetX);
+    		var mouseY = parseInt(e.clientY-offsetY);
+    		var highlight=-1;
+    		for(var i = 0; i < territoryShapeInfo.length; i++){
+    			var definedTerritory = territoryShapeInfo[i];
+    			define(definedTerritory);
+    			if(ctx.isPointInPath(mouseX,mouseY)){
+    				highlight = i;
+    			}
+    		}
+    		draw(highlight);
+    	}
     });
-
-	//create 3 divs, 1 for each player in order after the client's player's turn
-	var tempPlayerNumber = 0;
-	for (var pos = 1; pos < 4; pos++) {
-		tempPlayerNumber = (playerNumber + pos);
-		if (tempPlayerNumber > 3) {
-			tempPlayerNumber = 0;
-		}
-		document.getElementById('p' + pos + 'Area').innerHTML = '<div><img src="' + kingdomPicArray[kingdom[tempPlayerNumber]] + '" width="40%"><BR>' + commName[tempPlayerNumber] + '<div id="player' + tempPlayerNumber + 'Cards" class="nOfCards">' + nOfCards[tempPlayerNumber] + '</div></div>';
-	}
-
-	//create decks for each stage using the card info arrays
-	/*var stage1Deck = [];
-	var stage2Deck = [];
-	var stage3Deck = [];*/
-	var drawPile = [];
-	for (var i = 0; i < cardInfo.length; i++) {
-		for (var j = 0; j < cardInfo[i].frequency1; j++) {
-			drawPile.push(cardInfo[i]);
-		}
-	}
-	function deckShuffle(array) {
-		var m = array.length, t, i;
-		while (m) {
-			i = Math.floor(Math.random() * m--);
-			t = array[m];
-			array[m] = array[i];
-			array[i] = t;
-		}
-		drawPile = array;
-	}
-	deckShuffle(drawPile);
-
-	//just temporary
-	for (var i = 0; i < 8; i++) {
-		document.getElementsByClassName('cardImage')[i].innerHTML = drawPile[i].name;
-	}
-	nOfCards[4] = drawPile.length;
-	var stageOfWar = 1;
-	//initial draw pile, discard pile, and card magnification area
-	document.getElementById('drawPile').innerHTML = '<div style="font-size: 2em">' + nOfCards[4] + '</div><BR><div style="font-size: 1.2em">(Stage ' + stageOfWar + ')</div>';
-
-	//initial player info
-	document.getElementById('kingdomImage').innerHTML = '<img src="' + kingdomPicArray[kingdom[playerNumber]] + '" height="' + (document.getElementById('playerCards').offsetHeight/100*75) + '">';
-	document.getElementById('commanderName').innerHTML = commName[playerNumber];
-	/*document.getElementsByClassName('cardImage')[0].innerHTML = '<img src="images/card_back_placeholder.png" height="' + (document.getElementById('playerCards').offsetHeight/100*90) + '">';
-	document.getElementsByClassName('cardOptions')[0].innerHTML = 'TEXT!';*/
-
-	//initializing territory/border shapes and positions
-	var canvas = document.getElementById('gameBoardCanvas');
-	canvas.width = document.getElementById('gameBoard').offsetWidth;
-	canvas.height = document.getElementById('gameBoard').offsetHeight;
-	function reOffset(){
-		var BB = canvas.getBoundingClientRect();
-		offsetX = BB.left;
-		offsetY = BB.top;
-	}
-	var offsetX, offsetY;
-	reOffset();
-	window.onscroll = function(e) { reOffset(); }
-	var isDown = false;
-	var startX, startY;
-	var highlight = -1;
-	ctx = canvas.getContext('2d');
-	ctx.fillStyle = 'rgba(0,0,0,0.2)';
-	initialDraw();
-
-	function draw(highlight) {
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		for (var ter = 0; ter < territoryShapeInfo.length; ter++) {
-			var definedTerritory = territoryShapeInfo[ter];
-			define(definedTerritory);
-			ctx.stroke();
-			if(ter == highlight){
-				ctx.fill();
-			}
-		}
-	}
-	function initialDraw() {
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		for (var ter = 0; ter < territoryShapeInfo.length; ter++) {
-			var definedTerritory = territoryShapeInfo[ter];
-			define(definedTerritory);
-			ctx.stroke();
-			//creating div's only initially or it will cause big hardware lag
-            var tbl = document.createElement('table');
-            tbl.className = 'territoryTbl';
-            tbl.id = 'territoryTbl' + ter;
-            tbl.style.width = '1.5%';
-            tbl.style.height = '3%';
-            tbl.style.marginLeft = (document.getElementById('otherPlayers').offsetWidth + canvas.width/100*definedTerritory[(definedTerritory.length - 1)].x - 22) + 'px';
-            tbl.style.marginTop = (canvas.height/100*definedTerritory[(definedTerritory.length - 1)].y - 20) + 'px';
-            tbl.style.position = 'absolute';
-            tbl.style.color = 'black';
-            //tbl.setAttribute('border', '1px solid black');
-            var tbdy = document.createElement('tbody');
-            tbdy.id = 'territoryTbdy' + ter;
-            var trow = document.createElement('tr');
-            trow.id = 'territoryTrow' + ter;
-            var tdata = document.createElement('td');
-            tdata.id = 'territoryTdata' + ter;
-            var ttext = document.createTextNode(ter);
-            tdata.appendChild(ttext);
-            trow.appendChild(tdata);
-            tbdy.appendChild(trow);
-            tbl.appendChild(tbdy);
-            document.body.appendChild(tbl);
-			/*var div = document.createElement('div');
-			document.body.appendChild(div);
-			div.className = 'territoryDiv';
-			div.id = 'territoryDiv' + ter;
-			div.style.marginLeft = (document.getElementById('otherPlayers').offsetWidth + canvas.width/100*definedTerritory[(definedTerritory.length - 1)].x - 20) + 'px';
-			div.style.marginTop = (canvas.height/100*definedTerritory[(definedTerritory.length - 1)].y - 15) + 'px';
-			div.style.position = 'absolute';
-			div.style.color = 'lightyellow';
-			div.textContent = ter;*/
-			/*if (ter > 9) {
-				var div = document.createElement('div');
-				document.body.appendChild(div);
-				div.className = 'territoryDiv';
-				div.id = 'territoryDiv' + (ter - 9);
-				div.style.marginLeft = (document.getElementById('otherPlayers').offsetWidth + canvas.width/100*definedTerritory[(definedTerritory.length - 1)].x - 20) + 'px';
-				div.style.marginTop = (canvas.height/100*definedTerritory[(definedTerritory.length - 1)].y - 15) + 'px';
-				div.style.position = 'absolute';
-				div.style.color = 'lightyellow';
-				div.textContent = (ter - 9);
-			}*/
-			if(ter == highlight){
-				ctx.fill();
-			}
-		}
-	}
-    document.getElementById('territoryTdata10').textContent = '★';
-    document.getElementById('territoryTdata18').textContent = '★';
-    document.getElementById('territoryTdata29').textContent = '★';
-    document.getElementById('territoryTdata35').textContent = '★';
-	function define(t){
-		ctx.beginPath();
-		var coordPercentage1 = canvas.width/100*t[0].x;
-		var coordPercentage2 = canvas.height/100*t[0].y;
-		ctx.moveTo(coordPercentage1, coordPercentage2);
-		for (var coord = 1; coord < (t.length - 1); coord++) {
-			coordPercentage1 = canvas.width/100*t[coord].x;
-			coordPercentage2 = canvas.height/100*t[coord].y;
-			ctx.lineTo(coordPercentage1, coordPercentage2);
-		}
-		ctx.closePath();
-	}
-	$("#gameBoardCanvas").mousemove(function(e) { handleMouseMove(e); });
-	function handleMouseMove(e){
-		e.preventDefault();
-		e.stopPropagation();
-		var mouseX = parseInt(e.clientX-offsetX);
-		var mouseY = parseInt(e.clientY-offsetY);
-		var highlight=-1;
-		for(var i = 0; i < territoryShapeInfo.length; i++){
-			var definedTerritory = territoryShapeInfo[i];
-			define(definedTerritory);
-			if(ctx.isPointInPath(mouseX,mouseY)){
-				highlight = i;
-			}
-		}
-		draw(highlight);
-	}
 });
