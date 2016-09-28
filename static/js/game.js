@@ -11,11 +11,11 @@ var kingdom = [0, 1, 2, 3];
 //order: 0=Mantle, 1=Mistral, 2=Vacuo, 3=Vale
 var playerByKingdom = [0,1,2,3];
 
-var nOfCards = [1,2,3,4,99];
+var nOfCards = [0,0,0,0,99];
 var kingdomPicArray = ['images/Atlas_Symbol.svg.png', 'images/Mistral_Symbol.svg.png', 'images/Vacuo_Symbol.svg.png', 'images/Vale_Symbol.svg.png'];
-var common = 5;
+var common = 4;
 var uncommon = 3;
-var rare = 1;
+var rare = 2;
 var unitImage = 'images/Ralph_unit_card.jpg';
 var trapImage = 'images/Its_a_trap_card.jpg';
 var utilityImage = 'images/Ralph_unit_card.jpg';
@@ -293,13 +293,14 @@ var cardInfo = [
 	{name:'Silver Eyes',frequency1:0,frequency2:0,frequency3:1,affiliation:0,duration:999,image:utilityImage,description:''},
 	{name:'Smugglers of Wind Path',frequency1:uncommon,frequency2:uncommon,frequency3:uncommon,affiliation:0,duration:0,image:utilityImage,description:''},
 	{name:'Thruster Packs',frequency1:0,frequency2:rare,frequency3:uncommon,affiliation:0,duration:999,image:utilityImage,description:''},
-	{name:'Tornado',frequency1:0,frequency2:uncommon,frequency3:rare,affiliation:0,nh0:1,nh1:1,nh2:1,duration:3,image:utilityImage,description:''}
+    {name:'Tornado',frequency1:0,frequency2:uncommon,frequency3:rare,affiliation:0,nh0:1,nh1:1,nh2:1,duration:3,image:utilityImage,description:''},
+    //special cards
+    {name:'Evolution of Warfare',frequency1:1,frequency2:1,frequency3:1}
 ];
 
 $(document).ready(function () {
 	document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
     var GRID = jsCookie.set('rtgLastGame');
-    console.log(GRID);
     var UID = jsCookie.set('rtgUID');
     var pInGame = [0,0,0,0];
     socket.emit('get game data', GRID, UID);
@@ -314,7 +315,6 @@ $(document).ready(function () {
         for (var kd = 0; kd < 4; kd++) {
             playerByKingdom[kd] = kingdom.indexOf(kd);
         }
-        console.log(playerNumber);
         console.log(commName);
         console.log(kingdom);
         console.log(playerByKingdom);
@@ -327,39 +327,35 @@ $(document).ready(function () {
             } else {
                 tempPlayerNumber = (playerNumber + pos);
             }
-            /*tempPlayerNumber = (playerNumber + pos);
-            if (tempPlayerNumber > 3) {
-                tempPlayerNumber = 0;
-            }*/
     		document.getElementById('p' + pos + 'Area').innerHTML = '<div><img src="' + kingdomPicArray[kingdom[tempPlayerNumber]] + '" width="40%"><BR>' + commName[tempPlayerNumber] + '<div id="player' + tempPlayerNumber + 'Cards" class="nOfCards">' + nOfCards[tempPlayerNumber] + '</div></div>';
     	}
 
-    	//create decks for each stage using the card info arrays
-    	/*var stage1Deck = [];
-    	var stage2Deck = [];
-    	var stage3Deck = [];*/
-    	var drawPile = [];
-    	for (var i = 0; i < cardInfo.length; i++) {
-    		for (var j = 0; j < cardInfo[i].frequency1; j++) {
-    			drawPile.push(cardInfo[i]);
-    		}
-    	}
-    	function deckShuffle(array) {
-    		var m = array.length, t, i;
-    		while (m) {
-    			i = Math.floor(Math.random() * m--);
-    			t = array[m];
-    			array[m] = array[i];
-    			array[i] = t;
-    		}
-    		drawPile = array;
-    	}
-    	deckShuffle(drawPile);
+    	//create deck
+        if (playerNumber === 0) {
+            var drawPile = [];
+            for (var i = 0; i < cardInfo.length; i++) {
+                for (var j = 0; j < cardInfo[i].frequency1; j++) {
+                    drawPile.push(cardInfo[i]);
+                    drawPile[(drawPile.length - 1)].id = drawPile.length;
+                }
+            }
+            function deckShuffle(array) {
+                var m = array.length, t, i;
+                while (m) {
+                    i = Math.floor(Math.random() * m--);
+                    t = array[m];
+                    array[m] = array[i];
+                    array[i] = t;
+                }
+                drawPile = array;
+            }
+            deckShuffle(drawPile);
+        }
 
     	//just temporary
-    	for (var i = 0; i < 8; i++) {
-    		document.getElementsByClassName('cardImage')[i].innerHTML = drawPile[i].name;
-    	}
+    	/*for (var cards = 0; cards < 5; cards++) {
+    		document.getElementsByClassName('cardImage')[cards].innerHTML = drawPile[cards].name;
+    	}*/
 
     	nOfCards[4] = drawPile.length;
     	var stageOfWar = 1;
@@ -369,8 +365,18 @@ $(document).ready(function () {
     	//initial player info
     	document.getElementById('kingdomImage').innerHTML = '<img src="' + kingdomPicArray[kingdom[playerNumber]] + '" height="' + (document.getElementById('playerCards').offsetHeight/100*75) + '">';
     	document.getElementById('commanderName').innerHTML = commName[playerNumber];
-    	/*document.getElementsByClassName('cardImage')[0].innerHTML = '<img src="images/card_back_placeholder.png" height="' + (document.getElementById('playerCards').offsetHeight/100*90) + '">';
-    	document.getElementsByClassName('cardOptions')[0].innerHTML = 'TEXT!';*/
+
+        //deal cards
+        var pHands = [[],[],[],[]]
+        if (playerNumber === 0) {
+            for (var hand = 0; hand < 5; hand++) {
+                for (var p = 0; p < 4; p++) {
+                    pHands[p].push(drawPile[0]);
+                    drawPile.splice(0,1);
+                }
+                document.getElementsByClassName('cardImage')[hand].innerHTML = pHands[playerNumber][hand].id + '. ' + pHands[playerNumber][hand].name;
+            }
+        }
 
     	//initializing territory/border shapes and positions
     	var canvas = document.getElementById('gameBoardCanvas');
