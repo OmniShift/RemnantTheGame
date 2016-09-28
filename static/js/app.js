@@ -312,11 +312,7 @@ socket.on('room full', function () {
 function startGame() {
     document.getElementById("startGameButton").disabled = true;
     console.log('Starting game');
-    /*jsCookie.set('rtgLastGame', roomID, {
-        expires: 365
-    });*/
     socket.emit('start game', roomID);
-    //window.location.href = "/game.html";
 }
 socket.on('start game', function() {
     console.log('Game starting');
@@ -333,7 +329,7 @@ socket.on('game already started', function () {
 
 $(document).ready(function () {
     //UserID is checked or generated
-    function checkCookie() {
+    //function checkCookie() {
         userID = jsCookie.get('rtgUID');
         if (userID !== undefined) {
             console.log('User ' + userID + ' is connected.');
@@ -342,8 +338,8 @@ $(document).ready(function () {
             console.log('New user connected. ID will be generated.');
             generateUID();
         }
-    }
-    checkCookie();
+    /*}
+    checkCookie();*/
 
     hideAYSPrompt();
     hideNewGameSettings();

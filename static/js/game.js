@@ -2,16 +2,17 @@ var socket = io();
 var jsCookie = Cookies.noConflict();
 
 //the following values are placeholders to be received from the server on page initialization
+//playerNumber is directly used as index, so ranges from 0 to 3
+var playerNumber = 1;
 var commName = ['Ruby Blank', 'Weiss Blank', 'Blake Blank', 'Yang Xiao-Blank'];
 var kingdom = [0, 1, 2, 3];
-var kingdomByPlayer = ['Mantle', 'Mistral', 'Vacuo', 'Vale'];
+//var kingdomByPlayer = ['Mantle', 'Mistral', 'Vacuo', 'Vale'];
 //playerByKingdom are the player numbers (0-3) that control which kingdom
 //order: 0=Mantle, 1=Mistral, 2=Vacuo, 3=Vale
 var playerByKingdom = [0,1,2,3];
-var kingdomPicArray = ['images/Atlas_Symbol.svg.png', 'images/Mistral_Symbol.svg.png', 'images/Vacuo_Symbol.svg.png', 'images/Vale_Symbol.svg.png'];
-//playerNumber is directly used as index, so ranges from 0 to 3
-var playerNumber = 1;
+
 var nOfCards = [1,2,3,4,99];
+var kingdomPicArray = ['images/Atlas_Symbol.svg.png', 'images/Mistral_Symbol.svg.png', 'images/Vacuo_Symbol.svg.png', 'images/Vale_Symbol.svg.png'];
 var common = 5;
 var uncommon = 3;
 var rare = 1;
@@ -297,6 +298,25 @@ var cardInfo = [
 
 $(document).ready(function () {
 	document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
+    var GRID = jsCookie.set('rtgLastGame');
+    var UID = jsCookie.set('rtgUID');
+    var pInGame = [0,0,0,0];
+    socket.emit('get game data', GRID, UID);
+    socket.on('return game data', function(playerIndex, pIDs, pCommander, pKingdom) {
+        playerNumber = playerIndex;
+        //pInGame[playerNumber] = 2;
+        for (var p = 0; p < 4; p++) {
+            commName[p] = pCommander[p];
+            kingdom[p] = pKingdom[p];
+        }
+        for (var kd = 0; kd < 4; kd++) {
+            playerByKingdom[kd] = kingdom.indexOf(kd);
+        }
+    });
+    console.log(playerNumber);
+    console.log(commName);
+    console.log(kingdom);
+    console.log(playerByKingdom);
 
 	//create 3 divs, 1 for each player in order after the client's player's turn
 	var tempPlayerNumber = 0;

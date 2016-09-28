@@ -360,8 +360,8 @@ io.on('connection', function (socket) {
             logger.log('player per kingdom: ' + JSON.stringify(pPosPerKingdom));
             logger.log('kingdom per player: ' + JSON.stringify(playerKingdomOrder));
             pool.query(
-                'UPDATE "GRIDs" SET status = 1, playerid = $1, playercommname = $2, playerkingdompref = $3 WHERE idname = $4;', [
-                    pidOrder, playerCommOrder, playerKingdomOrder, roomID
+                'UPDATE "GRIDs" SET status = 1, playerid = $1, playerready = $2, playercommname = $3, playerkingdompref = $4 WHERE idname = $5;', [
+                    pidOrder, [0,0,0,0], playerCommOrder, playerKingdomOrder, roomID
                 ], function (err, data) {
                     if (err) {
                         throw new Error('Error adding ' + UID + ' to game room ' + roomID);
@@ -375,6 +375,20 @@ io.on('connection', function (socket) {
             logger.error('query error', e.message, e.stack);
         });
     });
+
+    /*----------------------------------------------------------------------*/
+
+    //var playerIndex = -99;
+
+    socket.on('get game data', function (roomID, UID) {
+        pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
+            var playerIndex = res.rows[0].playerid.indexOf(UID);
+            var pIDs = res.rows[0].playerid;
+            var pCommander = res.rows[0].playercommname;
+            var pKingdom = res.rows[0].playerkingdompref;
+            socket.emit('return game data', playerIndex, pIDs, pCommander, pKingdom);
+        });
+    })
 
     socket.on('disconnect', function () {
         logger.log('User ' + userID + ' disconnected');
