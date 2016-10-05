@@ -337,16 +337,18 @@ $(document).ready(function () {
 
     	//create deck
         var drawPile = [];
+        var count = 0;
         if (playerNumber === 0) {
             for (var cType = 0; cType < cardInfo.length; cType++) {
-                console.log(cType);
+                //console.log(cType);
                 for (var freq = 0; freq < cardInfo[cType].frequency1; freq++) {
-                    drawPile.push(cardInfo[cType]);
+                    var card = JSON.parse(JSON.stringify(cardInfo[cType]));
+                    card.id = count++;
+                    drawPile.push(card);
                     //for some reason, neither this or the commented out code below create unique id numbers per card. Every card with the same name gets the same number :S
-                    console.log(drawPile.length - 1);
-                    drawPile[(drawPile.length - 1)].id = (drawPile.length - 1);
+                    //console.log(drawPile.length - 1);
+                    //drawPile[(drawPile.length - 1)].id = (drawPile.length - 1);
                     console.log(drawPile[(drawPile.length - 1)]);
-                    pausecomp(1000);
                 }
             }
             /*for (var cards = 0; cards < drawPile.length; cards++) {
