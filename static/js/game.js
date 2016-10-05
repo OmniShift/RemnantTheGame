@@ -11,7 +11,7 @@ var kingdom = [0, 1, 2, 3];
 //order: 0=Mantle, 1=Mistral, 2=Vacuo, 3=Vale
 var playerByKingdom = [0,1,2,3];
 
-var nOfCards = [0,0,0,0,99];
+var nOfCards = [5,5,5,5,99];
 var kingdomPicArray = ['images/Atlas_Symbol.svg.png', 'images/Mistral_Symbol.svg.png', 'images/Vacuo_Symbol.svg.png', 'images/Vale_Symbol.svg.png'];
 var common = 4;
 var uncommon = 3;
@@ -81,7 +81,7 @@ var territoryShapeInfo = [
     //end of menagerie, rest is water
     [{x:20.5,y:18},{x:21,y:14},{x:25,y:13.5},{x:28.5,y:13.5},{x:28,y:16},{x:29,y:20},{x:25,y:20.5},{x:25.5,y:16.5}],
     [{x:21,y:14},{x:20.5,y:8},{x:25.5,y:7},{x:30,y:7.5},{x:30.5,y:10},{x:29,y:10.5},{x:28.5,y:13.5},{x:25,y:13.5},{x:25.5,y:10}],
-    [{x:30,y:7.5},{x:30.5,y:5},{x:34,y:4.5},{x:40,y:5},{x:39.5,y:9.5},{x:35,y:9},{x:30.5,y:10},{x:35,y:6.5}],
+    [{x:30,y:7.5},{x:30.5,y:5},{x:34,y:4.5},{x:40,y:5},{x:39.5,y:9.5},{x:39.5,y:19.5},{x:35,y:9},{x:30.5,y:10},{x:35,y:6.5}],
     [{x:39.5,y:9.5},{x:40,y:5},{x:41,y:4},{x:42.5,y:4.5},{x:43,y:7},{x:42,y:7.5},{x:42,y:8},{x:42.5,y:10},{x:49,y:10.5},{x:49.5,y:12},{x:47.5,y:13},{x:45.5,y:17},{x:42.5,y:15.5},{x:40.5,y:12},{x:41,y:10},{x:44.5,y:13}],
     [{x:43,y:7},{x:42.5,y:4.5},{x:42.5,y:3},{x:48,y:2.5},{x:53,y:4},{x:56,y:3.5},{x:58.5,y:5},{x:58,y:7},{x:55,y:7},{x:54,y:8},{x:53,y:7},{x:48,y:6.5},{x:50,y:4.5}],
     [{x:58,y:7},{x:58.5,y:5},{x:57,y:4},{x:57.5,y:3},{x:63,y:3},{x:65,y:4},{x:67,y:6.5},{x:67,y:10.5},{x:66.5,y:12.5},{x:65,y:13},{x:64.5,y:8.5},{x:63.5,y:8.5},{x:62.5,y:6.5},{x:61.5,y:6.5},{x:59.5,y:7.5},{x:64,y:5.5}],
@@ -351,10 +351,6 @@ $(document).ready(function () {
                     console.log(drawPile[(drawPile.length - 1)]);
                 }
             }
-            /*for (var cards = 0; cards < drawPile.length; cards++) {
-                drawPile[cards].id = (cards);
-                console.log(drawPile[cards]);
-            }*/
             function deckShuffle(array) {
                 var m = array.length, t, i;
                 while (m) {
