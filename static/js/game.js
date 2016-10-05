@@ -337,11 +337,14 @@ $(document).ready(function () {
                 console.log(cType);
                 for (var freq = 0; freq < cardInfo[cType].frequency1; freq++) {
                     drawPile.push(cardInfo[cType]);
-                    console.log(drawPile.length - 1);
                     //for some reason, neither this or the commented out code below create unique id numbers per card. Every card with the same name gets the same number :S
+                    /*console.log(drawPile.length - 1);
                     drawPile[(drawPile.length - 1)].id = (drawPile.length - 1);
-                    console.log(drawPile[(drawPile.length - 1)]);
+                    console.log(drawPile[(drawPile.length - 1)]);*/
                 }
+            }
+            for (var cards = 0; cards < drawPile.length; cards++) {
+                drawPile[cards].id = (cards);
             }
             function deckShuffle(array) {
                 var m = array.length, t, i;
@@ -354,9 +357,6 @@ $(document).ready(function () {
                 drawPile = array;
             }
             deckShuffle(drawPile);
-            /*for (var cards = 0; cards < drawPile.length; cards++) {
-                drawPile[cards].id = (cards + 1);
-            }*/
         }
 
         //deal cards
