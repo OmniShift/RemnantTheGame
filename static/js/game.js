@@ -303,6 +303,11 @@ $(document).ready(function () {
     var GRID = jsCookie.set('rtgLastGame');
     var UID = jsCookie.set('rtgUID');
     var pInGame = [0,0,0,0];
+    function pausecomp(ms) {
+        ms += new Date().getTime();
+        while (new Date() < ms){}
+    }
+
     socket.emit('get game data', GRID, UID);
     socket.on('return game data', function(roomID, playerIndex, pIDs, pCommander, pKingdom) {
         console.log('received game data');
@@ -334,19 +339,20 @@ $(document).ready(function () {
         var drawPile = [];
         if (playerNumber === 0) {
             for (var cType = 0; cType < cardInfo.length; cType++) {
-                //console.log(cType);
+                console.log(cType);
                 for (var freq = 0; freq < cardInfo[cType].frequency1; freq++) {
                     drawPile.push(cardInfo[cType]);
                     //for some reason, neither this or the commented out code below create unique id numbers per card. Every card with the same name gets the same number :S
-                    /*console.log(drawPile.length - 1);
+                    console.log(drawPile.length - 1);
                     drawPile[(drawPile.length - 1)].id = (drawPile.length - 1);
-                    console.log(drawPile[(drawPile.length - 1)]);*/
+                    console.log(drawPile[(drawPile.length - 1)]);
+                    pausecomp(100);
                 }
             }
-            for (var cards = 0; cards < drawPile.length; cards++) {
+            /*for (var cards = 0; cards < drawPile.length; cards++) {
                 drawPile[cards].id = (cards);
                 console.log(drawPile[cards]);
-            }
+            }*/
             function deckShuffle(array) {
                 var m = array.length, t, i;
                 while (m) {
