@@ -1,4 +1,4 @@
-var socket = io();
+﻿var socket = io();
 var jsCookie = Cookies.noConflict();
 
 //the following values are placeholders to be received from the server on page initialization
@@ -331,12 +331,13 @@ $(document).ready(function () {
     	}
 
     	//create deck
+        var drawPile = [];
         if (playerNumber === 0) {
-            var drawPile = [];
-            for (var i = 0; i < cardInfo.length; i++) {
-                for (var j = 0; j < cardInfo[i].frequency1; j++) {
-                    drawPile.push(cardInfo[i]);
-                    //drawPile[(drawPile.length - 1)].id = drawPile.length;
+            for (var cType = 0; cType < cardInfo.length; cType++) {
+                for (var freq = 0; freq < cardInfo[cType].frequency1; freq++) {
+                    drawPile.push(cardInfo[cType]);
+                    //for some reason, neither this or the commented out code below create unique id numbers per card. Every card with the same name gets the same number :S
+                    drawPile[(drawPile.length - 1)].id = (drawPile.length - 1);
                 }
             }
             function deckShuffle(array) {
@@ -350,36 +351,43 @@ $(document).ready(function () {
                 drawPile = array;
             }
             deckShuffle(drawPile);
-            for (var cards = 0; cards < drawPile.length; cards++) {
+            /*for (var cards = 0; cards < drawPile.length; cards++) {
                 drawPile[cards].id = (cards + 1);
-            }
+            }*/
         }
 
-    	//just temporary
-    	/*for (var cards = 0; cards < 5; cards++) {
-    		document.getElementsByClassName('cardImage')[cards].innerHTML = drawPile[cards].name;
-    	}*/
+        //deal cards
+        var pCards = [];
+        if (playerNumber === 0) {
+            var tempCards = [[],[],[],[]];
+            for (var cards = 0; cards < 5; cards++) {
+                for (var p = 0; p < 4; p++) {
+                    tempCards[p].push(drawPile[0]);
+                    drawPile.splice(0,1);
+                }
+		pCards.push(tempCards[playerNumber][cards]);
+		document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards].id + '. ' + pCards[cards].name;
+            }
+	    socket.emit('send dealt cards', roomID, tempCards);
+        }
+/*server-side code
+socket.on('send dealt cards', function(roomID, pCards) {
+	socket.broadcast.to(roomID).emit('initial hands', pCards);
+});
+*/
+    	socket.on('initial hands', function(tempCards) {
+    	    pCards = tempCards[playerNumber];
+    	    console.log(pCards);
+    	})
 
     	nOfCards[4] = drawPile.length;
     	var stageOfWar = 1;
-    	//initial draw pile, discard pile, and card magnification area
+    	//initial draw pile (and optionally discard pile/card magnification area)
     	document.getElementById('drawPile').innerHTML = '<div style="font-size: 2em">' + nOfCards[4] + '</div><BR><div style="font-size: 1.2em">(Stage ' + stageOfWar + ')</div>';
 
     	//initial player info
     	document.getElementById('kingdomImage').innerHTML = '<img src="' + kingdomPicArray[kingdom[playerNumber]] + '" height="' + (document.getElementById('playerCards').offsetHeight/100*75) + '">';
     	document.getElementById('commanderName').innerHTML = commName[playerNumber];
-
-        //deal cards
-        var pHands = [[],[],[],[]]
-        if (playerNumber === 0) {
-            for (var hand = 0; hand < 5; hand++) {
-                for (var p = 0; p < 4; p++) {
-                    pHands[p].push(drawPile[0]);
-                    drawPile.splice(0,1);
-                }
-                document.getElementsByClassName('cardImage')[hand].innerHTML = pHands[playerNumber][hand].id + '. ' + pHands[playerNumber][hand].name;
-            }
-        }
 
     	//initializing territory/border shapes and positions
     	var canvas = document.getElementById('gameBoardCanvas');
