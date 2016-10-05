@@ -213,6 +213,145 @@ for (var i = 38; i <= 41; i++) {
 for (var i = 42; i <= 137; i++) {
     territoryStateInfo.push({type:0,occupiedByPlayer:-1,occupiedByUnits:[],naturalHazardIDs:[]})
 }
+//for (var dummy = 0; dummy < 1; dummy++) {
+    territoryStateInfo[0].adjacentTer = [1,42,60,61,62];
+    territoryStateInfo[1].adjacentTer = [0,3,4,5,42,54,60];
+    territoryStateInfo[2].adjacentTer = [3,42,43,44,45,51,52];
+    territoryStateInfo[3].adjacentTer = [1,2,52,54];
+    territoryStateInfo[4].adjacentTer = [1,6,53,54,55];
+    territoryStateInfo[5].adjacentTer = [1,6,7,59,60];
+    territoryStateInfo[6].adjacentTer = [4,5,55,56,57];
+    territoryStateInfo[7].adjacentTer = [5,57,58,59];
+    territoryStateInfo[8].adjacentTer = [9,10,59,61,65,69];
+    territoryStateInfo[9].adjacentTer = [8,10,12,58,59];
+    territoryStateInfo[10].adjacentTer = [8,9,11,12,69,70];
+    territoryStateInfo[11].adjacentTer = [10,12,73,75,77,79];
+    territoryStateInfo[12].adjacentTer = [9,10,11,13,14,58,79];
+    territoryStateInfo[13].adjacentTer = [12,14,15,58];
+    territoryStateInfo[14].adjacentTer = [12,13,15,79,80];
+    territoryStateInfo[15].adjacentTer = [13,14,16,17,57,58,80,81];
+    territoryStateInfo[16].adjacentTer = [15,17,18,56,57];
+    territoryStateInfo[17].adjacentTer = [15,16,18,19,81,86,87];
+    territoryStateInfo[18].adjacentTer = [16,17,19,20,21,55,56];
+    territoryStateInfo[19].adjacentTer = [17,18,21,87,89];
+    territoryStateInfo[20].adjacentTer = [18,21,55];
+    territoryStateInfo[21].adjacentTer = [18,19,20,92];
+    territoryStateInfo[22].adjacentTer = [50,53,92];
+    territoryStateInfo[23].adjacentTer = [80,81,82];
+    territoryStateInfo[24].adjacentTer = [84,85,123];
+    territoryStateInfo[25].adjacentTer = [26,28,29,30,45,46];
+    territoryStateInfo[26].adjacentTer = [25,27,30,46,47];
+    territoryStateInfo[27].adjacentTer = [26,30,47,48,49];
+    territoryStateInfo[28].adjacentTer = [25,29,45,51,52,53];
+    territoryStateInfo[29].adjacentTer = [25,28,30,50,53];
+    territoryStateInfo[30].adjacentTer = [25,26,27,29,49,50];
+    territoryStateInfo[31].adjacentTer = [32,88,119,120,121,122];
+    territoryStateInfo[32].adjacentTer = [31,33,35,88,89,90,91];
+    territoryStateInfo[33].adjacentTer = [32,34,90,91,93,94,95];
+    territoryStateInfo[34].adjacentTer = [33,35,90,95,96,97,105,107];
+    territoryStateInfo[35].adjacentTer = [32,34,36,37,90,107,119];
+    territoryStateInfo[36].adjacentTer = [35,37,115,117,118,119];
+    territoryStateInfo[37].adjacentTer = [35,36,107,109,112,114,115];
+    territoryStateInfo[38].adjacentTer = [39,117,118,120,127,128];
+    territoryStateInfo[39].adjacentTer = [38,40,41,116,117,129];
+    territoryStateInfo[40].adjacentTer = [39,41,116,131,132];
+    territoryStateInfo[41].adjacentTer = [39,40,129,130,131];
+    territoryStateInfo[42].adjacentTer = [0,1,2,43,62];
+    territoryStateInfo[43].adjacentTer = [2,42,44,62];
+    territoryStateInfo[44].adjacentTer = [2,43,45];
+    territoryStateInfo[45].adjacentTer = [2,25,28,44,46,51];
+    territoryStateInfo[46].adjacentTer = [25,26,45,47];
+    territoryStateInfo[47].adjacentTer = [26,27,46,48,99];
+    territoryStateInfo[48].adjacentTer = [27,47,49,94,96,98,99];
+    territoryStateInfo[49].adjacentTer = [27,30,48,50,93,94];
+    territoryStateInfo[50].adjacentTer = [22,29,30,49,53,92,93];
+    territoryStateInfo[51].adjacentTer = [2,28,45,52];
+    territoryStateInfo[52].adjacentTer = [2,3,28,51,53,54];
+    territoryStateInfo[53].adjacentTer = [4,22,28,29,50,52,54];
+    territoryStateInfo[54].adjacentTer = [1,3,4,52,53];
+    territoryStateInfo[55].adjacentTer = [4,6,18,20];
+    territoryStateInfo[56].adjacentTer = [6,16,18,55,57];
+    territoryStateInfo[57].adjacentTer = [6,7,15,16,56,58];
+    territoryStateInfo[58].adjacentTer = [7,9,12,13,15,57,59];
+    territoryStateInfo[59].adjacentTer = [5,7,8,9,58,60,61];
+    territoryStateInfo[60].adjacentTer = [0,1,5,59,61];
+    territoryStateInfo[61].adjacentTer = [0,8,59,60,62,64,65];
+    territoryStateInfo[62].adjacentTer = [0,42,43,61,63,64];
+    territoryStateInfo[63].adjacentTer = [62,64,66];
+    territoryStateInfo[64].adjacentTer = [61,62,63,65,66];
+    territoryStateInfo[65].adjacentTer = [8,61,64,66,67,68,69];
+    territoryStateInfo[66].adjacentTer = [63,64,65,67];
+    territoryStateInfo[67].adjacentTer = [65,66,68];
+    territoryStateInfo[68].adjacentTer = [65,67,69,70,71];
+    territoryStateInfo[69].adjacentTer = [8,10,65,68,70];
+    territoryStateInfo[70].adjacentTer = [10,68,69,71,72,73];
+    territoryStateInfo[71].adjacentTer = [68,70,72];
+    territoryStateInfo[72].adjacentTer = [70,71,73,74];
+    territoryStateInfo[73].adjacentTer = [11,70,72,74,75];
+    territoryStateInfo[74].adjacentTer = [72,73,75];
+    territoryStateInfo[75].adjacentTer = [11,73,74,76,77];
+    territoryStateInfo[76].adjacentTer = [75,78];
+    territoryStateInfo[77].adjacentTer = [11,75,78,80];
+    territoryStateInfo[78].adjacentTer = [76,77,80,83];
+    territoryStateInfo[79].adjacentTer = [11,12,14,80];
+    territoryStateInfo[80].adjacentTer = [14,15,23,77,78,79,81,82,83];
+    territoryStateInfo[81].adjacentTer = [15,17,23,80,82,86];
+    territoryStateInfo[82].adjacentTer = [23,80,81,83,84,86];
+    territoryStateInfo[83].adjacentTer = [78,80,82,84,85];
+    territoryStateInfo[84].adjacentTer = [24,82,83,85,86,123];
+    territoryStateInfo[85].adjacentTer = [24,83,84,123];
+    territoryStateInfo[86].adjacentTer = [17,81,82,84,87,122];
+    territoryStateInfo[87].adjacentTer = [17,19,86,88,89,122];
+    territoryStateInfo[88].adjacentTer = [31,32,87,89,122];
+    territoryStateInfo[89].adjacentTer = [19,32,87,88,91];
+    territoryStateInfo[90].adjacentTer = [32,33,34,35,107,119];
+    territoryStateInfo[91].adjacentTer = [32,33,89,92,93];
+    territoryStateInfo[92].adjacentTer = [21,22,50,91,93];
+    territoryStateInfo[93].adjacentTer = [33,49,50,91,92,94];
+    territoryStateInfo[94].adjacentTer = [33,48,49,93,95,96];
+    territoryStateInfo[95].adjacentTer = [33,34,94,96];
+    territoryStateInfo[96].adjacentTer = [34,48,94,95,97,98];
+    territoryStateInfo[97].adjacentTer = [34,96,98,100,101,105];
+    territoryStateInfo[98].adjacentTer = [48,96,97,99,100];
+    territoryStateInfo[99].adjacentTer = [47,48,98,100];
+    territoryStateInfo[100].adjacentTer = [97,98,99,101];
+    territoryStateInfo[101].adjacentTer = [97,100,102,103,104,105];
+    territoryStateInfo[102].adjacentTer = [101,103];
+    territoryStateInfo[103].adjacentTer = [101,102,104,111];
+    territoryStateInfo[104].adjacentTer = [101,103,105,106,110,111];
+    territoryStateInfo[105].adjacentTer = [34,97,101,104,106,107];
+    territoryStateInfo[106].adjacentTer = [104,105,107,108,110];
+    territoryStateInfo[107].adjacentTer = [34,35,37,105,106,108,109];
+    territoryStateInfo[108].adjacentTer = [106,107,109,110];
+    territoryStateInfo[109].adjacentTer = [37,107,108,110,112];
+    territoryStateInfo[110].adjacentTer = [104,106,108,109,111,112];
+    territoryStateInfo[111].adjacentTer = [103,104,110,112,113];
+    territoryStateInfo[112].adjacentTer = [37,109,110,111,113,114];
+    territoryStateInfo[113].adjacentTer = [111,112,114,133];
+    territoryStateInfo[114].adjacentTer = [37,112,113,115,132,133];
+    territoryStateInfo[115].adjacentTer = [36,37,114,116,117,132];
+    territoryStateInfo[116].adjacentTer = [39,40,115,117,132];
+    territoryStateInfo[117].adjacentTer = [38,39,116,118];
+    territoryStateInfo[118].adjacentTer = [36,38,117,119,120];
+    territoryStateInfo[119].adjacentTer = [31,35,36,118,120];
+    territoryStateInfo[120].adjacentTer = [31,38,118,119,121,126,127];
+    territoryStateInfo[121].adjacentTer = [31,120,122,124,125,126];
+    territoryStateInfo[122].adjacentTer = [31,86,87,88,121,123,124];
+    territoryStateInfo[123].adjacentTer = [24,84,85,122,124,125];
+    territoryStateInfo[124].adjacentTer = [121,122,123,125];
+    territoryStateInfo[125].adjacentTer = [121,123,124,126];
+    territoryStateInfo[126].adjacentTer = [120,121,125,127,128];
+    territoryStateInfo[127].adjacentTer = [38,120,126,128];
+    territoryStateInfo[128].adjacentTer = [38,126,127,129];
+    territoryStateInfo[129].adjacentTer = [39,41,128,130];
+    territoryStateInfo[130].adjacentTer = [41,129,131,135];
+    territoryStateInfo[131].adjacentTer = [40,41,130,132,134,135];
+    territoryStateInfo[132].adjacentTer = [40,114,115,116,131];
+    territoryStateInfo[133].adjacentTer = [113,114,132,134,136];
+    territoryStateInfo[134].adjacentTer = [131,132,133,135,136];
+    territoryStateInfo[135].adjacentTer = [130,131,134,136];
+    territoryStateInfo[136].adjacentTer = [133,134,135];
+//}
 
 //affiliation: 0=none, 1=mantle, 2=mistral, 3=vacuo, 4=vale
 //(transport)size: 0=normal, 1=large, 2=huge, 3=colossal, 99=immovable (structure)
@@ -303,10 +442,10 @@ $(document).ready(function () {
     var GRID = jsCookie.set('rtgLastGame');
     var UID = jsCookie.set('rtgUID');
     var pInGame = [0,0,0,0];
-    function pausecomp(ms) {
+    /*function pausecomp(ms) {
         ms += new Date().getTime();
         while (new Date() < ms){}
-    }
+    }*/
 
     socket.emit('get game data', GRID, UID);
     socket.on('return game data', function(roomID, playerIndex, pIDs, pCommander, pKingdom) {
