@@ -346,7 +346,7 @@ $(document).ready(function () {
                     console.log(drawPile.length - 1);
                     drawPile[(drawPile.length - 1)].id = (drawPile.length - 1);
                     console.log(drawPile[(drawPile.length - 1)]);
-                    pausecomp(100);
+                    pausecomp(1000);
                 }
             }
             /*for (var cards = 0; cards < drawPile.length; cards++) {
