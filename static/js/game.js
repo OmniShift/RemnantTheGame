@@ -340,6 +340,7 @@ $(document).ready(function () {
                     drawPile[(drawPile.length - 1)].id = (drawPile.length - 1);
                 }
             }
+            console.log(drawPile);
             function deckShuffle(array) {
                 var m = array.length, t, i;
                 while (m) {
