@@ -388,7 +388,7 @@ io.on('connection', function (socket) {
             var pCommander = res.rows[0].playercommname;
             var pKingdom = res.rows[0].playerkingdompref;
             logger.log('returning game data');
-            socket.emit('return game data', playerIndex, pIDs, pCommander, pKingdom);
+            socket.emit('return game data', roomID, playerIndex, pIDs, pCommander, pKingdom);
         });
     })
 

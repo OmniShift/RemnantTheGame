@@ -304,7 +304,7 @@ $(document).ready(function () {
     var UID = jsCookie.set('rtgUID');
     var pInGame = [0,0,0,0];
     socket.emit('get game data', GRID, UID);
-    socket.on('return game data', function(playerIndex, pIDs, pCommander, pKingdom) {
+    socket.on('return game data', function(roomID, playerIndex, pIDs, pCommander, pKingdom) {
         console.log('received game data');
         playerNumber = playerIndex;
         //pInGame[playerNumber] = 2;
