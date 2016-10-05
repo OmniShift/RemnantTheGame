@@ -334,13 +334,14 @@ $(document).ready(function () {
         var drawPile = [];
         if (playerNumber === 0) {
             for (var cType = 0; cType < cardInfo.length; cType++) {
+                console.log(cType);
                 for (var freq = 0; freq < cardInfo[cType].frequency1; freq++) {
                     drawPile.push(cardInfo[cType]);
                     //for some reason, neither this or the commented out code below create unique id numbers per card. Every card with the same name gets the same number :S
                     drawPile[(drawPile.length - 1)].id = (drawPile.length - 1);
+                    console.log(drawPile[(drawPile.length - 1)]);
                 }
             }
-            console.log(drawPile);
             function deckShuffle(array) {
                 var m = array.length, t, i;
                 while (m) {
