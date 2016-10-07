@@ -504,6 +504,8 @@ $(document).ready(function () {
 
         //deal cards
         var pCards = [];
+        console.log(allCards);
+        console.log(allCards[0]);
         if (playerNumber === 0 && allCards[0][0] === -1) {
             var tempCards = [[],[],[],[]];
             for (var cards = 0; cards < 5; cards++) {
