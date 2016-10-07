@@ -393,10 +393,10 @@ io.on('connection', function (socket) {
             socket.emit('return game data', roomID, playerIndex, pIDs, pCommander, pKingdom, pCards);
         });
     })
-    socket.on('send dealt cards', function(roomID, pCards) {
+    socket.on('send dealt cards', function(roomID, allCards) {
         pool.query(
-            'UPDATE "GRIDs" SET status = 1, playerid = $1, playerready = $2, playercommname = $3, playerkingdompref = $4 WHERE idname = $5;', [
-                pidOrder, [0,0,0,0], playerCommOrder, playerKingdomOrder, roomID
+            'UPDATE "GRIDs" SET playercards = $1 WHERE idname = $2;', [
+                allCards, roomID
             ], function (err, data) {
                 if (err) {
                     throw new Error('Error adding ' + UID + ' to game room ' + roomID);
