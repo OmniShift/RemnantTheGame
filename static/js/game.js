@@ -536,6 +536,8 @@ $(document).ready(function () {
 	        socket.emit('send dealt cards', roomID, tempHands);
         } else if (playerNumber === 0) {
             for (var cards = 0; cards < allCards[playerNumber].length; cards++) {
+                //referenceCards[pCards] is undefined
+                console.log(referenceCards);
                 console.log(referenceCards[pCards]);
                 document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards] + '. ' + referenceCards[pCards].name;
             }
