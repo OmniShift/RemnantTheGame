@@ -478,17 +478,32 @@ $(document).ready(function () {
 
     	//create deck
         var drawPile = [];
-        var count = 0;
+        var cardPile = [];
+        var count = -1;
+        for (var cType = 0; cType < cardInfo.length; cType++) {
+            for (var freq = 0; freq < cardInfo[cType].frequency1; freq++) {
+                var card = JSON.parse(JSON.stringify(cardInfo[cType]));
+                card.id = count++;
+                card.stage = 1;
+                cardPile.push(card);
+            }
+            for (var freq = 0; freq < cardInfo[cType].frequency2; freq++) {
+                var card = JSON.parse(JSON.stringify(cardInfo[cType]));
+                card.id = count++;
+                card.stage = 2;
+                cardPile.push(card);
+            }
+            for (var freq = 0; freq < cardInfo[cType].frequency3; freq++) {
+                var card = JSON.parse(JSON.stringify(cardInfo[cType]));
+                card.id = count++;
+                card.stage = 3;
+                cardPile.push(card);
+            }
+        }
         if (playerNumber === 0) {
-            for (var cType = 0; cType < cardInfo.length; cType++) {
-                //console.log(cType);
-                for (var freq = 0; freq < cardInfo[cType].frequency1; freq++) {
-                    var card = JSON.parse(JSON.stringify(cardInfo[cType]));
-                    card.id = count++;
-                    drawPile.push(card);
-                    //for some reason, neither this or the commented out code below create unique id numbers per card. Every card with the same name gets the same number :S
-                    //console.log(drawPile.length - 1);
-                    //drawPile[(drawPile.length - 1)].id = (drawPile.length - 1);
+            for (var i = 0; i < cardPile.length; i++) {
+                if (cardPile[i].stage === 1) {
+                    drawPile.push(cardPile[i].id);
                 }
             }
             function deckShuffle(array) {
