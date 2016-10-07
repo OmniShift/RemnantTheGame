@@ -213,7 +213,7 @@ for (var i = 38; i <= 41; i++) {
 for (var i = 42; i <= 137; i++) {
     territoryStateInfo.push({type:0,occupiedByPlayer:-1,occupiedByUnits:[],naturalHazardIDs:[]})
 }
-//for (var dummy = 0; dummy < 1; dummy++) {
+//for (var adjacentTerritories = 0; adjacentTerritories < 1; adjacentTerritories++) {
     territoryStateInfo[0].adjacentTer = [1,42,60,61,62];
     territoryStateInfo[1].adjacentTer = [0,3,4,5,42,54,60];
     territoryStateInfo[2].adjacentTer = [3,42,43,44,45,51,52];
@@ -437,6 +437,17 @@ var cardInfo = [
     {name:'Evolution of Warfare',frequency1:1,frequency2:1,frequency3:1}
 ];
 
+function deckShuffle(array) {
+    var m = array.length, t, i;
+    while (m) {
+        i = Math.floor(Math.random() * m--);
+        t = array[m];
+        array[m] = array[i];
+        array[i] = t;
+    }
+    drawPile = array;
+}
+
 $(document).ready(function () {
 	document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
     var GRID = jsCookie.set('rtgLastGame');
@@ -462,8 +473,6 @@ $(document).ready(function () {
         console.log(commName);
         console.log(kingdom);
         console.log(playerByKingdom);
-        console.log(allCards);
-        console.log(allCards[0]);
 
     	//create 3 divs, 1 for each player in order after the client's player's turn
     	var tempPlayerNumber = 0;
@@ -477,44 +486,36 @@ $(document).ready(function () {
     	}
 
     	//create deck
+        //referenceCards contains all unique cards with info and id for reference
+        //drawPile contains all drawable cards by reference id
         var drawPile = [];
-        var cardPile = [];
+        var referenceCards = [];
         var count = -1;
         for (var cType = 0; cType < cardInfo.length; cType++) {
             for (var freq = 0; freq < cardInfo[cType].frequency1; freq++) {
                 var card = JSON.parse(JSON.stringify(cardInfo[cType]));
                 card.id = count++;
                 card.stage = 1;
-                cardPile.push(card);
+                referenceCards.push(card);
             }
             for (var freq = 0; freq < cardInfo[cType].frequency2; freq++) {
                 var card = JSON.parse(JSON.stringify(cardInfo[cType]));
                 card.id = count++;
                 card.stage = 2;
-                cardPile.push(card);
+                referenceCards.push(card);
             }
             for (var freq = 0; freq < cardInfo[cType].frequency3; freq++) {
                 var card = JSON.parse(JSON.stringify(cardInfo[cType]));
                 card.id = count++;
                 card.stage = 3;
-                cardPile.push(card);
+                referenceCards.push(card);
             }
         }
         if (playerNumber === 0) {
-            for (var i = 0; i < cardPile.length; i++) {
-                if (cardPile[i].stage === 1) {
-                    drawPile.push(cardPile[i].id);
+            for (var i = 0; i < referenceCards.length; i++) {
+                if (referenceCards[i].stage === 1) {
+                    drawPile.push(referenceCards[i].id);
                 }
-            }
-            function deckShuffle(array) {
-                var m = array.length, t, i;
-                while (m) {
-                    i = Math.floor(Math.random() * m--);
-                    t = array[m];
-                    array[m] = array[i];
-                    array[i] = t;
-                }
-                drawPile = array;
             }
             deckShuffle(drawPile);
         }
@@ -529,13 +530,13 @@ $(document).ready(function () {
                     drawPile.splice(0,1);
                 }
         		pCards.push(tempCards[playerNumber][cards]);
-        		document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards].id + '. ' + pCards[cards].name;
+        		document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards] + '. ' + referenceCards[pCards].name;
             }
             console.log(tempCards);
 	        socket.emit('send dealt cards', roomID, tempCards);
         } else if (playerNumber === 0) {
             for (var cards = 0; cards < allCards[playerNumber].length; cards++) {
-                document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards].id + '. ' + pCards[cards].name;
+                document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards] + '. ' + referenceCards[pCards].name;
             }
         }
 
