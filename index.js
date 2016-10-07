@@ -394,6 +394,7 @@ io.on('connection', function (socket) {
         });
     })
     socket.on('send dealt cards', function(roomID, allCards) {
+        logger.log(allCards);
         pool.query(
             'UPDATE "GRIDs" SET playercards = $1 WHERE idname = $2;', [
                 allCards, roomID
