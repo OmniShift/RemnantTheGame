@@ -535,11 +535,12 @@ $(document).ready(function () {
             console.log(tempHands);
 	        socket.emit('send dealt cards', roomID, tempHands);
         } else if (playerNumber === 0) {
+            pCards = allCards[playerNumber];
             for (var cards = 0; cards < allCards[playerNumber].length; cards++) {
                 //referenceCards[pCards] is undefined
                 console.log(referenceCards);
-                console.log(referenceCards[pCards]);
-                document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards] + '. ' + referenceCards[pCards].name;
+                console.log(referenceCards[pCards[cards]]);
+                document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards] + '. ' + referenceCards[pCards[cards]].name;
             }
         }
 
