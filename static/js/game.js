@@ -462,6 +462,8 @@ $(document).ready(function () {
         console.log(commName);
         console.log(kingdom);
         console.log(playerByKingdom);
+        console.log(allCards);
+        console.log(allCards[0]);
 
     	//create 3 divs, 1 for each player in order after the client's player's turn
     	var tempPlayerNumber = 0;
@@ -504,13 +506,11 @@ $(document).ready(function () {
 
         //deal cards
         var pCards = [];
-        console.log(allCards);
-        console.log(allCards[0]);
         if (playerNumber === 0 && allCards[0][0] === -1) {
             var tempCards = [[],[],[],[]];
             for (var cards = 0; cards < 5; cards++) {
                 for (var p = 0; p < 4; p++) {
-                    tempCards[p][0] = drawPile[0];
+                    tempCards[p].push(drawPile[0]);
                     drawPile.splice(0,1);
                 }
         		pCards.push(tempCards[playerNumber][cards]);
