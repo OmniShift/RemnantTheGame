@@ -518,6 +518,10 @@ $(document).ready(function () {
             }
             console.log(tempCards);
 	        socket.emit('send dealt cards', roomID, tempCards);
+        } else if (playerNumber === 0) {
+            for (var cards = 0; cards < allCards[playerNumber].length; cards++) {
+                document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards].id + '. ' + pCards[cards].name;
+            }
         }
 
     	nOfCards[4] = drawPile.length;

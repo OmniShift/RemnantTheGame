@@ -399,10 +399,10 @@ io.on('connection', function (socket) {
                 allCards, roomID
             ], function (err, data) {
                 if (err) {
-                    throw new Error('Error adding ' + UID + ' to game room ' + roomID);
+                    throw new Error('Error adding player cards to game room ' + roomID);
                 }
         });
-        socket.broadcast.to(roomID).emit('initial hands', pCards);
+        socket.broadcast.to(roomID).emit('initial hands', allCards);
     });
 
     socket.on('disconnect', function () {
