@@ -11,7 +11,7 @@ var kingdom = [0, 1, 2, 3];
 //order: 0=Mantle, 1=Mistral, 2=Vacuo, 3=Vale
 var playerByKingdom = [0,1,2,3];
 
-var nOfCards = [5,5,5,5,99];
+var nOfCards = [-1,-1,-1,-1,-99];
 var kingdomPicArray = ['images/Atlas_Symbol.svg.png', 'images/Mistral_Symbol.svg.png', 'images/Vacuo_Symbol.svg.png', 'images/Vale_Symbol.svg.png'];
 var common = 4;
 var uncommon = 3;
@@ -448,7 +448,7 @@ $(document).ready(function () {
     }*/
 
     socket.emit('get game data', GRID, UID);
-    socket.on('return game data', function(roomID, playerIndex, pIDs, pCommander, pKingdom) {
+    socket.on('return game data', function(roomID, playerIndex, pIDs, pCommander, pKingdom, allCards) {
         console.log('received game data');
         playerNumber = playerIndex;
         //pInGame[playerNumber] = 2;
@@ -506,26 +506,23 @@ $(document).ready(function () {
         //deal cards
         var pCards = [];
         if (playerNumber === 0) {
-            var tempCards = [[],[],[],[]];
+            //var tempCards = [[],[],[],[]];
             for (var cards = 0; cards < 5; cards++) {
                 for (var p = 0; p < 4; p++) {
-                    tempCards[p].push(drawPile[0]);
-                    drawPile.splice(0,1);
+                    if (allCards[p][0] === -1) {
+                        allCards[p][0] = drawPile[0];
+                        drawPile.splice(0,1);
+                    } else {
+                        allCards[p].push(drawPile[0]);
+                        drawPile.splice(0,1);
+                    }
                 }
-		pCards.push(tempCards[playerNumber][cards]);
-		document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards].id + '. ' + pCards[cards].name;
+        		pCards.push(allCards[playerNumber][cards]);
+        		document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards].id + '. ' + pCards[cards].name;
             }
-	    socket.emit('send dealt cards', roomID, tempCards);
+            console.log(allCards);
+	        socket.emit('send dealt cards', roomID, allCards);
         }
-/*server-side code
-socket.on('send dealt cards', function(roomID, pCards) {
-	socket.broadcast.to(roomID).emit('initial hands', pCards);
-});
-*/
-    	socket.on('initial hands', function(tempCards) {
-    	    pCards = tempCards[playerNumber];
-    	    console.log(pCards);
-    	})
 
     	nOfCards[4] = drawPile.length;
     	var stageOfWar = 1;
@@ -653,4 +650,11 @@ socket.on('send dealt cards', function(roomID, pCards) {
     		draw(highlight);
     	}
     });
+    socket.on('initial hands', function(allCards) {
+        pCards = allCards[playerNumber];
+        console.log(pCards);
+        for (var cards = 0; cards < 5; cards++) {
+            document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards].id + '. ' + pCards[cards].name;
+        }
+    })
 });

@@ -142,13 +142,14 @@ io.on('connection', function (socket) {
                 if (hits === 0) {
                     logger.log('Game room ' + gameRoomID + ' available. Inserting it into database');
                     pool.query(
-                        'INSERT INTO "GRIDs" (idname, status, playerid, playerready, playercommname, playerkingdompref) VALUES ($1, $2, $3, $4, $5, $6)', [
+                        'INSERT INTO "GRIDs" (idname, status, playerid, playerready, playercommname, playerkingdompref, playercards) VALUES ($1, $2, $3, $4, $5, $6, $7)', [
                             gameRoomID,
                             0,
                             ['', '', '', ''],
                             [0, 0, 0, 0],
                             ['', '', '', ''],
-                            [0, 0, 0, 0]
+                            [0, 0, 0, 0],
+                            [-1, -1, -1, -1,-99]
                         ],
                         function (err, data) {
                             if (err) {
@@ -381,16 +382,28 @@ io.on('connection', function (socket) {
     //var playerIndex = -99;
 
     socket.on('get game data', function (roomID, UID) {
-        logger.log('game data request received');
+        logger.log('game data request for room ' + roomID + ' received');
         pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
             var playerIndex = res.rows[0].playerid.indexOf(UID);
             var pIDs = res.rows[0].playerid;
             var pCommander = res.rows[0].playercommname;
             var pKingdom = res.rows[0].playerkingdompref;
-            logger.log('returning game data');
-            socket.emit('return game data', roomID, playerIndex, pIDs, pCommander, pKingdom);
+            var pCards = res.rows[0].playercards;
+            logger.log('returning game data of room ' + roomID);
+            socket.emit('return game data', roomID, playerIndex, pIDs, pCommander, pKingdom, pCards);
         });
     })
+    socket.on('send dealt cards', function(roomID, pCards) {
+        pool.query(
+            'UPDATE "GRIDs" SET status = 1, playerid = $1, playerready = $2, playercommname = $3, playerkingdompref = $4 WHERE idname = $5;', [
+                pidOrder, [0,0,0,0], playerCommOrder, playerKingdomOrder, roomID
+            ], function (err, data) {
+                if (err) {
+                    throw new Error('Error adding ' + UID + ' to game room ' + roomID);
+                }
+        });
+        socket.broadcast.to(roomID).emit('initial hands', pCards);
+    });
 
     socket.on('disconnect', function () {
         logger.log('User ' + userID + ' disconnected');
