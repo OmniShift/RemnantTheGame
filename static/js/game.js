@@ -523,19 +523,20 @@ $(document).ready(function () {
         //deal cards
         var pCards = [];
         if (playerNumber === 0 && allCards[0][0] === -1) {
-            var tempCards = [[],[],[],[]];
+            var tempHands = [[],[],[],[]];
             for (var cards = 0; cards < 5; cards++) {
                 for (var p = 0; p < 4; p++) {
-                    tempCards[p].push(drawPile[0]);
+                    tempHands[p].push(drawPile[0]);
                     drawPile.splice(0,1);
                 }
-        		pCards.push(tempCards[playerNumber][cards]);
+        		pCards.push(tempHands[playerNumber][cards]);
         		document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards] + '. ' + referenceCards[pCards].name;
             }
-            console.log(tempCards);
-	        socket.emit('send dealt cards', roomID, tempCards);
+            console.log(tempHands);
+	        socket.emit('send dealt cards', roomID, tempHands);
         } else if (playerNumber === 0) {
             for (var cards = 0; cards < allCards[playerNumber].length; cards++) {
+                console.log(referenceCards[pCards]);
                 document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards] + '. ' + referenceCards[pCards].name;
             }
         }
@@ -666,8 +667,8 @@ $(document).ready(function () {
     		draw(highlight);
     	}
     });
-    socket.on('initial hands', function(tempCards) {
-        pCards = tempCards[playerNumber];
+    socket.on('initial hands', function(tempHands) {
+        pCards = tempHands[playerNumber];
         console.log(pCards);
         for (var cards = 0; cards < 5; cards++) {
             document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards].id + '. ' + pCards[cards].name;
