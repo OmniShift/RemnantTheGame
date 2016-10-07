@@ -487,7 +487,6 @@ $(document).ready(function () {
                     //for some reason, neither this or the commented out code below create unique id numbers per card. Every card with the same name gets the same number :S
                     //console.log(drawPile.length - 1);
                     //drawPile[(drawPile.length - 1)].id = (drawPile.length - 1);
-                    console.log(drawPile[(drawPile.length - 1)]);
                 }
             }
             function deckShuffle(array) {
@@ -505,23 +504,18 @@ $(document).ready(function () {
 
         //deal cards
         var pCards = [];
-        if (playerNumber === 0) {
-            //var tempCards = [[],[],[],[]];
+        if (playerNumber === 0 && allCards[0][0] === -1) {
+            var tempCards = [[],[],[],[]];
             for (var cards = 0; cards < 5; cards++) {
                 for (var p = 0; p < 4; p++) {
-                    if (allCards[p][0] === -1) {
-                        allCards[p][0] = drawPile[0];
-                        drawPile.splice(0,1);
-                    } else {
-                        allCards[p].push(drawPile[0]);
-                        drawPile.splice(0,1);
-                    }
+                    tempCards[p][0] = drawPile[0];
+                    drawPile.splice(0,1);
                 }
-        		pCards.push(allCards[playerNumber][cards]);
+        		pCards.push(tempCards[playerNumber][cards]);
         		document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards].id + '. ' + pCards[cards].name;
             }
-            console.log(allCards);
-	        socket.emit('send dealt cards', roomID, allCards);
+            console.log(tempCards);
+	        socket.emit('send dealt cards', roomID, tempCards);
         }
 
     	nOfCards[4] = drawPile.length;
@@ -650,8 +644,8 @@ $(document).ready(function () {
     		draw(highlight);
     	}
     });
-    socket.on('initial hands', function(allCards) {
-        pCards = allCards[playerNumber];
+    socket.on('initial hands', function(tempCards) {
+        pCards = tempCards[playerNumber];
         console.log(pCards);
         for (var cards = 0; cards < 5; cards++) {
             document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards].id + '. ' + pCards[cards].name;
