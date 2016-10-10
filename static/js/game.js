@@ -559,7 +559,7 @@ $(document).ready(function () {
             draw(highlight);
         }
     var tempCount = 0
-    while (gameStarted === false) {
+    while (gameStarted == false) {
         tempCount++;
         console.log(tempCount);
         socket.emit('client ready', GRID, UID);
