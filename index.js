@@ -398,7 +398,7 @@ io.on('connection', function (socket) {
                     tempReady++;
                 }
             }
-            if (tempReady === 4 && playerIndex === 0) {
+            if (/*tempReady === 4 && */playerIndex === 0) {
                 socket.emit('all clients ready', roomID, playerIndex, pIDs, pCommander, pKingdom, pCards);
                 pool.query(
                     'UPDATE "GRIDs" SET playerready = $1 WHERE idname = $2;', [
@@ -409,8 +409,8 @@ io.on('connection', function (socket) {
                         }
                 });
             } else {
-                //temporary ready check
-                socket.emit('all clients ready', roomID, playerIndex, pIDs, pCommander, pKingdom, pCards);
+                /*temporary ready check
+                socket.emit('all clients ready', roomID, playerIndex, pIDs, pCommander, pKingdom, pCards);*/
                 pool.query(
                     'UPDATE "GRIDs" SET playerready[$1] = 2 WHERE idname = $2;', [
                         playerIndex, roomID

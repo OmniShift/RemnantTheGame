@@ -630,7 +630,7 @@ $(document).ready(function () {
             var tempCardPiles = [JSON.stringify(drawPile),JSON.stringify(tempHands[0]),'','',JSON.stringify(tempHands[1]),'','',JSON.stringify(tempHands[2]),'','',JSON.stringify(tempHands[3]),'',''];
             socket.emit('share game data', roomID, tempHands, tempCardPiles);
         } else {
-            for (var p = 0; p < 5; p++) {
+            for (var p = 0; p < 4; p++) {
                 nOfCards[p] = allHands[p].length;
                 console.log(nOfCards);
                 if (document.getElementById('player' + p + 'Cards') !== null) {
