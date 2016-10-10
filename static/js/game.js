@@ -556,12 +556,13 @@ $(document).ready(function () {
         }
     var tempCount = 0
     var readyInterval = setInterval(function(){
-        readyIntervalFunc()
+        if(tempCount > 0) {
+            clearInterval(readyInterval);
+        } else {
+            readyIntervalFunc()
+        }
     }, 1000);
     function readyIntervalFunc(){
-        if (gameStarted === true) {
-            clearInterval(readyInterval);
-        }
         tempCount++;
         console.log(tempCount);
         socket.emit('client ready', GRID, UID);
