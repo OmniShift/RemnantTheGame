@@ -1,5 +1,7 @@
-﻿var socket = io();
+﻿console.log('starting script');
+var socket = io();
 var jsCookie = Cookies.noConflict();
+console.log('sockets and cookies');
 
 //the following values are placeholders to be received from the server on page initialization
 //playerNumber is directly used as index, so ranges from 0 to 3
