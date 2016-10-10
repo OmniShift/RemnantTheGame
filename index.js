@@ -385,6 +385,7 @@ io.on('connection', function (socket) {
         logger.log('readying client ' + UID + ' in room ' + roomID);
         pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
             playerIndex = res.rows[0].playerid.indexOf(UID);
+            logger.log(playerIndex);
             var pIDs = res.rows[0].playerid;
             var pCommander = res.rows[0].playercommname;
             var pKingdom = res.rows[0].playerkingdompref;
