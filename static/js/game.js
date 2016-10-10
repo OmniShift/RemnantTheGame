@@ -213,7 +213,7 @@ for (var i = 38; i <= 41; i++) {
 for (var i = 42; i <= 137; i++) {
     territoryStateInfo.push({type:0,occupiedByPlayer:-1,occupiedByUnits:[],naturalHazardIDs:[]})
 }
-//for (var adjacentTerritories = 0; adjacentTerritories < 1; adjacentTerritories++) {
+//adjacent territories
     territoryStateInfo[0].adjacentTer = [1,42,60,61,62];
     territoryStateInfo[1].adjacentTer = [0,3,4,5,42,54,60];
     territoryStateInfo[2].adjacentTer = [3,42,43,44,45,51,52];
@@ -351,7 +351,6 @@ for (var i = 42; i <= 137; i++) {
     territoryStateInfo[134].adjacentTer = [131,132,133,135,136];
     territoryStateInfo[135].adjacentTer = [130,131,134,136];
     territoryStateInfo[136].adjacentTer = [133,134,135];
-//}
 
 //affiliation: 0=none, 1=mantle, 2=mistral, 3=vacuo, 4=vale
 //(transport)size: 0=normal, 1=large, 2=huge, 3=colossal, 99=immovable (structure)
@@ -437,159 +436,69 @@ var cardInfo = [
     {name:'Evolution of Warfare',frequency1:1,frequency2:1,frequency3:1}
 ];
 
-function deckShuffle(array) {
-    var m = array.length, t, i;
-    while (m) {
-        i = Math.floor(Math.random() * m--);
-        t = array[m];
-        array[m] = array[i];
-        array[i] = t;
-    }
-    drawPile = array;
-}
 
 $(document).ready(function () {
 	document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
     var GRID = jsCookie.set('rtgLastGame');
     var UID = jsCookie.set('rtgUID');
     var pInGame = [0,0,0,0];
-    /*function pausecomp(ms) {
+    var gameStarted = false;
+    var pCards = [];
+    var drawPile = [];
+    var referenceCards = [];
+    var stageOfWar = 0;
+    function pausecomp(ms) {
         ms += new Date().getTime();
         while (new Date() < ms){}
-    }*/
-
-    socket.emit('get game data', GRID, UID);
-    socket.on('return game data', function(roomID, playerIndex, pIDs, pCommander, pKingdom, allCards) {
-        console.log('received game data');
-        playerNumber = playerIndex;
-        //pInGame[playerNumber] = 2;
-        for (var p = 0; p < 4; p++) {
-            commName[p] = pCommander[p];
-            kingdom[p] = (pKingdom[p]-1);
+    }
+    function deckShuffle(array) {
+        var m = array.length, t, i;
+        while (m) {
+            i = Math.floor(Math.random() * m--);
+            t = array[m];
+            array[m] = array[i];
+            array[i] = t;
         }
-        for (var kd = 0; kd < 4; kd++) {
-            playerByKingdom[kd] = kingdom.indexOf(kd);
-        }
-        console.log(commName);
-        console.log(kingdom);
-        console.log(playerByKingdom);
+        drawPile = array;
+    }
 
-    	//create 3 divs, 1 for each player in order after the client's player's turn
-    	var tempPlayerNumber = 0;
-    	for (var pos = 1; pos < 4; pos++) {
-            if ((playerNumber + pos) > 3) {
-                tempPlayerNumber = (playerNumber + pos - 4);
-            } else {
-                tempPlayerNumber = (playerNumber + pos);
-            }
-    		document.getElementById('p' + pos + 'Area').innerHTML = '<div><img src="' + kingdomPicArray[kingdom[tempPlayerNumber]] + '" width="40%"><BR>' + commName[tempPlayerNumber] + '<div id="player' + tempPlayerNumber + 'Cards" class="nOfCards">' + nOfCards[tempPlayerNumber] + '</div></div>';
-    	}
-
-    	//create deck
-        //referenceCards contains all unique cards with info and id for reference
-        //drawPile contains all drawable cards by reference id
-        var drawPile = [];
-        var referenceCards = [];
-        var count = -1;
-        for (var cType = 0; cType < cardInfo.length; cType++) {
-            for (var freq = 0; freq < cardInfo[cType].frequency1; freq++) {
-                var card = JSON.parse(JSON.stringify(cardInfo[cType]));
-                card.id = count++;
-                card.stage = 1;
-                referenceCards.push(card);
-            }
-            for (var freq = 0; freq < cardInfo[cType].frequency2; freq++) {
-                var card = JSON.parse(JSON.stringify(cardInfo[cType]));
-                card.id = count++;
-                card.stage = 2;
-                referenceCards.push(card);
-            }
-            for (var freq = 0; freq < cardInfo[cType].frequency3; freq++) {
-                var card = JSON.parse(JSON.stringify(cardInfo[cType]));
-                card.id = count++;
-                card.stage = 3;
-                referenceCards.push(card);
-            }
+    //initializing territory/border shapes and positions
+        var canvas = document.getElementById('gameBoardCanvas');
+        canvas.width = document.getElementById('gameBoard').offsetWidth;
+        canvas.height = document.getElementById('gameBoard').offsetHeight;
+        function reOffset(){
+            var BB = canvas.getBoundingClientRect();
+            offsetX = BB.left;
+            offsetY = BB.top;
         }
-        if (playerNumber === 0) {
-            for (var i = 0; i < referenceCards.length; i++) {
-                if (referenceCards[i].stage === 1) {
-                    drawPile.push(referenceCards[i].id);
+        var offsetX, offsetY;
+        reOffset();
+        window.onscroll = function(e) { reOffset(); }
+        var isDown = false;
+        var startX, startY;
+        var highlight = -1;
+        ctx = canvas.getContext('2d');
+        ctx.fillStyle = 'rgba(0,0,0,0.2)';
+        initialDraw();
+
+        function draw(highlight) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (var ter = 0; ter < territoryShapeInfo.length; ter++) {
+                var definedTerritory = territoryShapeInfo[ter];
+                define(definedTerritory);
+                ctx.stroke();
+                if(ter == highlight){
+                    ctx.fill();
                 }
             }
-            deckShuffle(drawPile);
         }
-
-        //deal cards
-        var pCards = [];
-        if (playerNumber === 0 && allCards[0][0] === -1) {
-            var tempHands = [[],[],[],[]];
-            for (var cards = 0; cards < 5; cards++) {
-                for (var p = 0; p < 4; p++) {
-                    tempHands[p].push(drawPile[0]);
-                    drawPile.splice(0,1);
-                }
-        		pCards.push(tempHands[playerNumber][cards]);
-        		document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards] + '. ' + referenceCards[pCards].name;
-            }
-            console.log(tempHands);
-	        socket.emit('send dealt cards', roomID, tempHands);
-        } else if (playerNumber === 0) {
-            pCards = allCards[playerNumber];
-            for (var cards = 0; cards < allCards[playerNumber].length; cards++) {
-                //referenceCards[pCards] is undefined
-                console.log(referenceCards);
-                console.log(referenceCards[pCards[cards]]);
-                document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards] + '. ' + referenceCards[pCards[cards]].name;
-            }
-        }
-
-    	nOfCards[4] = drawPile.length;
-    	var stageOfWar = 1;
-    	//initial draw pile (and optionally discard pile/card magnification area)
-    	document.getElementById('drawPile').innerHTML = '<div style="font-size: 2em">' + nOfCards[4] + '</div><BR><div style="font-size: 1.2em">(Stage ' + stageOfWar + ')</div>';
-
-    	//initial player info
-    	document.getElementById('kingdomImage').innerHTML = '<img src="' + kingdomPicArray[kingdom[playerNumber]] + '" height="' + (document.getElementById('playerCards').offsetHeight/100*75) + '">';
-    	document.getElementById('commanderName').innerHTML = commName[playerNumber];
-
-    	//initializing territory/border shapes and positions
-    	var canvas = document.getElementById('gameBoardCanvas');
-    	canvas.width = document.getElementById('gameBoard').offsetWidth;
-    	canvas.height = document.getElementById('gameBoard').offsetHeight;
-    	function reOffset(){
-    		var BB = canvas.getBoundingClientRect();
-    		offsetX = BB.left;
-    		offsetY = BB.top;
-    	}
-    	var offsetX, offsetY;
-    	reOffset();
-    	window.onscroll = function(e) { reOffset(); }
-    	var isDown = false;
-    	var startX, startY;
-    	var highlight = -1;
-    	ctx = canvas.getContext('2d');
-    	ctx.fillStyle = 'rgba(0,0,0,0.2)';
-    	initialDraw();
-
-    	function draw(highlight) {
-    		ctx.clearRect(0, 0, canvas.width, canvas.height);
-    		for (var ter = 0; ter < territoryShapeInfo.length; ter++) {
-    			var definedTerritory = territoryShapeInfo[ter];
-    			define(definedTerritory);
-    			ctx.stroke();
-    			if(ter == highlight){
-    				ctx.fill();
-    			}
-    		}
-    	}
-    	function initialDraw() {
-    		ctx.clearRect(0, 0, canvas.width, canvas.height);
-    		for (var ter = 0; ter < territoryShapeInfo.length; ter++) {
-    			var definedTerritory = territoryShapeInfo[ter];
-    			define(definedTerritory);
-    			ctx.stroke();
-    			//creating div's only initially or it will cause big hardware lag
+        function initialDraw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (var ter = 0; ter < territoryShapeInfo.length; ter++) {
+                var definedTerritory = territoryShapeInfo[ter];
+                define(definedTerritory);
+                ctx.stroke();
+                //creating div's only initially or it will cause big hardware lag
                 var tbl = document.createElement('table');
                 tbl.className = 'territoryTbl';
                 tbl.id = 'territoryTbl' + ter;
@@ -612,69 +521,194 @@ $(document).ready(function () {
                 tbdy.appendChild(trow);
                 tbl.appendChild(tbdy);
                 document.body.appendChild(tbl);
-    			/*var div = document.createElement('div');
-    			document.body.appendChild(div);
-    			div.className = 'territoryDiv';
-    			div.id = 'territoryDiv' + ter;
-    			div.style.marginLeft = (document.getElementById('otherPlayers').offsetWidth + canvas.width/100*definedTerritory[(definedTerritory.length - 1)].x - 20) + 'px';
-    			div.style.marginTop = (canvas.height/100*definedTerritory[(definedTerritory.length - 1)].y - 15) + 'px';
-    			div.style.position = 'absolute';
-    			div.style.color = 'lightyellow';
-    			div.textContent = ter;*/
-    			/*if (ter > 9) {
-    				var div = document.createElement('div');
-    				document.body.appendChild(div);
-    				div.className = 'territoryDiv';
-    				div.id = 'territoryDiv' + (ter - 9);
-    				div.style.marginLeft = (document.getElementById('otherPlayers').offsetWidth + canvas.width/100*definedTerritory[(definedTerritory.length - 1)].x - 20) + 'px';
-    				div.style.marginTop = (canvas.height/100*definedTerritory[(definedTerritory.length - 1)].y - 15) + 'px';
-    				div.style.position = 'absolute';
-    				div.style.color = 'lightyellow';
-    				div.textContent = (ter - 9);
-    			}*/
-    			if(ter == highlight){
-    				ctx.fill();
-    			}
-    		}
-    	}
+                if(ter == highlight){
+                    ctx.fill();
+                }
+            }
+        }
         document.getElementById('territoryTdata10').textContent = '★';
         document.getElementById('territoryTdata18').textContent = '★';
         document.getElementById('territoryTdata29').textContent = '★';
         document.getElementById('territoryTdata35').textContent = '★';
-    	function define(t){
-    		ctx.beginPath();
-    		var coordPercentage1 = canvas.width/100*t[0].x;
-    		var coordPercentage2 = canvas.height/100*t[0].y;
-    		ctx.moveTo(coordPercentage1, coordPercentage2);
-    		for (var coord = 1; coord < (t.length - 1); coord++) {
-    			coordPercentage1 = canvas.width/100*t[coord].x;
-    			coordPercentage2 = canvas.height/100*t[coord].y;
-    			ctx.lineTo(coordPercentage1, coordPercentage2);
-    		}
-    		ctx.closePath();
-    	}
-    	$("#gameBoardCanvas").mousemove(function(e) { handleMouseMove(e); });
-    	function handleMouseMove(e){
-    		e.preventDefault();
-    		e.stopPropagation();
-    		var mouseX = parseInt(e.clientX-offsetX);
-    		var mouseY = parseInt(e.clientY-offsetY);
-    		var highlight=-1;
-    		for(var i = 0; i < territoryShapeInfo.length; i++){
-    			var definedTerritory = territoryShapeInfo[i];
-    			define(definedTerritory);
-    			if(ctx.isPointInPath(mouseX,mouseY)){
-    				highlight = i;
-    			}
-    		}
-    		draw(highlight);
-    	}
-    });
-    socket.on('initial hands', function(tempHands) {
-        pCards = tempHands[playerNumber];
-        console.log(pCards);
-        for (var cards = 0; cards < 5; cards++) {
-            document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards].id + '. ' + pCards[cards].name;
+        function define(t){
+            ctx.beginPath();
+            var coordPercentage1 = canvas.width/100*t[0].x;
+            var coordPercentage2 = canvas.height/100*t[0].y;
+            ctx.moveTo(coordPercentage1, coordPercentage2);
+            for (var coord = 1; coord < (t.length - 1); coord++) {
+                coordPercentage1 = canvas.width/100*t[coord].x;
+                coordPercentage2 = canvas.height/100*t[coord].y;
+                ctx.lineTo(coordPercentage1, coordPercentage2);
+            }
+            ctx.closePath();
         }
-    })
+        $("#gameBoardCanvas").mousemove(function(e) { handleMouseMove(e); });
+        function handleMouseMove(e){
+            e.preventDefault();
+            e.stopPropagation();
+            var mouseX = parseInt(e.clientX-offsetX);
+            var mouseY = parseInt(e.clientY-offsetY);
+            var highlight=-1;
+            for(var i = 0; i < territoryShapeInfo.length; i++){
+                var definedTerritory = territoryShapeInfo[i];
+                define(definedTerritory);
+                if(ctx.isPointInPath(mouseX,mouseY)){
+                    highlight = i;
+                }
+            }
+            draw(highlight);
+        }
+    while (gameStarted === false) {
+        socket.emit('client ready', GRID, UID);
+        pausecomp(1000);
+    }
+    socket.on('all clients ready', function(roomID, playerIndex, pIDs, pCommander, pKingdom, allHands) {
+        console.log('all clients confirmed ready');
+        playerNumber = playerIndex;
+        //pInGame[playerNumber] = 2;
+        for (var p = 0; p < 4; p++) {
+            commName[p] = pCommander[p];
+            kingdom[p] = (pKingdom[p]-1);
+        }
+        for (var kd = 0; kd < 4; kd++) {
+            playerByKingdom[kd] = kingdom.indexOf(kd);
+        }
+
+        //create 3 divs, 1 for each player in order after the client's player's turn
+        var tempPlayerNumber = 0;
+        for (var pos = 1; pos < 4; pos++) {
+            if ((playerNumber + pos) > 3) {
+                tempPlayerNumber = (playerNumber + pos - 4);
+            } else {
+                tempPlayerNumber = (playerNumber + pos);
+            }
+            document.getElementById('p' + pos + 'Area').innerHTML = '<div><img src="' + kingdomPicArray[kingdom[tempPlayerNumber]] + '" width="40%"><BR>' + commName[tempPlayerNumber] + '<div id="player' + tempPlayerNumber + 'Cards" class="nOfCards">' + nOfCards[tempPlayerNumber] + '</div></div>';
+        }
+
+        //create deck
+        //referenceCards contains all unique cards with info and id for reference
+        //drawPile contains all drawable cards by reference id
+        var count = -1;
+        for (var cType = 0; cType < cardInfo.length; cType++) {
+            for (var freq = 0; freq < cardInfo[cType].frequency1; freq++) {
+                var card = JSON.parse(JSON.stringify(cardInfo[cType]));
+                card.id = count++;
+                card.stage = 1;
+                referenceCards.push(card);
+            }
+            for (var freq = 0; freq < cardInfo[cType].frequency2; freq++) {
+                var card = JSON.parse(JSON.stringify(cardInfo[cType]));
+                card.id = count++;
+                card.stage = 2;
+                referenceCards.push(card);
+            }
+            for (var freq = 0; freq < cardInfo[cType].frequency3; freq++) {
+                var card = JSON.parse(JSON.stringify(cardInfo[cType]));
+                card.id = count++;
+                card.stage = 3;
+                referenceCards.push(card);
+            }
+        }
+        for (var i = 0; i < referenceCards.length; i++) {
+            if (referenceCards[i].stage === 1) {
+                drawPile.push(referenceCards[i].id);
+            }
+        }
+        deckShuffle(drawPile);
+
+        //deal cards
+        if (allHands[0][0] === -1) {
+            var tempHands = [[],[],[],[]];
+            for (var cards = 0; cards < 5; cards++) {
+                for (var p = 0; p < 4; p++) {
+                    tempHands[p].push(drawPile[0]);
+                    drawPile.splice(0,1);
+                }
+                pCards.push(tempHands[playerNumber][cards]);
+                document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards] + '. ' + referenceCards[pCards].name;
+            }
+            console.log(tempHands);
+            var tempCardPiles = [JSON.stringify(drawPile),JSON.stringify(tempHands[0]),'','',JSON.stringify(tempHands[1]),'','',JSON.stringify(tempHands[2]),'','',JSON.stringify(tempHands[3]),'',''];
+            socket.emit('share game data', roomID, tempHands, tempCardPiles);
+        } else {
+            pCards = allHands[playerNumber];
+            for (var cards = 0; cards < pCards.length; cards++) {
+                document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards] + '. ' + referenceCards[pCards[cards]].name;
+            }
+        }
+
+        nOfCards[4] = drawPile.length;
+        stageOfWar = 1;
+        //initial draw pile (and optionally discard pile/card magnification area)
+        document.getElementById('drawPile').innerHTML = '<div style="font-size: 2em">' + nOfCards[4] + '</div><BR><div style="font-size: 1.2em">(Stage ' + stageOfWar + ')</div>';
+
+        //initial player info
+        document.getElementById('kingdomImage').innerHTML = '<img src="' + kingdomPicArray[kingdom[playerNumber]] + '" height="' + (document.getElementById('playerCards').offsetHeight/100*75) + '">';
+        document.getElementById('commanderName').innerHTML = commName[playerNumber];
+    }
+    socket.on('return game data', function(roomID, playerIndex, pIDs, pCommander, pKingdom, allHands, cardpiles) {
+        console.log('received game data');
+        var tempCardPiles = JSON.parse(cardpiles);
+        playerNumber = playerIndex;
+        //pInGame[playerNumber] = 2;
+        for (var p = 0; p < 4; p++) {
+            commName[p] = pCommander[p];
+            kingdom[p] = (pKingdom[p]-1);
+        }
+        for (var kd = 0; kd < 4; kd++) {
+            playerByKingdom[kd] = kingdom.indexOf(kd);
+        }
+
+    	//create 3 divs, 1 for each player in order after the client's player's turn
+    	var tempPlayerNumber = 0;
+    	for (var pos = 1; pos < 4; pos++) {
+            if ((playerNumber + pos) > 3) {
+                tempPlayerNumber = (playerNumber + pos - 4);
+            } else {
+                tempPlayerNumber = (playerNumber + pos);
+            }
+    		document.getElementById('p' + pos + 'Area').innerHTML = '<div><img src="' + kingdomPicArray[kingdom[tempPlayerNumber]] + '" width="40%"><BR>' + commName[tempPlayerNumber] + '<div id="player' + tempPlayerNumber + 'Cards" class="nOfCards">' + nOfCards[tempPlayerNumber] + '</div></div>';
+    	}
+
+    	//create deck
+        //referenceCards contains all unique cards with info and id for reference
+        //drawPile contains all drawable cards by reference id
+        var count = -1;
+        for (var cType = 0; cType < cardInfo.length; cType++) {
+            for (var freq = 0; freq < cardInfo[cType].frequency1; freq++) {
+                var card = JSON.parse(JSON.stringify(cardInfo[cType]));
+                card.id = count++;
+                card.stage = 1;
+                referenceCards.push(card);
+            }
+            for (var freq = 0; freq < cardInfo[cType].frequency2; freq++) {
+                var card = JSON.parse(JSON.stringify(cardInfo[cType]));
+                card.id = count++;
+                card.stage = 2;
+                referenceCards.push(card);
+            }
+            for (var freq = 0; freq < cardInfo[cType].frequency3; freq++) {
+                var card = JSON.parse(JSON.stringify(cardInfo[cType]));
+                card.id = count++;
+                card.stage = 3;
+                referenceCards.push(card);
+            }
+        }
+        drawPile = tempCardPiles[0];
+
+        //player cards
+        pCards = allHands[playerNumber];
+        for (var cards = 0; cards < pCards.length; cards++) {
+            document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards] + '. ' + referenceCards[pCards[cards]].name;
+        }
+
+    	nOfCards[4] = drawPile.length;
+    	var stageOfWar = 1;
+    	//initial draw pile (and optionally discard pile/card magnification area)
+    	document.getElementById('drawPile').innerHTML = '<div style="font-size: 2em">' + nOfCards[4] + '</div><BR><div style="font-size: 1.2em">(Stage ' + stageOfWar + ')</div>';
+
+    	//initial player info
+    	document.getElementById('kingdomImage').innerHTML = '<img src="' + kingdomPicArray[kingdom[playerNumber]] + '" height="' + (document.getElementById('playerCards').offsetHeight/100*75) + '">';
+    	document.getElementById('commanderName').innerHTML = commName[playerNumber];
+    });
 });

@@ -381,29 +381,62 @@ io.on('connection', function (socket) {
 
     //var playerIndex = -99;
 
-    socket.on('get game data', function (roomID, UID) {
-        logger.log('game data request for room ' + roomID + ' received');
+    socket.on('client ready', function(roomID, UID) {
+        logger.log('readying client ' + UID + ' in room ' + roomID);
         pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
             var playerIndex = res.rows[0].playerid.indexOf(UID);
             var pIDs = res.rows[0].playerid;
             var pCommander = res.rows[0].playercommname;
             var pKingdom = res.rows[0].playerkingdompref;
             var pCards = res.rows[0].playercards;
-            logger.log('returning game data of room ' + roomID);
-            socket.emit('return game data', roomID, playerIndex, pIDs, pCommander, pKingdom, pCards);
-        });
-    })
-    socket.on('send dealt cards', function(roomID, allCards) {
-        logger.log(allCards);
-        pool.query(
-            'UPDATE "GRIDs" SET playercards = $1 WHERE idname = $2;', [
-                allCards, roomID
-            ], function (err, data) {
-                if (err) {
-                    throw new Error('Error adding player cards to game room ' + roomID);
+            var pReady = res.rows[0].playerready;
+            pReady[playerIndex] = 2;
+            var tempReady = 0
+            for (var i = 0; i < 4; i++) {
+                if (pReady[i] === 2) {
+                    tempReady++;
                 }
-        });
-        socket.broadcast.to(roomID).emit('initial hands', allCards);
+            }
+            if (tempReady === 4 && playerIndex === 0) {
+                socket.emit('all clients ready', roomID, playerIndex, pIDs, pCommander, pKingdom, pCards);
+                pool.query(
+                    'UPDATE "GRIDs" SET playerready = $1 WHERE idname = $2;', [
+                        [1, 1, 1, 1], roomID
+                    ], function (err, data) {
+                        if (err) {
+                            throw new Error('Error resetting ready state for game room ' + roomID);
+                        }
+                });
+            } else {
+                pool.query(
+                    'UPDATE "GRIDs" SET playerready[$1] = 2 WHERE idname = $2;', [
+                        playerIndex, roomID
+                    ], function (err, data) {
+                        if (err) {
+                            throw new Error('Error readying player ' + playerIndex + ' in game room ' + roomID);
+                        }
+                });
+            }
+            
+        }
+    });
+    socket.on('share game data', function(roomID, allHands, cardpiles) {
+        //logger.log(allHands);
+        pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
+            var playerIndex = res.rows[0].playerid.indexOf(UID);
+            var pIDs = res.rows[0].playerid;
+            var pCommander = res.rows[0].playercommname;
+            var pKingdom = res.rows[0].playerkingdompref;
+            socket.broadcast.to(roomID).emit('return game data', roomID, playerIndex, pIDs, pCommander, pKingdom, allHands, cardpiles);
+            pool.query(
+                'UPDATE "GRIDs" SET playercards = $1, cardpiles = $2 WHERE idname = $3;', [
+                    allHands, cardpiles, roomID
+                ], function (err, data) {
+                    if (err) {
+                        throw new Error('Error updating hands of game room ' + roomID);
+                    }
+            });
+        }
     });
 
     socket.on('disconnect', function () {
