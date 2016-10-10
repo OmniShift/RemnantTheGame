@@ -442,7 +442,7 @@ $(document).ready(function () {
     var GRID = jsCookie.set('rtgLastGame');
     var UID = jsCookie.set('rtgUID');
     var pInGame = [0,0,0,0];
-    //var gameStarted = false;
+    var gameStarted = false;
     var pCards = [];
     var drawPile = [];
     var referenceCards = [];
@@ -556,7 +556,7 @@ $(document).ready(function () {
         }
     var tempCount = 0
     var readyInterval = setInterval(function(){
-        if(tempCount > 0) {
+        if(gameStarted === true) {
             clearInterval(readyInterval);
         } else {
             readyIntervalFunc()
@@ -564,7 +564,7 @@ $(document).ready(function () {
     }, 1000);
     function readyIntervalFunc(){
         tempCount++;
-        console.log(tempCount);
+        //console.log(tempCount);
         socket.emit('client ready', GRID, UID);
     }
     socket.on('all clients ready', function(roomID, playerIndex, pIDs, pCommander, pKingdom, allHands) {

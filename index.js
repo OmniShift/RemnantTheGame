@@ -379,12 +379,12 @@ io.on('connection', function (socket) {
 
     /*----------------------------------------------------------------------*/
 
-    //var playerIndex = -99;
+    var playerIndex = -99;
 
     socket.on('client ready', function(roomID, UID) {
         logger.log('readying client ' + UID + ' in room ' + roomID);
         pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
-            var playerIndex = res.rows[0].playerid.indexOf(UID);
+            playerIndex = res.rows[0].playerid.indexOf(UID);
             var pIDs = res.rows[0].playerid;
             var pCommander = res.rows[0].playercommname;
             var pKingdom = res.rows[0].playerkingdompref;
@@ -408,6 +408,8 @@ io.on('connection', function (socket) {
                         }
                 });
             } else {
+                //temporary ready check
+                socket.emit('all clients ready', roomID, playerIndex, pIDs, pCommander, pKingdom, pCards);
                 pool.query(
                     'UPDATE "GRIDs" SET playerready[$1] = 2 WHERE idname = $2;', [
                         playerIndex, roomID
