@@ -438,11 +438,6 @@ var cardInfo = [
 
 
 $(document).ready(function () {
-            for (var p = 0; p < 4; p++) {
-                if (document.getElementById('player' + p + 'Cards') !== null) {
-                    document.getElementById('player' + p + 'Cards').innerHTML = p;
-                }
-            }
 	document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
     var GRID = jsCookie.set('rtgLastGame');
     var UID = jsCookie.set('rtgUID');
@@ -651,6 +646,11 @@ $(document).ready(function () {
             }
             document.getElementById('p' + pos + 'Area').innerHTML = '<div><img src="' + kingdomPicArray[kingdom[tempPlayerNumber]] + '" width="40%"><BR>' + commName[tempPlayerNumber] + '<div id="player' + tempPlayerNumber + 'Cards" class="nOfCards">' + nOfCards[tempPlayerNumber] + '</div></div>';
         }
+            for (var p = 0; p < 4; p++) {
+                if (document.getElementById('player' + p + 'Cards') !== null) {
+                    document.getElementById('player' + p + 'Cards').innerHTML = p;
+                }
+            }
 
         nOfCards[4] = drawPile.length;
         stageOfWar = 1;
