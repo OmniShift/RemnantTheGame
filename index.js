@@ -436,7 +436,7 @@ io.on('connection', function (socket) {
                         throw new Error('Error updating hands of game room ' + roomID);
                     }
             });
-        }
+        });
     });
 
     socket.on('disconnect', function () {
