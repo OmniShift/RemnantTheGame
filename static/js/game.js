@@ -438,6 +438,11 @@ var cardInfo = [
 
 
 $(document).ready(function () {
+            for (var p = 0; p < 4; p++) {
+                if (document.getElementById('player' + p + 'Cards') !== null) {
+                    document.getElementById('player' + p + 'Cards').innerHTML = p;
+                }
+            }
 	document.getElementById('overlay').style.backgroundColor = 'rgba(0,0,0,0)';
     var GRID = jsCookie.set('rtgLastGame');
     var UID = jsCookie.set('rtgUID');
@@ -580,17 +585,6 @@ $(document).ready(function () {
             playerByKingdom[kd] = kingdom.indexOf(kd);
         }
 
-        //create 3 divs, 1 for each player in order after the client's player's turn
-        var tempPlayerNumber = 0;
-        for (var pos = 1; pos < 4; pos++) {
-            if ((playerNumber + pos) > 3) {
-                tempPlayerNumber = (playerNumber + pos - 4);
-            } else {
-                tempPlayerNumber = (playerNumber + pos);
-            }
-            document.getElementById('p' + pos + 'Area').innerHTML = '<div><img src="' + kingdomPicArray[kingdom[tempPlayerNumber]] + '" width="40%"><BR>' + commName[tempPlayerNumber] + '<div id="player' + tempPlayerNumber + 'Cards" class="nOfCards">' + nOfCards[tempPlayerNumber] + '</div></div>';
-        }
-
         //create deck
         //referenceCards contains all unique cards with info and id for reference
         //drawPile contains all drawable cards by reference id
@@ -633,7 +627,11 @@ $(document).ready(function () {
                 pCards.push(tempHands[playerNumber][cards]);
                 document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards] + '. ' + referenceCards[pCards].name;
             }
-            console.log(tempHands);
+            for (var p = 0; p < 4; p++) {
+                if (document.getElementById('player' + p + 'Cards') !== null) {
+                    document.getElementById('player' + p + 'Cards').innerHTML = noOfCards[p];
+                }
+            }
             var tempCardPiles = [JSON.stringify(drawPile),JSON.stringify(tempHands[0]),'','',JSON.stringify(tempHands[1]),'','',JSON.stringify(tempHands[2]),'','',JSON.stringify(tempHands[3]),'',''];
             socket.emit('share game data', roomID, tempHands, tempCardPiles);
         } else {
@@ -641,6 +639,17 @@ $(document).ready(function () {
             for (var cards = 0; cards < pCards.length; cards++) {
                 document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards] + '. ' + referenceCards[pCards[cards]].name;
             }
+        }
+
+        //create 3 divs, 1 for each player in order after the client's player's turn
+        var tempPlayerNumber = 0;
+        for (var pos = 1; pos < 4; pos++) {
+            if ((playerNumber + pos) > 3) {
+                tempPlayerNumber = (playerNumber + pos - 4);
+            } else {
+                tempPlayerNumber = (playerNumber + pos);
+            }
+            document.getElementById('p' + pos + 'Area').innerHTML = '<div><img src="' + kingdomPicArray[kingdom[tempPlayerNumber]] + '" width="40%"><BR>' + commName[tempPlayerNumber] + '<div id="player' + tempPlayerNumber + 'Cards" class="nOfCards">' + nOfCards[tempPlayerNumber] + '</div></div>';
         }
 
         nOfCards[4] = drawPile.length;
@@ -656,6 +665,7 @@ $(document).ready(function () {
         console.log('received game data');
         gameStarted = true;
         var tempCardPiles = JSON.parse(cardpiles);
+        nOfCards = [tempCardPiles[1].length,tempCardPiles[4].length,tempCardPiles[7].length,tempCardPiles[10].length,tempCardPiles[0].length];
         playerNumber = playerIndex;
         //pInGame[playerNumber] = 2;
         for (var p = 0; p < 4; p++) {
