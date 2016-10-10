@@ -19,6 +19,7 @@ var rare = 2;
 var unitImage = 'images/Ralph_unit_card.jpg';
 var trapImage = 'images/Its_a_trap_card.jpg';
 var utilityImage = 'images/Ralph_unit_card.jpg';
+console.log('initialization complete');
 var territoryShapeInfo = [
 	/*[{x:10,y:0},{x:20,y:0},{x:20,y:100},{x:10,y:100},{x:0,y:0}],
 	[{x:30,y:0},{x:40,y:0},{x:40,y:100},{x:30,y:100},{x:0,y:0}],
@@ -184,6 +185,7 @@ var territoryShapeInfo = [
     [{x:88.5,y:94},{x:88,y:88.5},{x:90.5,y:86},{x:91,y:80},{x:94.5,y:79.5},{x:94,y:87},{x:92.5,y:91.5},{x:92,y:87}],
     [{x:92.5,y:91.5},{x:94,y:87},{x:94.5,y:79.5},{x:95,y:73},{x:95.5,y:70},{x:97.5,y:73.5},{x:98,y:82},{x:97,y:92},{x:94.5,y:94},{x:96,y:82}],
 ];
+console.log('territory shapes complete');
 //var territoryIndex = [];
 
 //type: 0=land, 1=sea
@@ -351,6 +353,7 @@ for (var i = 42; i <= 137; i++) {
     territoryStateInfo[134].adjacentTer = [131,132,133,135,136];
     territoryStateInfo[135].adjacentTer = [130,131,134,136];
     territoryStateInfo[136].adjacentTer = [133,134,135];
+console.log('territory adjacency complete');
 
 //affiliation: 0=none, 1=mantle, 2=mistral, 3=vacuo, 4=vale
 //(transport)size: 0=normal, 1=large, 2=huge, 3=colossal, 99=immovable (structure)
@@ -435,6 +438,7 @@ var cardInfo = [
     //special cards
     {name:'Evolution of Warfare',frequency1:1,frequency2:1,frequency3:1}
 ];
+console.log('card info complete');
 
 
 $(document).ready(function () {
