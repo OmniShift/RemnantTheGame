@@ -622,14 +622,21 @@ $(document).ready(function () {
                 pCards.push(tempHands[playerNumber][cards]);
                 document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards] + '. ' + referenceCards[pCards].name;
             }
-            for (var p = 0; p < 4; p++) {
+            for (var p = 0; p < 5; p++) {
                 if (document.getElementById('player' + p + 'Cards') !== null) {
-                    document.getElementById('player' + p + 'Cards').innerHTML = noOfCards[p];
+                    document.getElementById('player' + p + 'Cards').innerHTML = 5;
                 }
             }
             var tempCardPiles = [JSON.stringify(drawPile),JSON.stringify(tempHands[0]),'','',JSON.stringify(tempHands[1]),'','',JSON.stringify(tempHands[2]),'','',JSON.stringify(tempHands[3]),'',''];
             socket.emit('share game data', roomID, tempHands, tempCardPiles);
         } else {
+            for (var p = 0; p < 5; p++) {
+                nOfCards[p] = allHands[p].length;
+                console.log(nOfCards);
+                if (document.getElementById('player' + p + 'Cards') !== null) {
+                    document.getElementById('player' + p + 'Cards').innerHTML = nOfCards[p];
+                }
+            }
             pCards = allHands[playerNumber];
             for (var cards = 0; cards < pCards.length; cards++) {
                 document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards] + '. ' + referenceCards[pCards[cards]].name;
@@ -646,11 +653,6 @@ $(document).ready(function () {
             }
             document.getElementById('p' + pos + 'Area').innerHTML = '<div><img src="' + kingdomPicArray[kingdom[tempPlayerNumber]] + '" width="40%"><BR>' + commName[tempPlayerNumber] + '<div id="player' + tempPlayerNumber + 'Cards" class="nOfCards">' + nOfCards[tempPlayerNumber] + '</div></div>';
         }
-            for (var p = 0; p < 4; p++) {
-                if (document.getElementById('player' + p + 'Cards') !== null) {
-                    document.getElementById('player' + p + 'Cards').innerHTML = p;
-                }
-            }
 
         nOfCards[4] = drawPile.length;
         stageOfWar = 1;
