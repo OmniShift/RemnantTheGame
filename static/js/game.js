@@ -442,7 +442,7 @@ $(document).ready(function () {
     var GRID = jsCookie.set('rtgLastGame');
     var UID = jsCookie.set('rtgUID');
     var pInGame = [0,0,0,0];
-    var gameStarted = false;
+    //var gameStarted = false;
     var pCards = [];
     var drawPile = [];
     var referenceCards = [];
@@ -567,6 +567,7 @@ $(document).ready(function () {
         console.log(tempCount);
         socket.emit('client ready', GRID, UID);
     }*/
+    console.log('something, anything!');
     socket.on('all clients ready', function(roomID, playerIndex, pIDs, pCommander, pKingdom, allHands) {
         console.log('all clients confirmed ready');
         gameStarted = true;
