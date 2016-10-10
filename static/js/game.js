@@ -563,6 +563,7 @@ $(document).ready(function () {
         tempCount++;
         console.log(tempCount);
         socket.emit('client ready', GRID, UID);
+        gameStarted = true;
         pausecomp(1000);
     }
     socket.on('all clients ready', function(roomID, playerIndex, pIDs, pCommander, pKingdom, allHands) {
