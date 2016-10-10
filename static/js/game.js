@@ -558,10 +558,10 @@ $(document).ready(function () {
             }
             draw(highlight);
         }
-    while (gameStarted === false) {
+    /*while (gameStarted === false) {
         socket.emit('client ready', GRID, UID);
         pausecomp(1000);
-    }
+    }*/
     socket.on('all clients ready', function(roomID, playerIndex, pIDs, pCommander, pKingdom, allHands) {
         console.log('all clients confirmed ready');
         playerNumber = playerIndex;
