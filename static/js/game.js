@@ -447,10 +447,6 @@ $(document).ready(function () {
     var drawPile = [];
     var referenceCards = [];
     var stageOfWar = 0;
-    function pausecomp(ms) {
-        ms += new Date().getTime();
-        while (new Date() < ms){}
-    }
     function deckShuffle(array) {
         var m = array.length, t, i;
         while (m) {
@@ -559,15 +555,20 @@ $(document).ready(function () {
             draw(highlight);
         }
     var tempCount = 0
-    while (gameStarted == false) {
+    var readyInterval = setInterval(function(){
+        readyIntervalFunc()
+    }, 1000);
+    function readyIntervalFunc(){
+        if (gameStarted === true) {
+            clearInterval(readyInterval);
+        }
         tempCount++;
         console.log(tempCount);
         socket.emit('client ready', GRID, UID);
-        gameStarted = true;
-        pausecomp(1000);
     }
     socket.on('all clients ready', function(roomID, playerIndex, pIDs, pCommander, pKingdom, allHands) {
         console.log('all clients confirmed ready');
+        gameStarted = true;
         playerNumber = playerIndex;
         //pInGame[playerNumber] = 2;
         for (var p = 0; p < 4; p++) {
@@ -652,6 +653,7 @@ $(document).ready(function () {
     });
     socket.on('return game data', function(roomID, playerIndex, pIDs, pCommander, pKingdom, allHands, cardpiles) {
         console.log('received game data');
+        gameStarted = true;
         var tempCardPiles = JSON.parse(cardpiles);
         playerNumber = playerIndex;
         //pInGame[playerNumber] = 2;
