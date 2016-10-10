@@ -554,7 +554,7 @@ $(document).ready(function () {
             }
             draw(highlight);
         }
-    var tempCount = 0
+    /*var tempCount = 0
     var readyInterval = setInterval(function(){
         if(tempCount > 0) {
             clearInterval(readyInterval);
@@ -566,7 +566,7 @@ $(document).ready(function () {
         tempCount++;
         console.log(tempCount);
         socket.emit('client ready', GRID, UID);
-    }
+    }*/
     socket.on('all clients ready', function(roomID, playerIndex, pIDs, pCommander, pKingdom, allHands) {
         console.log('all clients confirmed ready');
         gameStarted = true;
