@@ -418,7 +418,7 @@ io.on('connection', function (socket) {
                 });
             }
             
-        }
+        });
     });
     socket.on('share game data', function(roomID, allHands, cardpiles) {
         //logger.log(allHands);
