@@ -612,11 +612,13 @@ $(document).ready(function () {
                 referenceCards.push(card);
             }
         }
+        console.log(referenceCards);
         for (var i = 0; i < referenceCards.length; i++) {
             if (referenceCards[i].stage === 1) {
                 drawPile.push(referenceCards[i].id);
             }
         }
+        console.log(drawPile);
         deckShuffle(drawPile);
 
         //deal cards

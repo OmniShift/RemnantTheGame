@@ -452,7 +452,6 @@ io.on('connection', function (socket) {
             var pCommander = res.rows[0].playercommname;
             var pKingdom = res.rows[0].playerkingdompref;
             cardPiles = res.rows[0].cardpiles;
-            logger.log('returning game data to clients');
             logger.log(cardPiles);
             socket.broadcast.to(roomID).emit('return game data', roomID, pIDs, pCommander, pKingdom, cardPiles);
         })
