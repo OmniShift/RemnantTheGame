@@ -630,7 +630,7 @@ $(document).ready(function () {
                     document.getElementById('player' + p + 'Cards').innerHTML = 5;
                 }
             }
-            var tempCardPiles = [JSON.stringify(drawPile),JSON.stringify(tempHands[0]),'','',JSON.stringify(tempHands[1]),'','',JSON.stringify(tempHands[2]),'','',JSON.stringify(tempHands[3]),'',''];
+            var tempCardPiles = [JSON.stringify(drawPile),JSON.stringify(tempHands[0]),'[]','[]',JSON.stringify(tempHands[1]),'[]','[]',JSON.stringify(tempHands[2]),'[]','[]',JSON.stringify(tempHands[3]),'[]','[]'];
             socket.emit('share new game data', roomID, tempCardPiles);
         } else {
             for (var p = 0; p < 4; p++) {
@@ -643,7 +643,6 @@ $(document).ready(function () {
             for (var cards = 0; cards < pCards.length; cards++) {
                 document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards] + '. ' + referenceCards[pCards[cards]].name;
             }
-            console.log([JSON.stringify(drawPile),'1','','','2','','','3','','','4','','']);
             socket.emit('share old game data', roomID);
         }
 
@@ -669,11 +668,14 @@ $(document).ready(function () {
     });
     socket.on('return game data', function(roomID, pIDs, pCommander, pKingdom, sCardpiles) {
         console.log('received game data');
-        console.log(sCardpiles);
+        /*console.log(sCardpiles);
         console.log(sCardpiles[0]);
-        console.log(JSON.parse(sCardpiles[0]));
+        console.log(JSON.parse(sCardpiles[0]));*/
         gameStarted = true;
-        var tempCardPiles = [JSON.parse(sCardpiles[0]), JSON.parse(sCardpiles[1]), JSON.parse(sCardpiles[2]), JSON.parse(sCardpiles[3]), JSON.parse(sCardpiles[4]), JSON.parse(sCardpiles[5]), JSON.parse(sCardpiles[6]), JSON.parse(sCardpiles[7]), JSON.parse(sCardpiles[8]), JSON.parse(sCardpiles[9]), JSON.parse(sCardpiles[10]), JSON.parse(sCardpiles[11]), JSON.parse(sCardpiles[12])];
+        var tempCardPiles = [];
+        for (var i = 0; i < 13; i++) {
+            tempCardPiles.push(JSON.parse(sCardpiles[i]));
+        }
         nOfCards = [tempCardPiles[1].length, tempCardPiles[4].length, tempCardPiles[7].length, tempCardPiles[10].length, tempCardPiles[0].length];
         playerNumber = playerIndex;
         //pInGame[playerNumber] = 2;
