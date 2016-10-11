@@ -567,6 +567,9 @@ $(document).ready(function () {
         //console.log(tempCount);
         socket.emit('client ready', GRID, UID);
     }
+    socket.on('player index', function(playerIndex){
+        playerNumber = playerIndex;
+    })
     socket.on('all clients ready', function(roomID, playerIndex, pIDs, pCommander, pKingdom, allHands) {
         console.log('all clients confirmed ready');
         gameStarted = true;
@@ -628,7 +631,7 @@ $(document).ready(function () {
                 }
             }
             var tempCardPiles = [JSON.stringify(drawPile),JSON.stringify(tempHands[0]),'','',JSON.stringify(tempHands[1]),'','',JSON.stringify(tempHands[2]),'','',JSON.stringify(tempHands[3]),'',''];
-            socket.emit('share new game data', roomID, tempHands, tempCardPiles);
+            socket.emit('share new game data', roomID, tempCardPiles);
         } else {
             for (var p = 0; p < 4; p++) {
                 nOfCards[p] = allHands[p].length;
@@ -664,10 +667,10 @@ $(document).ready(function () {
         document.getElementById('kingdomImage').innerHTML = '<img src="' + kingdomPicArray[kingdom[playerNumber]] + '" height="' + (document.getElementById('playerCards').offsetHeight/100*75) + '">';
         document.getElementById('commanderName').innerHTML = commName[playerNumber];
     });
-    socket.on('return game data', function(roomID, playerIndex, pIDs, pCommander, pKingdom, allHands, cardpiles) {
+    socket.on('return game data', function(roomID, playerIndex, pIDs, pCommander, pKingdom, sCardpiles) {
         console.log('received game data');
         gameStarted = true;
-        var tempCardPiles = JSON.parse(cardpiles);
+        var tempCardPiles = JSON.parse(sCardpiles);
         nOfCards = [tempCardPiles[1].length,tempCardPiles[4].length,tempCardPiles[7].length,tempCardPiles[10].length,tempCardPiles[0].length];
         playerNumber = playerIndex;
         //pInGame[playerNumber] = 2;
