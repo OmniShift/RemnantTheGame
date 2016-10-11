@@ -591,7 +591,7 @@ $(document).ready(function () {
         //create deck
         //referenceCards contains all unique cards with info and id for reference
         //drawPile contains all drawable cards by reference id
-        var count = -1;
+        var count = 0;
         for (var cType = 0; cType < cardInfo.length; cType++) {
             for (var freq = 0; freq < cardInfo[cType].frequency1; freq++) {
                 var card = JSON.parse(JSON.stringify(cardInfo[cType]));
