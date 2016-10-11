@@ -671,8 +671,8 @@ $(document).ready(function () {
         console.log('received game data');
         console.log(sCardpiles);
         gameStarted = true;
-        var tempCardPiles = JSON.parse(sCardpiles);
-        nOfCards = [tempCardPiles[1].length,tempCardPiles[4].length,tempCardPiles[7].length,tempCardPiles[10].length,tempCardPiles[0].length];
+        var tempCardPiles = [JSON.parse(sCardpiles[0]), JSON.parse(sCardpiles[1]), JSON.parse(sCardpiles[2]), JSON.parse(sCardpiles[3]), JSON.parse(sCardpiles[4]), JSON.parse(sCardpiles[5]), JSON.parse(sCardpiles[6]), JSON.parse(sCardpiles[7]), JSON.parse(sCardpiles[8]), JSON.parse(sCardpiles[9]), JSON.parse(sCardpiles[10]), JSON.parse(sCardpiles[11]), JSON.parse(sCardpiles[12])];
+        nOfCards = [tempCardPiles[1].length, tempCardPiles[4].length, tempCardPiles[7].length, tempCardPiles[10].length, tempCardPiles[0].length];
         playerNumber = playerIndex;
         //pInGame[playerNumber] = 2;
         for (var p = 0; p < 4; p++) {
