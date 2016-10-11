@@ -258,6 +258,7 @@ table#playerTable td#kingdomImage {
 }
 table#playerTable td#commanderName {
 	height: 25%;
+	width: 15%;
 }
 table#playerTable td.cardImage {
 	border: 1px solid black;
