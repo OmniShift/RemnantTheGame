@@ -451,7 +451,11 @@ io.on('connection', function (socket) {
             var pCommander = res.rows[0].playercommname;
             var pKingdom = res.rows[0].playerkingdompref;
             cardpiles = res.rows[0].cardpiles;
+            logger.log('returning game data to clients');
             socket.broadcast.to(roomID).emit('return game data', roomID, pIDs, pCommander, pKingdom, cardpiles);
+        })
+        .catch(e => {
+            logger.error('query error', e.message, e.stack);
         });
     });
 
