@@ -254,6 +254,9 @@ table#playerTable td#kingdomImage {
 	width: 15%;
 	object-fit: fill;
 }
+table#playerTable td#kingdomImage img {
+	object-fit: fill;
+}
 table#playerTable td#commanderName {
 	height: 25%;
 }
