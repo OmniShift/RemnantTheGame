@@ -668,7 +668,7 @@ $(document).ready(function () {
         document.getElementById('drawPile').innerHTML = '<div style="font-size: 2em">' + nOfCards[4] + '</div><BR><div style="font-size: 1.2em">(Stage ' + stageOfWar + ')</div>';
 
         //initial player info
-        document.getElementById('kingdomImage').innerHTML = '<img src="' + kingdomPicArray[kingdom[playerNumber]] + '" height="' + (document.getElementById('playerCards').offsetHeight/100*75) + '">';
+        document.getElementById('kingdomImage').innerHTML = '<img src="' + kingdomPicArray[kingdom[playerNumber]] + /*'" height="' + (document.getElementById('playerCards').offsetHeight/100*75) + */'">';
         document.getElementById('commanderName').innerHTML = commName[playerNumber];
     });
     socket.on('return game data', function(roomID, pIDs, pCommander, pKingdom, sCardpiles) {

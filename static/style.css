@@ -210,7 +210,6 @@ table#cardPiles td {
 	height: 75%;
 	width: 80%;
 	z-index: 1;
-	/*background-size: 100% 100%;*/
 }
 #gameBoardCanvas {
 	position: absolute;
@@ -235,7 +234,6 @@ table.terTable10 {
 	z-index: 1;
 }
 #playerKingdom {
-	/*background-color: lightgray;*/
 	display: inline-block;
 	height: 100%;
 	text-align: center;
@@ -248,18 +246,16 @@ table#playerTable {
 	height: 100%;
 	table-layout: fixed;
 	border-spacing: 0.5em;
-	/*border: 1px solid black;*/
 }
 table#playerTable td {
 	text-align: center;
 }
 table#playerTable td#kingdomImage {
-	/*width: 15%;*/
+	width: 15%;
 	object-fit: fill;
 }
 table#playerTable td#commanderName {
 	height: 25%;
-	width: 25%;
 }
 table#playerTable td.cardImage {
 	border: 1px solid black;
