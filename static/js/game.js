@@ -667,7 +667,7 @@ $(document).ready(function () {
         document.getElementById('kingdomImage').innerHTML = '<img src="' + kingdomPicArray[kingdom[playerNumber]] + '" height="' + (document.getElementById('playerCards').offsetHeight/100*75) + '">';
         document.getElementById('commanderName').innerHTML = commName[playerNumber];
     });
-    socket.on('return game data', function(roomID, playerIndex, pIDs, pCommander, pKingdom, sCardpiles) {
+    socket.on('return game data', function(roomID, pIDs, pCommander, pKingdom, sCardpiles) {
         console.log('received game data');
         console.log(sCardpiles);
         gameStarted = true;
