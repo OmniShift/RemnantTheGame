@@ -1,4 +1,4 @@
-﻿var socket = io();
+var socket = io();
 var jsCookie = Cookies.noConflict();
 
 //the following values are placeholders to be received from the server on page initialization
@@ -622,13 +622,13 @@ $(document).ready(function () {
                 pCards.push(tempHands[playerNumber][cards]);
                 document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards] + '. ' + referenceCards[pCards].name;
             }
-            for (var p = 0; p < 5; p++) {
+            for (var p = 0; p < 4; p++) {
                 if (document.getElementById('player' + p + 'Cards') !== null) {
                     document.getElementById('player' + p + 'Cards').innerHTML = 5;
                 }
             }
             var tempCardPiles = [JSON.stringify(drawPile),JSON.stringify(tempHands[0]),'','',JSON.stringify(tempHands[1]),'','',JSON.stringify(tempHands[2]),'','',JSON.stringify(tempHands[3]),'',''];
-            socket.emit('share game data', roomID, tempHands, tempCardPiles);
+            socket.emit('share new game data', roomID, tempHands, tempCardPiles);
         } else {
             for (var p = 0; p < 4; p++) {
                 nOfCards[p] = allHands[p].length;
@@ -641,6 +641,8 @@ $(document).ready(function () {
             for (var cards = 0; cards < pCards.length; cards++) {
                 document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards] + '. ' + referenceCards[pCards[cards]].name;
             }
+            console.log([JSON.stringify(drawPile),'1','','','2','','','3','','','4','','']);
+            socket.emit('share old game data', roomID);
         }
 
         //create 3 divs, 1 for each player in order after the client's player's turn

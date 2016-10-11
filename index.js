@@ -423,14 +423,13 @@ io.on('connection', function (socket) {
             
         });
     });
-    socket.on('share game data', function(roomID, allHands, cardpiles) {
+    socket.on('share new game data', function(roomID, allHands, cardpiles) {
         //logger.log(allHands);
         pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
-            var playerIndex = res.rows[0].playerid.indexOf(UID);
             var pIDs = res.rows[0].playerid;
             var pCommander = res.rows[0].playercommname;
             var pKingdom = res.rows[0].playerkingdompref;
-            socket.broadcast.to(roomID).emit('return game data', roomID, playerIndex, pIDs, pCommander, pKingdom, allHands, cardpiles);
+            socket.broadcast.to(roomID).emit('return game data', roomID, pIDs, pCommander, pKingdom, allHands, cardpiles);
             pool.query(
                 'UPDATE "GRIDs" SET playercards = $1, cardpiles = $2 WHERE idname = $3;', [
                     allHands, cardpiles, roomID
@@ -439,6 +438,16 @@ io.on('connection', function (socket) {
                         throw new Error('Error updating hands of game room ' + roomID);
                     }
             });
+        });
+    });
+    socket.on('share old game data', function(roomID) {
+        //logger.log(allHands);
+        pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
+            var pIDs = res.rows[0].playerid;
+            var pCommander = res.rows[0].playercommname;
+            var pKingdom = res.rows[0].playerkingdompref;
+            var cardpiles = res.rows[0].cardpiles;
+            socket.broadcast.to(roomID).emit('return game data', roomID, playerIndex, pIDs, pCommander, pKingdom, cardpiles);
         });
     });
 
