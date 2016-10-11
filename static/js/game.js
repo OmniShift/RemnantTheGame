@@ -668,17 +668,12 @@ $(document).ready(function () {
     });
     socket.on('return game data', function(roomID, pIDs, pCommander, pKingdom, sCardpiles) {
         console.log('received game data');
-        /*console.log(sCardpiles);
-        console.log(sCardpiles[0]);
-        console.log(JSON.parse(sCardpiles[0]));*/
         gameStarted = true;
         var tempCardPiles = [];
         for (var i = 0; i < 13; i++) {
             tempCardPiles.push(JSON.parse(sCardpiles[i]));
         }
         nOfCards = [tempCardPiles[1].length, tempCardPiles[4].length, tempCardPiles[7].length, tempCardPiles[10].length, tempCardPiles[0].length];
-        playerNumber = playerIndex;
-        //pInGame[playerNumber] = 2;
         for (var p = 0; p < 4; p++) {
             commName[p] = pCommander[p];
             kingdom[p] = (pKingdom[p]-1);
