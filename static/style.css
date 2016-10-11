@@ -255,10 +255,11 @@ table#playerTable td {
 }
 table#playerTable td#kingdomImage {
 	/*width: 15%;*/
+	object-fit: fill;
 }
 table#playerTable td#commanderName {
 	height: 25%;
-	width: 15%;
+	width: 25%;
 }
 table#playerTable td.cardImage {
 	border: 1px solid black;
