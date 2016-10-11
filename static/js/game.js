@@ -570,10 +570,15 @@ $(document).ready(function () {
     socket.on('player index', function(playerIndex){
         playerNumber = playerIndex;
     })
-    socket.on('all clients ready', function(roomID, playerIndex, pIDs, pCommander, pKingdom, allHands) {
+    socket.on('all clients ready', function(roomID, playerIndex, pIDs, pCommander, pKingdom, sCardpiles) {
         console.log('all clients confirmed ready');
         gameStarted = true;
         playerNumber = playerIndex;
+        var tempCardPiles = [];
+        for (var i = 0; i < 13; i++) {
+            tempCardPiles.push(JSON.parse(sCardpiles[i]));
+        }
+        console.log(tempCardPiles[0][0]);
         //pInGame[playerNumber] = 2;
         for (var p = 0; p < 4; p++) {
             commName[p] = pCommander[p];
@@ -615,7 +620,7 @@ $(document).ready(function () {
         deckShuffle(drawPile);
 
         //deal cards
-        if (allHands[0][0] === -1) {
+        if (tempCardPiles[0][0] === -1) {
             var tempHands = [[],[],[],[]];
             for (var cards = 0; cards < 5; cards++) {
                 for (var p = 0; p < 4; p++) {
@@ -630,16 +635,16 @@ $(document).ready(function () {
                     document.getElementById('player' + p + 'Cards').innerHTML = 5;
                 }
             }
-            var tempCardPiles = [JSON.stringify(drawPile),JSON.stringify(tempHands[0]),'[]','[]',JSON.stringify(tempHands[1]),'[]','[]',JSON.stringify(tempHands[2]),'[]','[]',JSON.stringify(tempHands[3]),'[]','[]'];
+            tempCardPiles = [JSON.stringify(drawPile),JSON.stringify(tempHands[0]),'[]','[]',JSON.stringify(tempHands[1]),'[]','[]',JSON.stringify(tempHands[2]),'[]','[]',JSON.stringify(tempHands[3]),'[]','[]'];
             socket.emit('share new game data', roomID, tempCardPiles);
         } else {
             for (var p = 0; p < 4; p++) {
-                nOfCards[p] = allHands[p].length;
+                nOfCards[p] = tempCardPiles[((p * 3) + 1)].length;
                 if (document.getElementById('player' + p + 'Cards') !== null) {
                     document.getElementById('player' + p + 'Cards').innerHTML = nOfCards[p];
                 }
             }
-            pCards = allHands[playerNumber];
+            pCards = tempCardPiles[((playerNumber * 3) + 1)];
             for (var cards = 0; cards < pCards.length; cards++) {
                 document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards] + '. ' + referenceCards[pCards[cards]].name;
             }

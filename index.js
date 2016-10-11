@@ -142,14 +142,14 @@ io.on('connection', function (socket) {
                 if (hits === 0) {
                     logger.log('Game room ' + gameRoomID + ' available. Inserting it into database');
                     pool.query(
-                        'INSERT INTO "GRIDs" (idname, status, playerid, playerready, playercommname, playerkingdompref, playercards) VALUES ($1, $2, $3, $4, $5, $6, $7)', [
+                        'INSERT INTO "GRIDs" (idname, status, playerid, playerready, playercommname, playerkingdompref, cardpiles) VALUES ($1, $2, $3, $4, $5, $6, $7)', [
                             gameRoomID,
                             0,
                             ['', '', '', ''],
                             [0, 0, 0, 0],
                             ['', '', '', ''],
                             [0, 0, 0, 0],
-                            [-1, -1, -1, -1,-99]
+                            ['[-1]', '[]', '[]', '[]', '[]', '[]', '[]', '[]', '[]', '[]', '[]', '[]', '[]', ]
                         ],
                         function (err, data) {
                             if (err) {
@@ -380,8 +380,8 @@ io.on('connection', function (socket) {
     /*----------------------------------------------------------------------*/
 
     var playerIndex = -99;
-    //server-side cardpiles are always stringified. Parse on client-side
-    var cardpiles = [];
+    //server-side cardPiles are always stringified. Parse on client-side
+    var cardPiles = [];
 
     socket.on('client ready', function(roomID, UID) {
         socket.join(roomID);
@@ -392,7 +392,7 @@ io.on('connection', function (socket) {
             var pIDs = res.rows[0].playerid;
             var pCommander = res.rows[0].playercommname;
             var pKingdom = res.rows[0].playerkingdompref;
-            var pCards = res.rows[0].playercards;
+            cardPiles = res.rows[0].cardpiles;
             var pReady = res.rows[0].playerready;
             pReady[playerIndex] = 2;
             var tempReady = 0
@@ -402,7 +402,7 @@ io.on('connection', function (socket) {
                 }
             }
             if (/*tempReady === 4 && */playerIndex === 0) {
-                socket.emit('all clients ready', roomID, playerIndex, pIDs, pCommander, pKingdom, pCards);
+                socket.emit('all clients ready', roomID, playerIndex, pIDs, pCommander, pKingdom, cardPiles);
                 pool.query(
                     'UPDATE "GRIDs" SET playerready = $1 WHERE idname = $2;', [
                         [1, 1, 1, 1], roomID
@@ -413,7 +413,7 @@ io.on('connection', function (socket) {
                 });
             } else {
                 /*temporary ready check
-                socket.emit('all clients ready', roomID, playerIndex, pIDs, pCommander, pKingdom, pCards);*/
+                socket.emit('all clients ready', roomID, playerIndex, pIDs, pCommander, pKingdom, cardPiles);*/
                 pool.query(
                     'UPDATE "GRIDs" SET playerready[$1] = 2 WHERE idname = $2;', [
                         playerIndex, roomID
@@ -427,17 +427,17 @@ io.on('connection', function (socket) {
             
         });
     });
-    socket.on('share new game data', function(roomID, sCardpiles) {
+    socket.on('share new game data', function(roomID, sCardPiles) {
         logger.log('sharing data of new game');
         pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
             var pIDs = res.rows[0].playerid;
             var pCommander = res.rows[0].playercommname;
             var pKingdom = res.rows[0].playerkingdompref;
-            cardpiles = sCardpiles;
-            socket.broadcast.to(roomID).emit('return game data', roomID, pIDs, pCommander, pKingdom, cardpiles);
+            cardPiles = sCardPiles;
+            socket.broadcast.to(roomID).emit('return game data', roomID, pIDs, pCommander, pKingdom, cardPiles);
             pool.query(
                 'UPDATE "GRIDs" SET cardpiles = $1 WHERE idname = $2;', [
-                    cardpiles, roomID
+                    cardPiles, roomID
                 ], function (err, data) {
                     if (err) {
                         throw new Error('Error updating hands of game room ' + roomID);
@@ -451,10 +451,10 @@ io.on('connection', function (socket) {
             var pIDs = res.rows[0].playerid;
             var pCommander = res.rows[0].playercommname;
             var pKingdom = res.rows[0].playerkingdompref;
-            cardpiles = res.rows[0].cardpiles;
+            cardPiles = res.rows[0].cardpiles;
             logger.log('returning game data to clients');
-            logger.log(cardpiles);
-            socket.broadcast.to(roomID).emit('return game data', roomID, pIDs, pCommander, pKingdom, cardpiles);
+            logger.log(cardPiles);
+            socket.broadcast.to(roomID).emit('return game data', roomID, pIDs, pCommander, pKingdom, cardPiles);
         })
         .catch(e => {
             logger.error('query error', e.message, e.stack);
