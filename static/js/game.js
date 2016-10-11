@@ -720,7 +720,7 @@ $(document).ready(function () {
         drawPile = tempCardPiles[0];
 
         //player cards
-        pCards = allHands[playerNumber];
+        pCards = tempCardPiles[((playerNumber * 3) + 1)];
         for (var cards = 0; cards < pCards.length; cards++) {
             document.getElementsByClassName('cardImage')[cards].innerHTML = pCards[cards] + '. ' + referenceCards[pCards[cards]].name;
         }
