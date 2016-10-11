@@ -252,13 +252,12 @@ table#playerTable td {
 }
 table#playerTable td#kingdomImage {
 	width: 15%;
-	object-fit: fill;
 }
 table#playerTable td#kingdomImage img {
-	object-fit: fill;
+	height: auto;
+	width: 100%;
 }
 table#playerTable td#commanderName {
-	height: 25%;
 }
 table#playerTable td.cardImage {
 	border: 1px solid black;
