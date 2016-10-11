@@ -669,6 +669,7 @@ $(document).ready(function () {
     });
     socket.on('return game data', function(roomID, playerIndex, pIDs, pCommander, pKingdom, sCardpiles) {
         console.log('received game data');
+        console.log(sCardpiles);
         gameStarted = true;
         var tempCardPiles = JSON.parse(sCardpiles);
         nOfCards = [tempCardPiles[1].length,tempCardPiles[4].length,tempCardPiles[7].length,tempCardPiles[10].length,tempCardPiles[0].length];
