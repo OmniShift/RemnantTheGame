@@ -255,7 +255,7 @@ table#playerTable td#kingdomImage {
 }
 table#playerTable td#kingdomImage img {
 	height: auto;
-	width: 100%;
+	width: auto;
 }
 table#playerTable td#commanderName {
 }
