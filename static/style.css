@@ -254,12 +254,10 @@ table#playerTable td {
 	text-align: center;
 }
 table#playerTable td#kingdomImage {
-	width: 15%;
+	/*width: 15%;*/
 }
 table#playerTable td#commanderName {
-}
-table#playerTable td.cardOptions {
-	border: 1px solid black;
+	height: 25%;
 }
 table#playerTable td.cardImage {
 	border: 1px solid black;
