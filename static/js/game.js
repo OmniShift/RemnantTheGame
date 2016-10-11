@@ -632,7 +632,6 @@ $(document).ready(function () {
         } else {
             for (var p = 0; p < 4; p++) {
                 nOfCards[p] = allHands[p].length;
-                console.log(nOfCards);
                 if (document.getElementById('player' + p + 'Cards') !== null) {
                     document.getElementById('player' + p + 'Cards').innerHTML = nOfCards[p];
                 }
