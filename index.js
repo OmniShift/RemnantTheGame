@@ -384,6 +384,7 @@ io.on('connection', function (socket) {
     var cardpiles = [];
 
     socket.on('client ready', function(roomID, UID) {
+        socket.join(roomID);
         //logger.log('readying client ' + UID + ' in room ' + roomID);
         pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
             playerIndex = res.rows[0].playerid.indexOf(UID);
