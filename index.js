@@ -427,7 +427,7 @@ io.on('connection', function (socket) {
         });
     });
     socket.on('share new game data', function(roomID, sCardpiles) {
-        //logger.log(allHands);
+        logger.log('sharing data of new game');
         pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
             var pIDs = res.rows[0].playerid;
             var pCommander = res.rows[0].playercommname;
@@ -445,7 +445,7 @@ io.on('connection', function (socket) {
         });
     });
     socket.on('share old game data', function(roomID) {
-        //logger.log(allHands);
+        logger.log('sharing data of continued game');
         pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
             var pIDs = res.rows[0].playerid;
             var pCommander = res.rows[0].playercommname;
