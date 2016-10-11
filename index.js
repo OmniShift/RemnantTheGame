@@ -382,10 +382,10 @@ io.on('connection', function (socket) {
     var playerIndex = -99;
 
     socket.on('client ready', function(roomID, UID) {
-        logger.log('readying client ' + UID + ' in room ' + roomID);
+        //logger.log('readying client ' + UID + ' in room ' + roomID);
         pool.query('SELECT * FROM "GRIDs" WHERE idname = $1;', [roomID]).then(res => {
             playerIndex = res.rows[0].playerid.indexOf(UID);
-            logger.log(playerIndex);
+            //logger.log(playerIndex);
             var pIDs = res.rows[0].playerid;
             var pCommander = res.rows[0].playercommname;
             var pKingdom = res.rows[0].playerkingdompref;
@@ -447,7 +447,7 @@ io.on('connection', function (socket) {
             var pCommander = res.rows[0].playercommname;
             var pKingdom = res.rows[0].playerkingdompref;
             var cardpiles = res.rows[0].cardpiles;
-            socket.broadcast.to(roomID).emit('return game data', roomID, playerIndex, pIDs, pCommander, pKingdom, cardpiles);
+            socket.broadcast.to(roomID).emit('return game data', roomID, pIDs, pCommander, pKingdom, cardpiles);
         });
     });
 
