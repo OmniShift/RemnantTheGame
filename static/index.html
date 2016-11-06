@@ -23,15 +23,15 @@
 				<h2>Show those pesky Remnantians who was meant to rule them</h2>
 				<button id="createJoinButton" onclick="newGameWarning()">Create/Join New Game</button><br>
 				<button id="continueGameButton" onclick="continueGame()" disabled="">Continue Game</button><br>
-				<!--<button id="testerIDButton" onclick="toTestersPage()">To Testers Page</button><br>
-				
+				<button id="testerIDButton" onclick="toTestersPage()">To Testers Page</button><br>
+				<!--
 									<button onclick="testFunc()">php test</button><br>
 									<button onclick="showNewGameSettings()">test button 2</button></div>
 									-->
 				<div class="popUp" id="newGameSettings">
 					<div class="popUpTop" style="text-align:center">
 						<div style="font-weight:bold; font-size:1.7em; padding:7px">New game</div>
-						<p style="text-align:center; font-size:1.5em">There are no settings yet this early on in the game's development, so you have no options to choose from.</p>
+						<p style="text-align:center; font-size:1.5em">There are no settings yet this early on in the game"s development, so you have no options to choose from.</p>
 						<p style="text-align:center; font-size:1.5em">...you lucky devil!</p>
 					</div>
 					<!--
@@ -77,7 +77,7 @@
 					<div class="popUpBottom">
 						<p style="font-size:1.2em">Please insert your room code:<br>
 							<input id="roomCode" type="text" name="roomCode" autocomplete="off" maxlength="5" autofocus=""></p>
-						<button id="joinGameButton" onclick="roomCodeCheck()">Join game</button>
+						<button onclick="roomCodeCheck()">Join game</button>
 						<button onclick="hideJoinNewGame()">Cancel</button>
 					</div>
 				</div>
@@ -93,8 +93,7 @@
 						<div class="lobbyPlayerSlot" id="hLobbySlot1">Waiting for player to join...</div><br>
 						<div class="lobbyPlayerSlot" id="hLobbySlot2">Waiting for player to join...</div><br>
 						<div class="lobbyPlayerSlot" id="hLobbySlot3">Waiting for player to join...</div><br>
-						<!--disable button below for release - disabled=""-->
-						<button id="startGameButton" onclick="startGame()">Start game</button>
+						<button id="startGameButton" onclick="" disabled="">Start game</button>
 						<button onclick="hostLeave()">Cancel</button>
 					</div>
 				</div>

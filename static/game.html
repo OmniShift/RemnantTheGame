@@ -9,25 +9,22 @@
 	<body>
 		<div id="backgroundMain">
 		<div id="overlay">
-			<div id="otherPlayers"><table id="otherPlayersTable">
+			<div id="otherPlayers"><!--This is where the card covers and number of card of the other players are displayed (left)--><table id="otherPlayersTable">
 				<tr><td id="p1Area" style="background-image: url('images/card_back_placeholder.png'); background-size: 100% 100%;"></td></tr>
 				<tr><td id="p2Area" style="background-image: url('images/card_back_placeholder.png'); background-size: 100% 100%;"></td></tr>
 				<tr><td id="p3Area" style="background-image: url('images/card_back_placeholder.png'); background-size: 100% 100%;"></td></tr>
 			</table></div>
-
 			<div id="gameInfo"><!--This is where the draw pile, possibly some options and other game information is displayed (right)--><table id="cardPiles">
 				<tr><td id="drawPile" style="background-image: url('images/card_back_placeholder.png'); background-size: 100% 100%;"></td></tr>
-				<tr><td id="discardPile" style="border: 1px dashed black"></td></tr>
-			</table></div>
-
+			</table>
+			<button id="endTurnButton">End Turn</button>
+			<div id="terStateInfo"><table id="terGenInfo"></table><table id="terUnitInfo"></table></div></div>
 			<div id="gameBoard">
-				<svg viewBox="0 0 3840 2160" preserveAspectRatio="none">
+				<svg viewBox="0 0 3840 2160" preserveAspectRatio="none" id="gameBoardSVG">
 					<use xlink:href="images/game board.svg#svg2"></use>
 				</svg>
-				<canvas id="gameBoardCanvas" />
 			</div>
-
-			<div id="playerCards"><!--<div id="playerKingdom"></div>--><table id="playerTable">
+			<div id="playerCards"><!--<div id="playerKingdom"></div>--><!--This is where the player's own cards are displayed (bottom)--><table id="playerTable">
 				<tr class="images">
 					<td id="kingdomImage"></td>
 					<td id="cardImage1" class="cardImage" rowspan="2"></td>
@@ -45,9 +42,12 @@
 			</table></div>
 		</div><!--end of overlay-->
 		</div><!--end of backgroundMain-->
-		<script src="/socket.io/socket.io.js"></script>
+		
+		<!--<script src="/socket.io/socket.io.js"></script>-->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-		<script src="/js/js.cookie-2.1.2.min.js"></script>
-		<script src="/js/game.js"></script>
+		<script src="https://d3js.org/d3.v4.min.js"></script>
+		<!--<script src="/js/js.cookie-2.1.2.min.js"></script>-->
+		<!--remove the static folder on deployment-->
+		<script src="/static/js/game.js"></script>
 	</body>
 </html>
