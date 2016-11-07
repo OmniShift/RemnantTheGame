@@ -670,7 +670,7 @@ $(document).ready(function () {
 			document.getElementById('unitNumbersTer' + tempTerID).classList.add('territoryText');
 			document.getElementById('unitNumbersTer' + tempTerID).classList.add('territoryArea');
 			territoryStateInfo[tempTerID].ownedByPlayer = 2;
-			territoryStateInfo[terID].occupiedByPlayer = 2;
+			territoryStateInfo[tempTerID].occupiedByPlayer = 2;
 		}
 		d3.select('#unitNumbersTer' + tempTerID).text(territoryStateInfo[tempTerID].occupiedByUnits.length.toString());
 		$('#cardImage' + (altCardPiles[((2 * 3) + 1)].indexOf(tempActiveCard) + 1)).removeClass('selected');
@@ -707,7 +707,7 @@ $(document).ready(function () {
 			document.getElementById('unitNumbersTer' + tempTerID).classList.add('territoryText');
 			document.getElementById('unitNumbersTer' + tempTerID).classList.add('territoryArea');
 			territoryStateInfo[tempTerID].ownedByPlayer = playerNumber;
-			territoryStateInfo[terID].occupiedByPlayer = playerNumber;
+			territoryStateInfo[tempTerID].occupiedByPlayer = playerNumber;
 		}
 		d3.select('#unitNumbersTer' + tempTerID).text(territoryStateInfo[tempTerID].occupiedByUnits.length.toString());
 		$('#cardImage' + (altCardPiles[((playerNumber * 3) + 1)].indexOf(tempActiveCard) + 1)).removeClass('selected');
@@ -958,12 +958,6 @@ $(document).ready(function () {
 				td.appendChild(textNode);
 				tr.appendChild(td);
 				document.getElementById('terUnitInfo').appendChild(tr);
-				$('#terUnitInfo' + item).hover(function() {
-					//$('#terUnitTooltip' + item).toggleClass('showTooltip');
-					//$('#terUnitTooltip' + item - 1).toggle();
-					//console.log(item);
-					$(this).toggleClass('hoveredUnit');
-				});
 				if (territoryStateInfo[terID].occupiedByPlayer === playerNumber) {
 					$('#terUnitInfo' + item).click(function() {
 						$(this).toggleClass('selected');
@@ -1111,6 +1105,12 @@ $(document).ready(function () {
 					tooltipContainer.appendChild(tooltipTable);
 				document.getElementById('gameInfo').appendChild(tooltipContainer);
 				$('#terUnitTooltip' + item).addClass('tooltip');
+				$('#terUnitInfo' + item).hover(function() {
+					$('#terUnitTooltip' + item).toggleClass('showTooltip');
+					//$('#terUnitTooltip' + item).toggle();
+					console.log(item);
+					$(this).toggleClass('hoveredUnit');
+				});
 				//$('#terUnitTooltip' + item).hide();
 				//console.log(item);
 				/*$('#terUnitInfo' + item).hover(function(){
@@ -1158,10 +1158,10 @@ $(document).ready(function () {
 		for (var speedI = 0; speedI < maxSpeed; speedI++) {
 			var tempCheckedTers = checkedTers.length;
 			for (var currentTer = oldCheckedTers; currentTer < tempCheckedTers; currentTer++) {
+				//moveable/attackeable by: 0=ground, 1=naval, 2, flying
+				var canMoveFrom = [1,1,1];
+				var canAttackFrom = [1,1,1];
 				if (territoryStateInfo[currentTer].naturalHazardIDs.length > 0) {
-					//moveable/attackeable by: 0=ground, 1=naval, 2, flying
-					var canMoveFrom = [1,1,1];
-					var canAttackFrom = [1,1,1];
 					for (var hazard = 0; hazard < territoryStateInfo[currentTer].naturalHazardIDs.length; hazard++) {
 						switch(referenceCards[territoryStateInfo[currentTer].naturalHazardIDs[hazard]].name) {
 							case 'Earthquake':
@@ -1221,7 +1221,7 @@ $(document).ready(function () {
 															}
 														}
 													}
-													if (canAttackFrom[0] === 1 && canAttackTo[0] === 1 && canAttackFrom[1] === 1 && canAttackTo[1] === 1 && canAttackFrom[2] === 1 && canAttackTo[2] === 1 && ) {
+													if (canAttackFrom[0] === 1 && canAttackTo[0] === 1 && canAttackFrom[1] === 1 && canAttackTo[1] === 1 && canAttackFrom[2] === 1 && canAttackTo[2] === 1) {
 														$('#territoryArea' + tempAdjID).addClass('viableAttackTarget');
 													}
 												}
@@ -1490,7 +1490,7 @@ $(document).ready(function () {
 															}
 														}
 													}
-													if (canAttackFrom[0] === 1 && canAttackTo[0] === 1 && canAttackFrom[1] === 1 && canAttackTo[1] === 1 && canAttackFrom[2] === 1 && canAttackTo[2] === 1 && ) {
+													if (canAttackFrom[0] === 1 && canAttackTo[0] === 1 && canAttackFrom[1] === 1 && canAttackTo[1] === 1 && canAttackFrom[2] === 1 && canAttackTo[2] === 1) {
 														$('#territoryArea' + tempAdjID).addClass('viableAttackTarget');
 													}
 												}

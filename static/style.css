@@ -217,7 +217,7 @@ table#terUnitInfo td.hoveredUnit {
 .tooltip {
 	width: 10%;
 	/*height: 25%;*/
-	/*visibility: hidden;*/
+	visibility: hidden;
 	background-color: black;
 	color: white;
 	text-align: left;
