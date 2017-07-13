@@ -7,47 +7,316 @@
 		<title>Remnant - The Game</title>
 	</head>
 	<body>
-		<div id="backgroundMain">
-		<div id="overlay">
-			<div id="otherPlayers"><!--This is where the card covers and number of card of the other players are displayed (left)--><table id="otherPlayersTable">
+		<div id="main">
+			<!--This is where the card covers and number of card of the other players are displayed (left)-->
+			<div id="otherPlayers"><table id="otherPlayersTable">
 				<tr><td id="p1Area" style="background-image: url('images/card_back_placeholder.png'); background-size: 100% 100%;"></td></tr>
 				<tr><td id="p2Area" style="background-image: url('images/card_back_placeholder.png'); background-size: 100% 100%;"></td></tr>
 				<tr><td id="p3Area" style="background-image: url('images/card_back_placeholder.png'); background-size: 100% 100%;"></td></tr>
 			</table></div>
-			<div id="gameInfo"><!--This is where the draw pile, possibly some options and other game information is displayed (right)--><table id="cardPiles">
-				<tr><td id="drawPile" style="background-image: url('images/card_back_placeholder.png'); background-size: 100% 100%;"></td></tr>
-			</table>
-			<button id="endTurnButton">End Turn</button>
-			<div id="terStateInfo"><table id="terGenInfo"></table><table id="terUnitInfo"></table></div></div>
+
+			<!--This is where the draw pile, possibly some options and other game information is displayed (right)-->
+			<div id="gameInfo">
+				<table id="cardPiles">
+					<tr><td id="drawPile" style="background-image: url('images/card_back_placeholder.png'); background-size: 100% 100%;"></td></tr>
+					<tr><td id="cardPreviewArea">
+						<table class="cardVisuals" id="cardPreview">
+							<tr class="cardVisualsStats" id="cardVisualsStatsPreview"><td><div class="cardVisualsName" id="cardVisualsNamePreview">Knights of the Golden Sparrow</div>
+							<div class="cardVisualsDuration" id="cardVisualsDurationPreview">3TU</div><div class="cardVisualsSpeed" id="cardVisualsSpeedPreview">1SP</div><div class="cardVisualsAttack" id="cardVisualsAttackPreview">25AT</div><div class="cardVisualsHP" id="cardVisualsHPPreview">25/25HP</div></td></tr>
+							<tr class="cardVisualsImage"><td><img class="cardVisualsImage" id="cardVisualsImagePreview" src="images/Ralph_unit_card.jpg"></td></tr>
+							<tr class="cardVisualsSizeTypeMechanical" id="cardVisualsSizeTypeMechanicalPreview"><td><div class="cardVisualsSizeType" id="cardVisualsSizeTypePreview">Colossal unit</div><div class="cardVisualsMechanical" id="cardVisualsMechanicalPreview">Full-Mech.</div></td></tr>
+							<tr><td><div class="cardVisualsDescription" id="cardVisualsDescriptionPreview"></div></td></tr>
+						</table>
+						<div class="cardVisualsOverlay" id="cardVisualsOverlayPreview"></div>
+					</td></tr>
+					<tr><td id="cardHistory">
+						<div id="cardHistoryHeader"><center><u>Card history</u></center></div>
+						<div id="cardHistoryList"><table id="cardHistoryTable"></table></div>
+					</td></tr>
+				</table>
+				<button id="surrenderButton">Surrender</button><BR>
+				<button id="endTurnButton">End Turn</button>
+				<!--<button id="drawButton">draw card</button>-->
+				<div id="terStateInfo"><table id="terGenInfo"></table><table id="terUnitInfo"></table></div>
+			</div>
+
+			<div id="flyingCard" style="background-image: url('images/card_back_placeholder.png'); background-size: 100% 100%;"></div>
 			<div id="gameBoard">
-				<svg viewBox="0 0 3840 2160" preserveAspectRatio="none" id="gameBoardSVG">
+				<svg id="gameBoardSVG" viewBox="0 0 3840 2160" preserveAspectRatio="none">
+					<defs>
+						<marker id="attackArrowMarker" viewBox="0 0 3840 2160" markerWidth="15" markerHeight="30" refx="750" refy="600" orient="auto">
+							<path d="M200,200 L200,1000 L1000,600 L200,200" style="fill:red;" />
+						</marker>
+						<marker id="moveArrowMarker" viewBox="0 0 3840 2160" markerWidth="15" markerHeight="30" refx="750" refy="600" orient="auto">
+							<path d="M200,200 L200,1000 L1000,600 L200,200" style="fill:darkblue;" />
+						</marker>
+					</defs>
 					<use xlink:href="images/game board.svg#svg2"></use>
 				</svg>
 			</div>
-			<div id="playerCards"><!--<div id="playerKingdom"></div>--><!--This is where the player's own cards are displayed (bottom)--><table id="playerTable">
+			
+			<!--This is where the player's own cards are displayed (bottom)-->
+			<div id="playerCards"><table id="playerTable">
 				<tr class="images">
 					<td id="kingdomImage"></td>
-					<td id="cardImage1" class="cardImage" rowspan="2"></td>
-					<td id="cardImage2" class="cardImage" rowspan="2"></td>
-					<td id="cardImage3" class="cardImage" rowspan="2"></td>
-					<td id="cardImage4" class="cardImage" rowspan="2"></td>
-					<td id="cardImage5" class="cardImage" rowspan="2"></td>
-					<td id="cardImage6" class="cardImage" rowspan="2"></td>
-					<td id="cardImage7" class="cardImage" rowspan="2"></td>
-					<td id="cardImage8" class="cardImage" rowspan="2"></td>
+					<td id="cardImage1" class="cardImage" rowspan="2">
+						<table class="cardVisuals" id="cardVisuals1">
+							<tr class="cardVisualsStats" id="cardVisualsStats1"><td><div class="cardVisualsName" id="cardVisualsName1"></div>
+							<div class="cardVisualsDuration" id="cardVisualsDuration1"></div><div class="cardVisualsSpeed" id="cardVisualsSpeed1"></div><div class="cardVisualsAttack" id="cardVisualsAttack1"></div><div class="cardVisualsHP" id="cardVisualsHP1"></div></td></tr>
+							<tr class="cardVisualsImage"><td><div class="cardVisualsImageContainer"><img class="cardVisualsImage" id="cardVisualsImage1" src=""><div class="cardVisualsImageDiv"><button class="discardButton">X</button></div></div></td></tr>
+							<tr class="cardVisualsSizeTypeMechanical" id="cardVisualsSizeTypeMechanical1"><td><div class="cardVisualsSizeType" id="cardVisualsSizeType1"></div><div class="cardVisualsMechanical" id="cardVisualsMechanical1"></div></td></tr>
+							<tr><td><div class="cardVisualsDescription" id="cardVisualsDescription1"></div></td></tr>
+						</table>
+					</td>
+					<td id="cardImage2" class="cardImage" rowspan="2">
+						<table class="cardVisuals" id="cardVisuals2">
+							<tr class="cardVisualsStats" id="cardVisualsStats2"><td><div class="cardVisualsName" id="cardVisualsName2"></div>
+							<div class="cardVisualsDuration" id="cardVisualsDuration2"></div><div class="cardVisualsSpeed" id="cardVisualsSpeed2"></div><div class="cardVisualsAttack" id="cardVisualsAttack2"></div><div class="cardVisualsHP" id="cardVisualsHP2"></div></td></tr>
+							<tr class="cardVisualsImage"><td><div class="cardVisualsImageContainer"><img class="cardVisualsImage" id="cardVisualsImage2" src=""><div class="cardVisualsImageDiv"><button class="discardButton">X</button></div></div></td></tr>
+							<tr class="cardVisualsSizeTypeMechanical" id="cardVisualsSizeTypeMechanical2"><td><div class="cardVisualsSizeType" id="cardVisualsSizeType2"></div><div class="cardVisualsMechanical" id="cardVisualsMechanical2"></div></td></tr>
+							<tr><td><div class="cardVisualsDescription" id="cardVisualsDescription2"></div></td></tr>
+						</table>
+					</td>
+					<td id="cardImage3" class="cardImage" rowspan="2">
+						<table class="cardVisuals" id="cardVisuals3">
+							<tr class="cardVisualsStats" id="cardVisualsStats3"><td><div class="cardVisualsName" id="cardVisualsName3"></div>
+							<div class="cardVisualsDuration" id="cardVisualsDuration3"></div><div class="cardVisualsSpeed" id="cardVisualsSpeed3"></div><div class="cardVisualsAttack" id="cardVisualsAttack3"></div><div class="cardVisualsHP" id="cardVisualsHP3"></div></td></tr>
+							<tr class="cardVisualsImage"><td><div class="cardVisualsImageContainer"><img class="cardVisualsImage" id="cardVisualsImage3" src=""><div class="cardVisualsImageDiv"><button class="discardButton">X</button></div></div></td></tr>
+							<tr class="cardVisualsSizeTypeMechanical" id="cardVisualsSizeTypeMechanical3"><td><div class="cardVisualsSizeType" id="cardVisualsSizeType3"></div><div class="cardVisualsMechanical" id="cardVisualsMechanical3"></div></td></tr>
+							<tr><td><div class="cardVisualsDescription" id="cardVisualsDescription3"></div></td></tr>
+						</table>
+					</td>
+					<td id="cardImage4" class="cardImage" rowspan="2">
+						<table class="cardVisuals" id="cardVisuals4">
+							<tr class="cardVisualsStats" id="cardVisualsStats4"><td><div class="cardVisualsName" id="cardVisualsName4"></div>
+							<div class="cardVisualsDuration" id="cardVisualsDuration4"></div><div class="cardVisualsSpeed" id="cardVisualsSpeed4"></div><div class="cardVisualsAttack" id="cardVisualsAttack4"></div><div class="cardVisualsHP" id="cardVisualsHP4"></div></td></tr>
+							<tr class="cardVisualsImage"><td><div class="cardVisualsImageContainer"><img class="cardVisualsImage" id="cardVisualsImage4" src=""><div class="cardVisualsImageDiv"><button class="discardButton">X</button></div></div></td></tr>
+							<tr class="cardVisualsSizeTypeMechanical" id="cardVisualsSizeTypeMechanical4"><td><div class="cardVisualsSizeType" id="cardVisualsSizeType4"></div><div class="cardVisualsMechanical" id="cardVisualsMechanical4"></div></td></tr>
+							<tr><td><div class="cardVisualsDescription" id="cardVisualsDescription4"></div></td></tr>
+						</table>
+					</td>
+					<td id="cardImage5" class="cardImage" rowspan="2">
+						<table class="cardVisuals" id="cardVisuals5">
+							<tr class="cardVisualsStats" id="cardVisualsStats5"><td><div class="cardVisualsName" id="cardVisualsName5"></div>
+							<div class="cardVisualsDuration" id="cardVisualsDuration5"></div><div class="cardVisualsSpeed" id="cardVisualsSpeed5"></div><div class="cardVisualsAttack" id="cardVisualsAttack5"></div><div class="cardVisualsHP" id="cardVisualsHP5"></div></td></tr>
+							<tr class="cardVisualsImage"><td><div class="cardVisualsImageContainer"><img class="cardVisualsImage" id="cardVisualsImage5" src=""><div class="cardVisualsImageDiv"><button class="discardButton">X</button></div></div></td></tr>
+							<tr class="cardVisualsSizeTypeMechanical" id="cardVisualsSizeTypeMechanical5"><td><div class="cardVisualsSizeType" id="cardVisualsSizeType5"></div><div class="cardVisualsMechanical" id="cardVisualsMechanical5"></div></td></tr>
+							<tr><td><div class="cardVisualsDescription" id="cardVisualsDescription5"></div></td></tr>
+						</table>
+					</td>
+					<td id="cardImage6" class="cardImage" rowspan="2">
+						<table class="cardVisuals" id="cardVisuals6">
+							<tr class="cardVisualsStats" id="cardVisualsStats6"><td><div class="cardVisualsName" id="cardVisualsName6"></div>
+							<div class="cardVisualsDuration" id="cardVisualsDuration6"></div><div class="cardVisualsSpeed" id="cardVisualsSpeed6"></div><div class="cardVisualsAttack" id="cardVisualsAttack6"></div><div class="cardVisualsHP" id="cardVisualsHP6"></div></td></tr>
+							<tr class="cardVisualsImage"><td><div class="cardVisualsImageContainer"><img class="cardVisualsImage" id="cardVisualsImage6" src=""><div class="cardVisualsImageDiv"><button class="discardButton">X</button></div></div></td></tr>
+							<tr class="cardVisualsSizeTypeMechanical" id="cardVisualsSizeTypeMechanical6"><td><div class="cardVisualsSizeType" id="cardVisualsSizeType6"></div><div class="cardVisualsMechanical" id="cardVisualsMechanical6"></div></td></tr>
+							<tr><td><div class="cardVisualsDescription" id="cardVisualsDescription6"></div></td></tr>
+						</table>
+					</td>
+					<td id="cardImage7" class="cardImage" rowspan="2">
+						<table class="cardVisuals" id="cardVisuals7">
+							<tr class="cardVisualsStats" id="cardVisualsStats7"><td><div class="cardVisualsName" id="cardVisualsName7"></div>
+							<div class="cardVisualsDuration" id="cardVisualsDuration7"></div><div class="cardVisualsSpeed" id="cardVisualsSpeed7"></div><div class="cardVisualsAttack" id="cardVisualsAttack7"></div><div class="cardVisualsHP" id="cardVisualsHP7"></div></td></tr>
+							<tr class="cardVisualsImage"><td><div class="cardVisualsImageContainer"><img class="cardVisualsImage" id="cardVisualsImage7" src=""><div class="cardVisualsImageDiv"><button class="discardButton">X</button></div></div></td></tr>
+							<tr class="cardVisualsSizeTypeMechanical" id="cardVisualsSizeTypeMechanical7"><td><div class="cardVisualsSizeType" id="cardVisualsSizeType7"></div><div class="cardVisualsMechanical" id="cardVisualsMechanical7"></div></td></tr>
+							<tr><td><div class="cardVisualsDescription" id="cardVisualsDescription7"></div></td></tr>
+						</table>
+					</td>
+					<td id="cardImage8" class="cardImage" rowspan="2">
+						<table class="cardVisuals" id="cardVisuals8">
+							<tr class="cardVisualsStats" id="cardVisualsStats8"><td><div class="cardVisualsName" id="cardVisualsName8"></div>
+							<div class="cardVisualsDuration" id="cardVisualsDuration8"></div><div class="cardVisualsSpeed" id="cardVisualsSpeed8"></div><div class="cardVisualsAttack" id="cardVisualsAttack8"></div><div class="cardVisualsHP" id="cardVisualsHP8"></div></td></tr>
+							<tr class="cardVisualsImage"><td><div class="cardVisualsImageContainer"><img class="cardVisualsImage" id="cardVisualsImage8" src=""><div class="cardVisualsImageDiv"><button class="discardButton">X</button></div></div></td></tr>
+							<tr class="cardVisualsSizeTypeMechanical" id="cardVisualsSizeTypeMechanical8"><td><div class="cardVisualsSizeType" id="cardVisualsSizeType8"></div><div class="cardVisualsMechanical" id="cardVisualsMechanical8"></div></td></tr>
+							<tr><td><div class="cardVisualsDescription" id="cardVisualsDescription8"></div></td></tr>
+						</table>
+					</td>
 				</tr>
 				<tr class="options">
 					<td id="commanderName" style="font-size: 1.35em"></td>
 				</tr>
 			</table></div>
-		</div><!--end of overlay-->
-		</div><!--end of backgroundMain-->
+		</div>
+
+		<!--Pop up windows-->
+		<!--TO DO: when checking for cookies warn players that playing in private mode (FF), incognito mode (chrome), or similar browser modes that prevent cookie storage prevents the possibility of continuing any old game or game that you start in this mode. Ill have to check if that overwrites existing cookies, permanently preventing continuing old games-->
+		<div id="overlayWindowsBackground"></div><!--FUTURE FIX: why doesn't this appear at all?-->
+		<div id="overlayWindows">
+			<div class="popUp" id="combat">
+				<table id="combatTable">
+					<tr id="combatHeaders">
+						<td class="combatAttackers"></td>
+						<td class="combatBlankArea"></td>
+						<td class="combatWall"></td>
+						<td class="combatDefenders"></td>
+					</tr>
+					<tr id="combatUnits">
+						<td class="combatAttackers"></td>
+						<td class="combatBlankArea"></td>
+						<td class="combatWall"></td>
+						<td class="combatDefenders"></td>
+					</tr>
+				</table>
+			</div>
+			<div class="popUp" id="utilityApplier">
+				<table id="utilityTable">
+				</table>
+				<center><button id="utilityCancelButton">Cancel</button></center>
+			</div>
+			<div class="popUp" id="cardCarousel">
+				<table id="carouselTable">
+					<tr id="carouselMoveRow">
+						<td></td>
+						<td><center><button id="carouselBack"><-</button></center></td>
+						<td></td>
+						<td><center><button id="carouselForward">-></button></center></td>
+						<td></td>
+					</tr>
+					<tr id="carouselCardsRow">
+						<td>
+							<table class="cardVisuals" id="carouselVisuals-2">
+								<tr class="cardVisualsStats" id="carouselVisualsStats-2"><td><div class="cardVisualsName" id="carouselVisualsName-2"></div>
+								<div class="cardVisualsDuration" id="carouselVisualsDuration-2"></div><div class="cardVisualsSpeed" id="carouselVisualsSpeed-2"></div><div class="cardVisualsAttack" id="carouselVisualsAttack-2"></div><div class="cardVisualsHP" id="carouselVisualsHP-2"></div></td></tr>
+								<tr class="cardVisualsImage"><td><img class="cardVisualsImage" id="carouselVisualsImage-2" src=""></td></tr>
+								<tr class="cardVisualsSizeTypeMechanical" id="carouselVisualsSizeTypeMechanical-2"><td><div class="cardVisualsSizeType" id="carouselVisualsSizeType-2"></div><div class="cardVisualsMechanical" id="carouselVisualsMechanical-2"></div></td></tr>
+								<tr><td><div class="cardVisualsDescription" id="carouselVisualsDescription-2"></div></td></tr>
+							</table>
+						</td>
+						<td>
+							<table class="cardVisuals" id="carouselVisuals-1">
+								<tr class="cardVisualsStats" id="carouselVisualsStats-1"><td><div class="cardVisualsName" id="carouselVisualsName-1"></div>
+								<div class="cardVisualsDuration" id="carouselVisualsDuration-1"></div><div class="cardVisualsSpeed" id="carouselVisualsSpeed-1"></div><div class="cardVisualsAttack" id="carouselVisualsAttack-1"></div><div class="cardVisualsHP" id="carouselVisualsHP-1"></div></td></tr>
+								<tr class="cardVisualsImage"><td><img class="cardVisualsImage" id="carouselVisualsImage-1" src=""></td></tr>
+								<tr class="cardVisualsSizeTypeMechanical" id="carouselVisualsSizeTypeMechanical-1"><td><div class="cardVisualsSizeType" id="carouselVisualsSizeType-1"></div><div class="cardVisualsMechanical" id="carouselVisualsMechanical-1"></div></td></tr>
+								<tr><td><div class="cardVisualsDescription" id="carouselVisualsDescription-1"></div></td></tr>
+							</table>
+						</td>
+						<td>
+							<table class="cardVisuals" id="carouselVisuals0">
+								<tr class="cardVisualsStats" id="carouselVisualsStats0"><td><div class="cardVisualsName" id="carouselVisualsName0"></div>
+								<div class="cardVisualsDuration" id="carouselVisualsDuration0"></div><div class="cardVisualsSpeed" id="carouselVisualsSpeed0"></div><div class="cardVisualsAttack" id="carouselVisualsAttack0"></div><div class="cardVisualsHP" id="carouselVisualsHP0"></div></td></tr>
+								<tr class="cardVisualsImage"><td><img class="cardVisualsImage" id="carouselVisualsImage0" src=""></td></tr>
+								<tr class="cardVisualsSizeTypeMechanical" id="carouselVisualsSizeTypeMechanical0"><td><div class="cardVisualsSizeType" id="carouselVisualsSizeType0"></div><div class="cardVisualsMechanical" id="carouselVisualsMechanical0"></div></td></tr>
+								<tr><td><div class="cardVisualsDescription" id="carouselVisualsDescription0"></div></td></tr>
+							</table>
+						</td>
+						<td>
+							<table class="cardVisuals" id="carouselVisuals1">
+								<tr class="cardVisualsStats" id="carouselVisualsStats1"><td><div class="cardVisualsName" id="carouselVisualsName1"></div>
+								<div class="cardVisualsDuration" id="carouselVisualsDuration1"></div><div class="cardVisualsSpeed" id="carouselVisualsSpeed1"></div><div class="cardVisualsAttack" id="carouselVisualsAttack1"></div><div class="cardVisualsHP" id="carouselVisualsHP1"></div></td></tr>
+								<tr class="cardVisualsImage"><td><img class="cardVisualsImage" id="carouselVisualsImage1" src=""></td></tr>
+								<tr class="cardVisualsSizeTypeMechanical" id="carouselVisualsSizeTypeMechanical1"><td><div class="cardVisualsSizeType" id="carouselVisualsSizeType1"></div><div class="cardVisualsMechanical" id="carouselVisualsMechanical1"></div></td></tr>
+								<tr><td><div class="cardVisualsDescription" id="carouselVisualsDescription1"></div></td></tr>
+							</table>
+						</td>
+						<td>
+							<table class="cardVisuals" id="carouselVisuals2">
+								<tr class="cardVisualsStats" id="carouselVisualsStats2"><td><div class="cardVisualsName" id="carouselVisualsName2"></div>
+								<div class="cardVisualsDuration" id="carouselVisualsDuration2"></div><div class="cardVisualsSpeed" id="carouselVisualsSpeed2"></div><div class="cardVisualsAttack" id="carouselVisualsAttack2"></div><div class="cardVisualsHP" id="carouselVisualsHP2"></div></td></tr>
+								<tr class="cardVisualsImage"><td><img class="cardVisualsImage" id="carouselVisualsImage2" src=""></td></tr>
+								<tr class="cardVisualsSizeTypeMechanical" id="carouselVisualsSizeTypeMechanical2"><td><div class="cardVisualsSizeType" id="carouselVisualsSizeType2"></div><div class="cardVisualsMechanical" id="carouselVisualsMechanical2"></div></td></tr>
+								<tr><td><div class="cardVisualsDescription" id="carouselVisualsDescription2"></div></td></tr>
+							</table>
+						</td>
+					</tr>
+					<tr id="carouselSelectRow">
+						<td><center><button id="carouselSelect-2">Select</button></center></td>
+						<td><center><button id="carouselSelect-1">Select</button></center></td>
+						<td><center><button id="carouselSelect0">Select</button></center></td>
+						<td><center><button id="carouselSelect1">Select</button></center></td>
+						<td><center><button id="carouselSelect2">Select</button></center></td>
+					</tr>
+				</table>
+				<center><button id="carouselCancelButton">Cancel</button></center>
+			</div>
+			<div class="popUp" id="discardCard">
+				<table class="cardVisuals" id="discardVisuals">
+					<tr class="cardVisualsStats" id="discardVisualsStats"><td><div class="cardVisualsName" id="discardVisualsName"></div>
+					<div class="cardVisualsDuration" id="discardVisualsDuration"></div><div class="cardVisualsSpeed" id="discardVisualsSpeed"></div><div class="cardVisualsAttack" id="discardVisualsAttack"></div><div class="cardVisualsHP" id="discardVisualsHP"></div></td></tr>
+					<tr class="cardVisualsImage"><td><div class="cardVisualsImageContainer"><img class="cardVisualsImage" id="discardVisualsImage" src=""><div class="cardVisualsImageDiv"><button class="discardButton">X</button></div></div></td></tr>
+					<tr class="cardVisualsSizeTypeMechanical" id="discardVisualsSizeTypeMechanical"><td><div class="cardVisualsSizeType" id="discardVisualsSizeType"></div><div class="cardVisualsMechanical" id="discardVisualsMechanical"></div></td></tr>
+					<tr><td><div class="cardVisualsDescription" id="discardVisualsDescription"></div></td></tr>
+				</table>
+			</div>
+			<div class="popUp" id="dontUseTraps">
+				<center><div id="dontUseTrapsText"></div>
+				<button id="dontUseTrapsButton">Don't play any trap card</button></center>
+			</div>
+			<div class="popUp" id="giantNevermore">
+				<table id="giantNevermoreTable">
+				</table>
+			</div>
+			<div class="popUp" id="stealthyCommandeering">
+				<table id="stealthyCommandeeringTable">
+				</table>
+			</div>
+			<div class="popUp" id="spoilsOfWar">
+				<center><div id="spoilsOfWarText">Where will you draw your spoils of war from?</div></center>
+				<table id="spoilsOfWarTable">
+					<tr>
+						<td id="spoilsOfWarPlayer" style="background-image: url('images/card_back_placeholder.png'); background-size: 100% 100%;"><div><span class="imageCenterHelper"></span><img id="spoilsOfWarPlayerImage"></div></td>
+						<td id="spoilsOfWarEmpty"></td>
+						<td id="spoilsOfWarDrawPile" style="background-image: url('images/card_back_placeholder.png'); background-size: 100% 100%;"><center><div id="spoilsOfWarDrawPileHelper"><span>Draw pile</span></div></center></td>
+					</tr>
+				</table>
+			</div>
+			<div class="popUp" id="singleCardWindow">
+				<center><div id="singleCardTopText"></div>
+				<table class="cardVisuals" id="singleCardVisuals">
+					<tr class="cardVisualsStats" id="singleCardVisualsStats"><td><div class="cardVisualsName" id="singleCardVisualsName"></div>
+					<div class="cardVisualsDuration" id="singleCardVisualsDuration"></div><div class="cardVisualsSpeed" id="singleCardVisualsSpeed"></div><div class="cardVisualsAttack" id="singleCardVisualsAttack"></div><div class="cardVisualsHP" id="singleCardVisualsHP"></div></td></tr>
+					<tr class="cardVisualsImage"><td><div class="cardVisualsImageContainer"><img class="cardVisualsImage" id="singleCardVisualsImage" src=""><div class="cardVisualsImageDiv"><button class="singleCardButton">X</button></div></div></td></tr>
+					<tr class="cardVisualsSizeTypeMechanical" id="singleCardVisualsSizeTypeMechanical"><td><div class="cardVisualsSizeType" id="singleCardVisualsSizeType"></div><div class="cardVisualsMechanical" id="singleCardVisualsMechanical"></div></td></tr>
+					<tr><td><div class="cardVisualsDescription" id="singleCardVisualsDescription"></div></td></tr>
+				</table>
+				<button id="singleCardWindowButton">OK</button></center>
+			</div>
+			<div class="popUp" id="priorityTargets">
+				<table id="priorityTargetsTable">
+				</table>
+				<center><div id="priorityTargetsNumbers">0 targets will take priority when attacking</div><BR>
+				<button id="priorityTargetsConfirmButton">Attack</button><button id="priorityTargetsCancelButton">Cancel</button></center>
+			</div>
+			<div class="popUp" id="surrender">
+				<center><div id="surrenderHeader">Are you sure you want to surrender?</div><BR>
+				<div id="surrenderText">If you no longer have control over a capital, you are still able to retake any capital with the units you still have on the field and the cards you have left in your hand.<BR>
+				Should you choose to surrender, all your units and utilities are removed from play and you will no longer get a turn. You may still spectate in the hopes of seeing the demise of the kingdom that overtook yours.</div><BR>
+				<button id="surrenderConfirmButton">Surrender</button><button id="surrenderCancelButton">Cancel</button></center>
+			</div>
+			<div class="popUp" id="playerDefeated">
+				<center><div id="playerDefeatedHeader">Commander ... has surrendered/was defeated</div><BR>
+				<img id="playerDefeatedIcon"><BR>
+				<BR>
+				<div id="playerDefeatedText">In the face of current events, after valliantly defending their kingdom against numerous military campaigns/after heroically launching their final attacks, commander ... of ... has formally declared unconditional surrender/lost the last of their forces. All their units and utilities are removed from play/All that remains of the kingdom is its history.</div><BR>
+				<button id="playerDefeatedButton">Close</button></center>
+			</div>
+			<div class="popUp" id="playerVictory">
+				<center><div id="playerVictoryHeader">Commander ... was victorious</div><BR>
+				<img id="playerVictoryIcon"><BR>
+				<BR>
+				<div id="playerVictoryText">Through military and tactical superiority, commander ... has led the armies of ... to victory and brought unity to the world of Remnant. Little does the commander know this was all just a ruse to leave their cookie jar unguarded. The king ate good that day.</div><BR>
+				<button id="playerVictoryButton">Return to homepage</button></center>
+			</div>
+			<div class="popUp" id="transportManager">
+				<table id="transportManagerTable">
+					<tr>
+						<td>
+							<table id="transportAndButtonTable">
+							</table>
+							<table id="activeUnitsTable">
+							</table>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div id="evolutionOfWarfareText">Evolution of Warfare</div>
 		
 		<!--<script src="/socket.io/socket.io.js"></script>-->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 		<script src="https://d3js.org/d3.v4.min.js"></script>
 		<!--<script src="/js/js.cookie-2.1.2.min.js"></script>-->
 		<!--remove the static folder on deployment-->
-		<script src="/static/js/game.js"></script>
+		<script src="/js/game.js"></script>
 	</body>
 </html>

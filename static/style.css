@@ -18,7 +18,7 @@ button {
 	border-radius: 5px;
 }
 
-#backgroundMain {
+#main {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -27,14 +27,24 @@ button {
 	z-index: 0;
 	background-color: rgba(183, 84, 84, 1);
 }
-#overlay {
-	position: fixed;
+#overlayWindowsBackground {
+	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
 	z-index: 100;
 	background-color: rgba(0, 0, 0, 0.5);
+	display: none;
+}
+#overlayWindows {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 100;
+	display: none;
 }
 
 #newsBoard {
@@ -174,6 +184,7 @@ table#otherPlayersTable {
 table#otherPlayersTable td {
 	color: white;
 	text-align: center;
+	cursor: default;
 }
 .nOfCards {
 	font-size: 2em;
@@ -189,15 +200,129 @@ table#otherPlayersTable td {
 	z-index: 1;
 	text-align: center;
 }
+
 table#cardPiles {
 	width: 100%;
-	height: 25%;
-	table-layout: fixed;
+	height: 75%;
+	/*table-layout: fixed;*/
 	border-spacing: 0.5em;
 }
-table#cardPiles td {
+table#cardPiles tr {
+	height: 33.33%;
+	cursor: default;
+}
+#drawPile {
 	color: white;
 }
+#flyingCard {
+	position: absolute;
+	width: 9%;
+	height: 24%;
+}
+
+#cardPreviewArea {
+	border: 1px dashed black;
+}
+table.cardVisuals {
+	height: 100%;
+	width: 100%;
+	border: 1px dashed black;
+}
+table.cardVisuals tr {
+	vertical-align: baseline;
+	width: 100%;
+	border: 1px dashed red;
+}
+table.cardVisuals td {
+	width: 20%;
+	font-size: 0.7em;
+	border: 1px solid red;
+}
+table.cardVisuals tr.cardVisualsStats {
+	height: 0px;
+}
+table.cardVisuals tr.cardVisualsSizeTypeMechanical {
+	height: 0px;
+}
+table.cardVisuals tr.cardVisualsStats div {
+	float: right;
+	border: 1px solid blue;
+}
+table.cardVisuals tr.cardVisualsStats div.cardVisualsName {
+	width: 100%;
+	font-size: 1.1em;
+	text-align: left;
+}
+table.cardVisuals tr.cardVisualsImage {
+	height: 0%;
+	width: 100%;
+}
+table.cardVisuals img.cardVisualsImage {
+	height: auto;
+	width: 100%;
+}
+table.cardVisuals div.cardVisualsSizeType {
+	float: left;
+	border: 1px solid blue;
+}
+table.cardVisuals div.cardVisualsMechanical {
+	float: right;
+	border: 1px solid blue;
+}
+table.cardVisuals div.cardVisualsDescription {
+	text-align: left;
+	margin-left: 3%;
+	margin-right: 1%;
+	overflow: auto;
+	height: 100%;
+}
+table.cardVisuals div#cardVisualsDescriptionPreview {
+	overflow: hidden;
+}
+
+table#cardPiles td#cardHistory {
+	position: relative;
+	vertical-align: baseline;
+	border: 1px dashed purple;
+}
+table#cardPiles div#cardHistoryHeader {
+	border: 1px dotted green;
+	font-size: 1em;
+	height: 10%;
+}
+table#cardPiles div#cardHistoryList {
+	border: 1px dotted green;
+	height: 90%;
+	overflow-y: auto;
+}
+table#cardHistoryTable {
+	width: 100%;
+}
+table#cardHistoryTable tr td {
+	text-align: left;
+	border: 1px solid black;
+	width: 100%;
+	font-size: 1.1em;
+}
+
+#surrenderButton {
+	position: absolute;
+	width: 9%;
+	font-size: 1em;
+	background-color: #C20;
+	border-color: #600;
+	right: 0.5%;
+	bottom: 4%;
+}
+#endTurnButton {
+	position: absolute;
+	width: 9%;
+	font-size: 1.2em;
+	background-color: lightgreen;
+	right: 0.5%;
+	bottom: 0.5%;
+}
+
 #terStateInfo {
 	height: 25%;
 	overflow-y: auto;
@@ -257,6 +382,30 @@ table#terUnitInfo td.hoveredUnit {
 .terInfoTooltip:hover .terInfoTooltipText {
 	visibility: visible;
 }*/
+#transporterList {
+	width: 21%;
+	background-color: black;
+	color: white;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px 5px;
+	position: absolute;
+	z-index: 10;
+}
+#transporterTable {
+	width: 10%;
+	color: white;
+	text-align: left;
+	position: relative;
+	z-index: 10;
+}
+#unitTable {
+	width: 10%;
+	color: white;
+	text-align: left;
+	position: relative;
+	z-index: 10;
+}
 
 #gameBoard {
 	float: top;
@@ -310,13 +459,386 @@ table#playerTable td#kingdomImage img {
 }
 table#playerTable td#commanderName {
 	height: 25%;
+	cursor: default;
 }
 table#playerTable td.cardImage {
 	border: 1px solid black;
+	cursor: default;
 }
 table#playerTable td.hoveredCard {
 	background-color: rgba(0,0,0,0.2);
 }
+
+#combat {
+	width: 35%;
+	margin-top: -15%;
+	margin-left: -17.5%;
+}
+table#combatTable {
+	float: top;
+	text-align: center;
+	width: 100%;
+	padding: 0.5%;
+	position: relative;
+	z-index: 102;
+	border: 1px solid black;
+}
+tr#combatHeaders {
+	/*change this according to outcomes*/
+	line-height: 1.3em;
+	font-size: 1.1em;
+}
+td.combatAttackers {
+	width: 35%;
+	border: 1px solid black;
+}
+td.combatBlankArea {
+	width: 15%;
+	border: 1px solid black;
+}
+td.combatWall {
+	width: 5%;
+	border: 1px solid black;
+}
+td.combatDefenders {
+	width: 35%;
+	border: 1px solid black;
+}
+tr#combatUnits .combatTarget {
+	width: 15%;
+	text-align: center;
+}
+#combatUnits {
+	vertical-align: text-top;
+	cursor: default;
+}
+tr#combatUnits .priorityBlank {
+	width: 15%;
+}
+tr#combatUnits .combatUnitInfo {
+	width: 100%;
+	text-align: left;
+}
+.maxHealthBar {
+	position: relative;
+	width: 100%;
+	height: 1.2em;
+	background-color: darkred;
+	border: 1px solid darkgray;
+}
+.currentHealthBar {
+	position: absolute;
+	height: 100%;
+	background-color: green;
+	transition: width 100ms linear;
+	-webkit-transition: width 100ms linear;
+	-moz-transition: width 100ms linear;
+	-o-transition: width 100ms linear;
+}
+.combatUnitName {
+	width: 80%;
+	cursor: default;
+}
+
+#discardCard {
+	float: top;
+	position: relative;
+	width: 15%;
+	z-index: 100;
+}
+div.cardVisualsImageContainer {
+	position: relative;
+}
+div.cardVisualsImageDiv {
+	position: absolute;
+	height: 250%;
+	width: 100%;
+	top: 40%;
+}
+button.discardButton {
+	border-radius: 50%;
+	font-size: 1.5em;
+	text-align: center;
+	font-weight: 700;
+	color: red;
+}
+
+/*FUTURE FIX: why can't I change the height and why doesn't top work?*/
+#dontUseTraps {
+	position: relative;
+	width: 20%;
+	left: 40%;
+	top: 45%;
+	z-index: 100;
+	font-size: 1.1em;
+}
+#dontUseTraps button#dontUseTrapsButton {
+	font-size: 1.1em;
+	text-align: center;
+}
+
+#utilityApplier {
+	float: top;
+	position: relative;
+	width: 30%;
+	z-index: 100;
+	/*border: 1px solid black;*/
+}
+table#utilityTable {
+	float: top;
+	padding: 1.5%;
+	position: relative;
+	width: 100%;
+	border-collapse: collapse;
+	display: block;
+	z-index: 102;
+	cursor: default;
+	/*border: 1px solid black;*/
+}
+table#utilityTable tr {
+	border: 1px solid black;
+	width: 100%;
+	display: block;
+}
+table#utilityTable tr:hover {
+	background-color: rgba(0,0,0,0.2);
+}
+table#utilityTable tr tr:hover {
+	background-color: rgba(0,0,0,0);
+}
+table#utilityTable .utilityName {
+	width: 50%;
+}
+/*table#utilityTable tr td:nth-child(1) {
+	width: 30%;
+	display: block;
+	border-left: 1px solid black;
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+}
+table#utilityTable tr td:nth-child(2) {
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+}
+table#utilityTable tr td:nth-child(3) {
+	border-right: 1px solid black;
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+}*/
+table#giantNevermoreTable {
+	float: top;
+	padding: 1.5%;
+	position: relative;
+	width: 100%;
+	border-collapse: collapse;
+	display: block;
+	z-index: 102;
+	cursor: default;
+	/*border: 1px solid black;*/
+}
+table#giantNevermoreTable tr {
+	border: 1px solid black;
+	width: 100%;
+	display: block;
+}
+table#giantNevermoreTable tr:hover {
+	background-color: rgba(0,0,0,0.2);
+}
+table#giantNevermoreTable .giantNevermoreName {
+	width: 50%;
+}
+table#stealthyCommandeeringTable {
+	float: top;
+	padding: 1.5%;
+	position: relative;
+	width: 100%;
+	border-collapse: collapse;
+	display: block;
+	z-index: 102;
+	cursor: default;
+	/*border: 1px solid black;*/
+}
+table#stealthyCommandeeringTable tr {
+	border: 1px solid black;
+	width: 100%;
+	display: block;
+}
+table#stealthyCommandeeringTable tr:hover {
+	background-color: rgba(0,0,0,0.2);
+}
+table#stealthyCommandeeringTable .stealthyCommandeeringName {
+	width: 50%;
+}
+#spoilsOfWar{
+	width: 30%;
+}
+#spoilsOfWarText{
+	padding: 0.5%;
+	font-size: 1.2em;
+}
+table#spoilsOfWarTable {
+	margin-left: auto;
+	margin-right: auto;
+	float: top;
+	padding: 1.5%;
+	position: relative;
+	width: 100%;
+	border-collapse: collapse;
+	display: inline-block;
+	z-index: 102;
+	cursor: default;
+	/*border: 1px solid black;*/
+}
+table#spoilsOfWarTable tr {
+	border: 1px solid black;
+	display: block;
+}
+table#spoilsOfWarTable #spoilsOfWarPlayer {
+	display: inline-block;
+	text-align: center;
+}
+table#spoilsOfWarTable #spoilsOfWarPlayer .imageCenterHelper {
+	display: inline-block;
+	height: 100%;
+	vertical-align: middle;
+}
+table#spoilsOfWarTable #spoilsOfWarPlayer div {
+	display: inline-block;
+	height: 100%;
+}
+table#spoilsOfWarTable #spoilsOfWarPlayer #spoilsOfWarPlayerImage {
+	width: 60%;
+	vertical-align: middle;
+}
+table#spoilsOfWarTable #spoilsOfWarEmpty {
+	display: inline-block;
+}
+table#spoilsOfWarTable #spoilsOfWarDrawPile {
+	display: inline-block;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 100%;
+}
+table#spoilsOfWarTable #spoilsOfWarDrawPile div {
+	display: table;
+	/*FUTURE FIX: stupid thing won't vertically center...*/
+	height: 250px;
+	width: 100%;
+	text-align: center;
+}
+table#spoilsOfWarTable #spoilsOfWarDrawPile div span {
+	color: white;
+	font-size: 1.5em;
+	height: 100%;
+	display: table-cell;
+	vertical-align: middle;
+	/*border: 1px dashed red;*/
+}
+table#priorityTargetsTable {
+	float: top;
+	padding: 1.5%;
+	position: relative;
+	width: 100%;
+	border-collapse: collapse;
+	display: block;
+	z-index: 102;
+	cursor: default;
+	/*border: 1px solid black;*/
+}
+table#priorityTargetsTable tr {
+	border: 1px solid black;
+	width: 100%;
+	display: block;
+}
+table#priorityTargetsTable tr:hover {
+	background-color: rgba(0,0,0,0.2);
+}
+table#priorityTargetsTable .priorityTargetsName {
+	width: 50%;
+}
+table#priorityTargetsTable .priorityTargetsNumbers {
+	font-size: 1.2em;
+}
+#cardCarousel {
+	position: relative;
+	width: 50%;
+	margin-left: -25%;
+	margin-top: 10%;
+	z-index: 100;
+}
+table#carouselTable {
+	padding: 1.5%;
+	position: relative;
+	width: 100%;
+	display: block;
+	cursor: default;
+	border: 1px solid green;
+}
+table#carouselTable td {
+	border: 1px solid black;
+	width: 17%;
+	margin: 1%;
+	display: inline-block;
+}
+table#carouselTable tr#carouselCardsRow td {
+	height: 80%;
+}
+table#carouselTable td table td {
+	width: 100%;
+	height: 80%;
+}
+#surrender {
+	padding: 1%;
+	position: absolute;
+	left: 35%;
+	width: 30%;
+	z-index: 102;
+	cursor: default;
+	/*border: 1px solid black;*/
+}
+#surrenderHeader {
+	font-size: 1.4em;
+}
+#surrenderText {
+	font-size: 1.05em;
+}
+#evolutionOfWarfareText {
+	position: absolute;
+	font-weight: 500;
+	color: black;
+	font-size: 6em;
+	text-shadow: 0px 0px 0.2em darkred;
+}
+
+.transportManagerTable {
+	width: 30%;
+}
+.transportAndButtonTable {
+	width: 15%;
+}
+.activeUnitsTable {
+	width: 10%;
+}
+.hoveredTD {
+	background-color: rgba(0,0,0,0.2);
+}
+.unmovableUnitTransportTD {
+	background-color: rgba(255,255,255,0.4);
+}
+.transporterTD {
+	width: 70%;
+}
+.blankTransportTD {
+	width: 10%;
+}
+.unitTransportTD {
+	width: 90%;
+}
+.transporterButton {
+	width: 20%;
+	font-size: 1.2em;
+}
+
 polygon {
 	fill:rgba(0,0,0,0);
 }
@@ -331,6 +853,33 @@ polygon {
 }
 .viableMovement {
 	fill: rgba(0,0,0,0.2);
+}
+.viableLoadIn {
+	fill: rgba(0,128,128,0.3);
+}
+.viableAttackTarget {
+	fill: rgba(255,0,0,0.3);
+}
+.viableRangedTarget {
+	fill: rgba(255,0,0,0.3);
+}
+.hoveredTer.viableMovement {
+	fill: rgba(0,255,0,0.4);
+}
+.hoveredTer.viableLoadIn {
+	fill: rgba(0,128,128,0.5);
+}
+.hoveredTer.viableAttackTarget {
+	fill: rgba(255,0,0,0.5);
+}
+.passingThrough {
+	fill: rgba(0,255,0,0.2);
+}
+.passingThrough.attackPath:not(.viableAttackTarget) {
+	fill: rgba(255,255,0,0.2);
+}
+.viableAttackTarget.passingThrough:not(.attackPath) {
+	fill: rgba(255,165,0,0.3);
 }
 .selected {
 	background-color: rgba(0,0,0,0.2);
