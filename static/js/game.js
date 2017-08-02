@@ -1012,6 +1012,7 @@ $(document).ready(function() {
 
 	// drawing territory borders
 	for (ter = 0; ter < territoryShapeInfo.length; ter++) {
+        console.log('drawing borders');
 		var tempString = '';
 		for (coord = 0; coord < (territoryShapeInfo[ter].length - 1); coord++) {
 			var tempX = 3840 / 100 * territoryShapeInfo[ter][coord].x
