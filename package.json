@@ -4,7 +4,6 @@
   "description": "A 4-player browser-based stategy game as a mix of Risk and trading card games like Yu-Gi-Oh! Based off the fictional board game featured in the webseries RWBY.",
   "engines": {
     "node": "8.1.4"
-    // previously: 5.9.1, had DoS vulnrability
   },
   "main": "index.js",
   "scripts": {
