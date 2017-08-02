@@ -3523,6 +3523,7 @@ $(document).ready(function() {
         }
     }
 
+    // order of attack functions: selectPriorityTargets, selectTrap (x2), activateTrap, attackTer
 	function selectPriorityTargets(targetTerID) {
 		console.log('selectPriorityTargets()');
 		viableTargets = [];
@@ -3742,6 +3743,7 @@ $(document).ready(function() {
                 switch(referenceCards[counterTrap].name) {
                     case 'Dismantler':
                         if (attackingPlayer === playerNumber) {
+                            // TO DO: select utility to destroy before combat starts
                             attackTer(sTargetTerID, sTargetedUnits, -1);
                         }
                         break;
