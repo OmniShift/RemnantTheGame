@@ -760,7 +760,7 @@ $(document).ready(function() {
         function hidePlayerVictory() {
             $('#overlayWindows, #overlayWindowsBackground, #playerVictory').fadeOut(150);
         }
-        function showPlayerVictory) {
+        function showPlayerVictory() {
             $('#overlayWindows, #overlayWindowsBackground, #playerVictory').fadeIn(150);
         }
         hidePlayerVictory();
