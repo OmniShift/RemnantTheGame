@@ -1010,6 +1010,7 @@ $(document).ready(function() {
 	document.getElementById('kingdomImage').innerHTML = '<img src="' + kingdomPicArray[kingdom[playerNumber]] + '" height="' + (document.getElementById('playerCards').offsetHeight/100*75) + '">';
 	document.getElementById('commanderName').innerHTML = commName[playerNumber];
 
+    // FUTURE FIX: why arent the borders drawn anymore in live version (after node.js 8.1.4 upgrade and all local changes)?
 	// drawing territory borders
 	for (ter = 0; ter < territoryShapeInfo.length; ter++) {
         console.log('drawing borders');
