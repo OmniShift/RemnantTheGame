@@ -1153,14 +1153,14 @@ $(document).ready(function() {
 
 	/*-------------------------------------------------------------------------------------------*/
 
-	document.getElementById('endTurnButton').onclick = function() {
+//	document.getElementById('endTurnButton').onclick = function() {
 		console.log('next turn');
         $('#endTurnButton').prop('disabled', true);
 		$('#endTurnButton').fadeOut(150);
 		// socket.emit('next turn', GRID, playerNumber);
 		serverNextTurn(GRID, playerNumber);
-	}
-	function nextTurn(newPlayerTurn, hasCapital) {
+//	}
+//	function nextTurn(newPlayerTurn, hasCapital) {
         // in response to the server telling the client a new player's turn is starting
 		for (var player = 0; player < 4; player++) {
 			for (var actives = 0; actives < altCardPiles[((player * 3) + 2)].length; actives++) {
@@ -1260,10 +1260,10 @@ $(document).ready(function() {
 			$('#endTurnButton').fadeIn(150);
             $('#endTurnButton').prop('disabled', false);
 		}
-	}
+//	}
 
     // FUTURE FIX: properly add terIDs to pathToTers before this function is called and check if classes are correctly added in refreshInteractibility() after that
-	function refreshInteractibility() {
+//	function refreshInteractibility() {
 		console.log('refreshInteractibility()');
 		if (playerTurn === playerNumber) {
 			for (var ter = 0; ter < territoryShapeInfo.length; ter++) {
@@ -1352,10 +1352,10 @@ $(document).ready(function() {
                 });
             }
 		}
-	}
-	refreshInteractibility();
+//	}
+//	refreshInteractibility();
     // TO DO (optional): use different icon shapes if all units are of 1 type (ground, air, naval) or mixed
-	function refreshTerStateVisuals(terID) {
+//	function refreshTerStateVisuals(terID) {
 		console.log('refreshTerStateVisuals()');
 		var nOfIcons = -1;
 		// displayedIcons are: units, defense level, natural hazards
@@ -1635,12 +1635,12 @@ $(document).ready(function() {
 				}
 			}
 		}
-	}
-	for (var ter = 0; ter < territoryStateInfo.length; ter++) {
-		refreshTerStateVisuals(ter);
-	}
-
-	function flyCardFly(startX, startY, endX, endY, time) {
+//	}
+//	for (var ter = 0; ter < territoryStateInfo.length; ter++) {
+//		refreshTerStateVisuals(ter);
+//	}
+//
+//	function flyCardFly(startX, startY, endX, endY, time) {
 		console.log('flyCardFly()');
 		$('#flyingCard').offset({top:startY, left:startX});
 		$('#flyingCard').show();
@@ -1659,8 +1659,8 @@ $(document).ready(function() {
 				$('#flyingCard').offset({top:posY, left:posX});
 			}
 		}
-	}
-	function createCardVisuals(cardID) {
+//	}
+//	function createCardVisuals(cardID) {
 		console.log('createCardVisuals()');
 		var tempPos = (altCardPiles[((playerNumber * 3) + 1)].length + 1);
 		document.getElementById('cardVisualsName' + tempPos).innerHTML = referenceCards[cardID].name;
@@ -1707,8 +1707,8 @@ $(document).ready(function() {
 		nOfCards[playerNumber] = altCardPiles[((playerNumber * 3) + 1)].length;
 		refreshInteractibility();
 		targetCard = -1;
-	}
-	function clearCardVisuals(cardIndex) {
+//	}
+//	function clearCardVisuals(cardIndex) {
 		console.log('clearCardVisuals()');
         // socket.emit('clear card visuals', GRID, playerNumber);
 		for (var pos = (cardIndex + 1); pos < altCardPiles[((playerNumber * 3) + 1)].length; pos++) {
@@ -1778,8 +1778,8 @@ $(document).ready(function() {
 		nOfCards[playerNumber] = altCardPiles[((playerNumber * 3) + 1)].length;
 		activeCard = -1;
 		refreshInteractibility();
-	}
-    function displayTargetCard(topText, cardID) {
+//	}
+//    function displayTargetCard(topText, cardID) {
         // I mightve missed some places where this function should also be executed
         document.getElementById('singleCardTopText').innerHTML = topText;
         document.getElementById('singleCardVisualsName').innerHTML = referenceCards[cardID].name;
@@ -1833,9 +1833,9 @@ $(document).ready(function() {
         setTimeout(function() {
             $('#singleCardWindow').fadeOut(150);
         }, 2000);
-    }
-
-	function selectCard(cardID, thisCard) {
+//    }
+//
+//	function selectCard(cardID, thisCard) {
 		console.log('selectCard()');
 		$('#territoryArea' + activeTer).removeClass('selected');
 		activeTer = -1;
@@ -1887,8 +1887,8 @@ $(document).ready(function() {
 			}
 		}
 		// console.log(activeCard);
-	}
-	function placeUnit(terID) {
+//	}
+//	function placeUnit(terID) {
 		console.log('placeUnit()');
         // socket.emit('place unit', GRID, playerNumber, activeCard, terID);
 		playedCard = true;
@@ -1917,13 +1917,13 @@ $(document).ready(function() {
 		activeCard = -1;
 		refreshTerStateVisuals(terID);
 		refreshInteractibility();
-	}
-	var viableCards = [];
-	var cardSource = -1;
-	var carouselCurrentIndex = 0;
-	var tempReturn = -1;
-	var lastPlayerVictory = -1;
-	function placeUtility() {
+//	}
+//	var viableCards = [];
+//	var cardSource = -1;
+//	var carouselCurrentIndex = 0;
+//	var tempReturn = -1;
+//	var lastPlayerVictory = -1;
+//	function placeUtility() {
 		console.log('placeUtility()');
         var tempSelected = false;
 		switch(referenceCards[activeCard].name) {
@@ -2644,7 +2644,7 @@ $(document).ready(function() {
 				}
 				break;
 		}
-	}
+//	}
     /*
 	function createRadial(terID) {
 		console.log('createRadial()');
@@ -2682,7 +2682,7 @@ $(document).ready(function() {
 		// $('#outerRadial1').remove();
 	}
     */
-	function showTerState(terID, thisTer) {
+//	function showTerState(terID, thisTer) {
 		console.log('showTerState()');
 		$(thisTer).toggleClass('selected');
 		/*removing all selections*/
@@ -2934,9 +2934,9 @@ $(document).ready(function() {
 				});*/
 			}
 		}
-	}
+//	}
     // FUTURE FIX: too many (and sometimes the wrong) terIDs are pushed to each pathToTer
-	function unitMoveAttackVisuals() {
+//	function unitMoveAttackVisuals() {
 		console.log('unitMoveAttackVisuals()');
 		var maxSpeed = 99;
 		// var movementMethod = -1;
@@ -3183,8 +3183,8 @@ $(document).ready(function() {
 			oldCheckedTers = newCheckedTers;
 		}
 		refreshInteractibility();
-	}
-	function moveToTer(targetTerID) {
+//	}
+//	function moveToTer(targetTerID) {
 		console.log('movetoter()');
         // socket.emit('move to ter', GRID, playerNumber, activeUnits, activeTer, targetTerID);
 		var tempX1 = 3840 / 100 * territoryShapeInfo[activeTer][(territoryShapeInfo[activeTer].length - 1)][0][0].x;
@@ -3273,8 +3273,8 @@ $(document).ready(function() {
                 moveArrowSVG.style.visibility = 'hidden';
             }, 500);
 		}, 1000);
-	}
-	function loadInTransport(tempAdjID) {
+//	}
+//	function loadInTransport(tempAdjID) {
 		console.log('loadInTransport()');
         var viableLoadUnits = [];
         var minRequiredSlots = 99;
@@ -3395,8 +3395,8 @@ $(document).ready(function() {
 			for (var hugeUnits = 0; hugeUnits < tempRequiredSize[2]; hugeUnits++) {
 				
 			}*/
-	}
-    function refreshTransportManager(viableTransport, allLoadUnits, remainingLoadUnits) {
+//	}
+ //   function refreshTransportManager(viableTransport, allLoadUnits, remainingLoadUnits) {
         // TO DO (and test): modify css for proper visualization
         $("#transportAndButtonTable tr").remove();
         $("#activeUnitsTable tr").remove();
@@ -3523,10 +3523,10 @@ $(document).ready(function() {
             unitTR.appendChild(unitTD);
             document.getElementById('activeUnitsTable').appendChild(unitTR);
         }
-    }
+ //   }
 
     // order of attack functions: selectPriorityTargets, selectTrap (x2), activateTrap, attackTer
-	function selectPriorityTargets(targetTerID) {
+//	function selectPriorityTargets(targetTerID) {
 		console.log('selectPriorityTargets()');
 		viableTargets = [];
 		for (var unit = 0; unit < territoryStateInfo[targetTerID].occupiedByUnits.length; unit++) {
@@ -3586,8 +3586,8 @@ $(document).ready(function() {
 			hidePriorityTargets();
 		}
 		showPriorityTargets();
-	}
-	function selectTrap(attackingPlayer, defendingPlayer, sActiveTerID, sTargetTerID, sAactiveUnits, sTargetedUnits, firstTrap) {
+//	}
+//	function selectTrap(attackingPlayer, defendingPlayer, sActiveTerID, sTargetTerID, sAactiveUnits, sTargetedUnits, firstTrap) {
         // TO DO (optional): change UI to include information on which units are attacking (to see which traps are best), possibly by showing combat window while selecting traps. Windows together may be too much to fit reasonably on screen
         console.log('selectTrap()');
 		var hasTraps = false;
@@ -3730,8 +3730,8 @@ $(document).ready(function() {
 			}
 		);
 		showDontUseTraps();
-	}
-	function activateTrap(attackingPlayer, defendingPlayer, sActiveTerID, sTargetTerID, attackingUnits, sTargetedUnits, firstTrap, counterTrap) {
+//	}
+//	function activateTrap(attackingPlayer, defendingPlayer, sActiveTerID, sTargetTerID, attackingUnits, sTargetedUnits, firstTrap, counterTrap) {
         // TO DO: make this universal to the attacking and defending player
         if (playerNumber === attackingPlayer || playerNumber === defendingPlayer) {
             for (var item = 0; item < territoryStateInfo[sActiveTerID].occupiedByUnits.length; item++) {
@@ -4092,8 +4092,8 @@ $(document).ready(function() {
                 }
             }
         }
-	}
-	function selectGiantNevermoreTarget(attackingPlayer, defendingPlayer, sActiveTerID, sTargetTerID, attackingUnits, sTargetedUnits, firstTrap, counterTrap) {
+//	}
+//	function selectGiantNevermoreTarget(attackingPlayer, defendingPlayer, sActiveTerID, sTargetTerID, attackingUnits, sTargetedUnits, firstTrap, counterTrap) {
 		console.log('selectGiantNevermoreTarget()');
 		document.getElementById('giantNevermoreTable').innerHTML = '';
 		var selectionMade = false;
@@ -4207,8 +4207,8 @@ $(document).ready(function() {
 		showGiantNevermore();
 		document.getElementById('giantNevermore').style.marginLeft = '-' + (document.getElementById('giantNevermore').offsetWidth / 2) + 'px';
 		document.getElementById('giantNevermore').style.marginTop = (window.innerHeight / 2) - (document.getElementById('giantNevermore').offsetHeight / 2) + 'px';
-	}
-	function selectStealthyCommandeeringTarget(attackingPlayer, defendingPlayer, sActiveTerID, sTargetTerID, attackingUnits, sTargetedUnits, firstTrap, counterTrap) {
+//	}
+//	function selectStealthyCommandeeringTarget(attackingPlayer, defendingPlayer, sActiveTerID, sTargetTerID, attackingUnits, sTargetedUnits, firstTrap, counterTrap) {
 		console.log('selectStealthyCommandeeringTarget()');
 		document.getElementById('stealthyCommandeeringTable').innerHTML = '';
 		var selectionMade = false;
@@ -4281,8 +4281,8 @@ $(document).ready(function() {
 		showStealthyCommandeering();
 		document.getElementById('stealthyCommandeering').style.marginLeft = '-' + (document.getElementById('stealthyCommandeering').offsetWidth / 2) + 'px';
 		document.getElementById('stealthyCommandeering').style.marginTop = (window.innerHeight / 2) - (document.getElementById('stealthyCommandeering').offsetHeight / 2) + 'px';
-	}
-    function attackTer(attackingPlayer, defendingPlayer, sActiveTerID, sTargetTerID, attackingUnits, sTargetedUnits, firstTrap, counterTrap) {
+//	}
+//    function attackTer(attackingPlayer, defendingPlayer, sActiveTerID, sTargetTerID, attackingUnits, sTargetedUnits, firstTrap, counterTrap) {
         console.log('attackTer()');
         /*initializing combat*/
             for (var ter = 0; ter < territoryShapeInfo.length; ter++) {
@@ -4951,8 +4951,8 @@ $(document).ready(function() {
                 document.getElementById('terUnitInfo').innerHTML = '';
             }
         }, (((1000 * priorityround) + 2100) * combatSpeed));
-    }
-	function chooseSpoilsOfWar(tempTargetPlayer) {
+//    }
+//	function chooseSpoilsOfWar(tempTargetPlayer) {
 		$('#spoilsOfWarPlayerImage').attr('src', kingdomPicArray[kingdom[tempTargetPlayer]]);
 		$('#spoilsOfWarPlayer').unbind('click');
 		$('#spoilsOfWarDrawPile').unbind('click');
@@ -4972,9 +4972,9 @@ $(document).ready(function() {
 			}
 		});
 		showSpoilsOfWar();
-	}
-
-	function applyUtility(viableUtilityTargets) {
+//	}
+//
+//	function applyUtility(viableUtilityTargets) {
 		console.log('applyUtility()');
         var tempSelected = false;
 		document.getElementById('utilityTable').innerHTML = '';
@@ -5082,17 +5082,17 @@ $(document).ready(function() {
 		showUtilityApplier();
 		document.getElementById('utilityApplier').style.marginLeft = '-' + (document.getElementById('utilityApplier').offsetWidth / 2) + 'px';
 		document.getElementById('utilityApplier').style.marginTop = (window.innerHeight / 2) - (document.getElementById('utilityApplier').offsetHeight / 2) + 'px';
-	}
-	function applyNH(terID) {
+//	}
+//	function applyNH(terID) {
 		console.log('applyNH()');
         // socket.emit('apply nh', GRID, playerNumber, activeCard, terID);
 		territoryStateInfo[terID].naturalHazardIDs.push(activeCard);
 		$('#cardImage' + (altCardPiles[((playerNumber * 3) + 1)].indexOf(activeCard) + 1)).removeClass('selected');
 		altCardPiles[((playerNumber * 3) + 2)].push(activeCard);
         refreshTerStateVisuals(terID);
-	}
-
-	function createDiscardVisuals() {
+//	}
+//
+//	function createDiscardVisuals() {
         // socket.emit('wait for discard', GRID, playerNumber);
 		var tempCardID = altCardPiles[((playerNumber * 3) + 1)][8];
 		document.getElementById('discardVisualsName').innerHTML = referenceCards[tempCardID].name;
@@ -5137,8 +5137,8 @@ $(document).ready(function() {
 		}
 		document.getElementById('discardVisualsDescription').innerHTML = referenceCards[tempCardID].description;
 		showDiscardCard();
-	}
-	function discardCard(thisButton) {
+//	}
+//	function discardCard(thisButton) {
 		var tempButtonIndex = $('.discardButton').index(thisButton);
 		if (tempButtonIndex !== 8) {
 			clearCardVisuals(tempButtonIndex);
@@ -5150,8 +5150,8 @@ $(document).ready(function() {
 		}
 		hideDiscardCard();
         // socket.emit('no more wait for discard', GRID, playerNumber);
-	}
-	function drawRandomFromPlayer(tempTargetPlayer, tempPile) {
+//	}
+//	function drawRandomFromPlayer(tempTargetPlayer, tempPile) {
 		console.log('drawRandomFromPlayer()');
 		var tempCardIndex = Math.floor(Math.random() * nOfCards[tempTargetPlayer]);
         // socket.emit('draw random from player', GRID, playerNumber, tempTargetPlayer, tempPile, tempCardIndex);
@@ -5167,8 +5167,8 @@ $(document).ready(function() {
 		} else {
 			createCardVisuals(tempCardID);
 		}
-	}
-	function pickCard() {
+//	}
+//	function pickCard() {
 		console.log('pickCard()');
 		for (var pos = -2; pos < 3; pos++) {
 			document.getElementById('carouselVisualsName' + pos).innerHTML = '';
@@ -5244,8 +5244,8 @@ $(document).ready(function() {
 				default: document.getElementById('carouselBack').style.visibility = 'visible'; document.getElementById('carouselForward').style.visibility = 'visible'; break;
 			}
 		}
-	}
-	function drawPickedCard(cardIndex) {
+//	}
+//	function drawPickedCard(cardIndex) {
 		console.log('drawPickedCard()');
         // socket.emit('draw picked card', GRID, playerNumber, targetPlayer, activeCard, viableCards[cardIndex]);
 		switch(cardSource) {
@@ -5408,8 +5408,8 @@ $(document).ready(function() {
 				cardSource = -1;
 				break;
 		}
-	}
-	function addToCardHistory(cardID, tempPlayerNumber) {
+//	}
+//	function addToCardHistory(cardID, tempPlayerNumber) {
 		console.log('addToCardHistory()');
 		lastPlayedCard = cardID;
 		document.getElementById('cardHistoryList').scrollTop = 0;
@@ -5560,7 +5560,7 @@ $(document).ready(function() {
 		tr.append(td);
 		$('#cardHistoryTable').prepend(tr);
 		cardHistory.splice(0,0,{card:cardID, player:playerNumber});
-	}
+//	}
 
 	/*SOCKET COMMANDS (commented out in local testing)
     socket.on('send player hands 1', function() {
@@ -6403,7 +6403,7 @@ $(document).ready(function() {
 
 	// socket.on('next turn', function() {
 	// });
-	function serverNextTurn(GRID, lastPlayer) {
+//	function serverNextTurn(GRID, lastPlayer) {
 		// TO DO: retrieve based on GRID from database: last player turn, next 2 cards from draw pile, playersStillPlaying, and nOfCapitalsByPlayer
 		// double check if local game is in sync with server
 		var serverSideCurrentPlayer; // TO DO: get player turn from database;
@@ -6444,12 +6444,12 @@ $(document).ready(function() {
         } else {
             socket.to(GRID).emit('next turn', serverSideCurrentPlayer, false);
         }
-	}
-    // socket.on('create draw pile', function(referenceCards) {
-    // });
-    var drawPile = [];
-    var EoWIDs = [];
-    function createDrawPile(GRID, sReferenceCards) {
+//	}
+//    // socket.on('create draw pile', function(referenceCards) {
+//    // });
+//    var drawPile = [];
+//    var EoWIDs = [];
+//    function createDrawPile(GRID, sReferenceCards) {
         // create draw pile
         for (var i = 0; i < referenceCards.length; i++) {
             var EoWIDs = [];
@@ -6464,8 +6464,8 @@ $(document).ready(function() {
         }
         // TO DO: save Evolution of Warfare ID array in database
         deckShuffle(GRID, drawPile, true);
-    }
-    function deckShuffle(GRID, array, dealCardsAfterwards) {
+//    }
+//    function deckShuffle(GRID, array, dealCardsAfterwards) {
         var m = array.length, t, i;
         while (m) {
             i = Math.floor(Math.random() * m--);
@@ -6477,10 +6477,10 @@ $(document).ready(function() {
         if (dealCardsAfterwards === true) {
             dealCards(GRID, drawPile);
         }
-    }
-    // For every player, there's an array of cards on their hand (1), cards in play (2), and card in their discard pile (3)
-    var altCardPiles = [[/*drawpile*/], [/*p1*/], [], [], [/*p2*/], [], [], [/*p3*/], [], [], [/*p4*/], [], []];
-    function dealCards(GRID, drawPile) {
+//    }
+//    // For every player, there's an array of cards on their hand (1), cards in play (2), and card in their discard pile (3)
+//    var altCardPiles = [[/*drawpile*/], [/*p1*/], [], [], [/*p2*/], [], [], [/*p3*/], [], [], [/*p4*/], [], []];
+//    function dealCards(GRID, drawPile) {
         for (var cards = 0; cards < 5; cards++) {
             for (var p = 0; p < 4; p++) {
                 altCardPiles[((p * 3) + 1)].push(drawPile[0]);
@@ -6490,8 +6490,8 @@ $(document).ready(function() {
             }
         }
         // socket.to(GRID).emit('send player hands 1');
-    }
-    function sDrawFromDrawPile(GRID, sNewPlayerTurn, sFirstCardID, sSecondCardID) {
+//    }
+//    function sDrawFromDrawPile(GRID, sNewPlayerTurn, sFirstCardID, sSecondCardID) {
         // TO DO: get first drawPile card from database
         var evolutionOfWarfareTime = 0;
         var tempDrawnCard = firstCardID;
@@ -6518,7 +6518,7 @@ $(document).ready(function() {
             drawPile.splice(0,1);
             nOfCards[4]--;
         }, evolutionOfWarfareTime);
-    }
+//    }
     /*
     socket.on('response send player hands 1', function(sPlayerNumber) {
         socket.emit('send player hands 2', altCardPiles[((playerNumber * 3) + 1)]);
