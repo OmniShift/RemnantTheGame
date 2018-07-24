@@ -15,7 +15,7 @@
     "fs": "0.0.1-security",
     "http": "0.0.0",
     "path": "^0.12.7",
-    //pg suggested to be upgraded from 6.0.3 to >6.0.5 due to high severity security vulnrability in 6.0.0
+    "_comment1": "pg suggested to be upgraded from 6.0.3 to >6.0.5 due to high severity security vulnrability in 6.0.0"
     "pg": "6.0.5",
     "promise": "^7.1.1",
     "socket.io": "^1.4.8",
